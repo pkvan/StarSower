@@ -14,11 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier:
   regionId: cloud_garden
   regionName: Cloud Garden
+  constellationTitle: The Cloud Veil
   skyGradient:
     serializedVersion: 2
-    key0: {r: 0.96, g: 0.97, b: 1.0, a: 1}
-    key1: {r: 0.82, g: 0.9, b: 0.98, a: 1}
-    key2: {r: 0.62, g: 0.8, b: 0.95, a: 1}
+    key0: {r: 0.58, g: 0.72, b: 0.88, a: 1}
+    key1: {r: 0.5, g: 0.68, b: 0.85, a: 1}
+    key2: {r: 0.36, g: 0.58, b: 0.83, a: 1}
     key3: {r: 0, g: 0, b: 0, a: 0}
     key4: {r: 0, g: 0, b: 0, a: 0}
     key5: {r: 0, g: 0, b: 0, a: 0}
@@ -44,11 +45,18 @@ MonoBehaviour:
     m_ColorSpace: -1
     m_NumColorKeys: 3
     m_NumAlphaKeys: 3
-  cameraBackgroundColor: {r: 0.62, g: 0.8, b: 0.95, a: 1.0}
+  cameraBackgroundColor: {r: 0.36, g: 0.58, b: 0.83, a: 1.0}
   backgroundLayers:
   - sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-    color: {r: 0.85, g: 0.92, b: 1.0, a: 0.45}
+    color: {r: 0.62, g: 0.76, b: 0.92, a: 0.14}
     parallaxFactor: 0
   cloudDensity: 0.85
-  defaultMusic: {fileID: 0}
+  defaultMusic: {fileID: 8300000, guid: 7f48bc995aeec4f19bcb61030f105af3, type: 3}
+  musicVolume: 1
   ambient: {fileID: 0}
+  ambientVolume: 1
+  ambientProfile: {fileID: 0}
+  particlePrefabs:
+  - {fileID: 900011001, guid: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb33, type: 3}
+  - {fileID: 900012001, guid: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb34, type: 3}
+  - {fileID: 900013001, guid: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb35, type: 3}

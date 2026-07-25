@@ -35,12 +35,23 @@ namespace StarSower.Biome
         [Header("Rơi / trôi")]
         [SerializeField] private float fallSpeedMin = 0.2f;
         [SerializeField] private float fallSpeedMax = 0.5f;
+        [Tooltip("Trôi NGANG đều một chiều (unit/giây), cộng thêm vào lắc sin. Âm là trôi sang trái. " +
+                 "Mặc định 0 = đứng yên theo phương ngang, đúng hành vi lá rơi Forgotten Forest. " +
+                 "Dùng cho mây Cloud Garden (S1-015).")]
+        [SerializeField] private float horizontalSpeedMin;
+        [SerializeField] private float horizontalSpeedMax;
+
         [Tooltip("Biên độ lắc ngang kiểu sóng sin — tạo cảm giác trôi nhẹ thay vì rơi thẳng.")]
         [SerializeField] private float driftAmplitude = 0.3f;
         [SerializeField] private float driftFrequencyMin = 0.2f;
         [SerializeField] private float driftFrequencyMax = 0.6f;
         [SerializeField] private float rotationSpeedMin = -30f;
         [SerializeField] private float rotationSpeedMax = 30f;
+
+        [Tooltip("Xoay hạt một góc ngẫu nhiên 0-360° lúc sinh ra. ĐÚNG cho lá rơi (lá nằm hướng " +
+                 "nào cũng được), SAI cho mây (mây lộn ngược là lộ ngay). Tắt thì hạt luôn giữ " +
+                 "đúng hướng của sprite gốc.")]
+        [SerializeField] private bool randomizeInitialRotation = true;
 
         [Header("Kích thước / độ mờ")]
         [SerializeField] private float scaleMin = 0.5f;
@@ -69,6 +80,7 @@ namespace StarSower.Biome
             public float Elapsed;
             public float Lifetime;
             public float FallSpeed;
+            public float HorizontalSpeed;
             public float DriftAmplitude;
             public float DriftFrequency;
             public float DriftPhase;
@@ -125,7 +137,7 @@ namespace StarSower.Biome
                 }
 
                 float y = p.Transform.localPosition.y - p.FallSpeed * dt;
-                float x = p.StartX + Mathf.Sin((p.Elapsed + p.DriftPhase) * p.DriftFrequency) * p.DriftAmplitude;
+                float x = ComputeX(p);
 
                 // Rơi hết xuống đáy vùng phát (hiếm khi xảy ra vì lifetime thường hết trước) — tái
                 // sinh lại từ đỉnh để giữ đúng cảm giác "rơi từ trên xuống" liền mạch.
@@ -142,6 +154,22 @@ namespace StarSower.Biome
                 c.a = ComputeAlpha(p) * peakOpacity;
                 p.Renderer.color = c;
             }
+        }
+
+        // Vị trí ngang tại thời điểm hiện tại = điểm gốc + trôi đều một chiều + lắc sin. Tách thành
+        // hàm riêng vì Respawn() cũng phải dùng đúng công thức này để đặt vị trí ban đầu — nếu chỉ
+        // gán StartX như trước, hạt được hồi sinh với Elapsed ngẫu nhiên (lúc Awake) sẽ nhảy một
+        // đoạn ở khung hình đầu tiên.
+        //
+        // CỐ Ý KHÔNG có wrap-around ở mép trái/phải: StartX đã được Respawn() lùi lại nửa quãng
+        // đường của cả vòng đời, nên hạt đi từ ngoài vùng vào giữa rồi ra ngoài, và fade out lo nốt
+        // hai đầu. Thêm wrap sẽ tạo cú "pop" nhảy từ mép này sang mép kia — đúng loại lỗi thị giác
+        // đã gặp ở S1-014C-002.
+        private float ComputeX(Particle p)
+        {
+            return p.StartX
+                   + p.HorizontalSpeed * p.Elapsed
+                   + Mathf.Sin((p.Elapsed + p.DriftPhase) * p.DriftFrequency) * p.DriftAmplitude;
         }
 
         // Fade in đầu vòng đời, giữ, fade out cuối vòng đời — không có hạt nào bật/tắt đột ngột.
@@ -173,14 +201,23 @@ namespace StarSower.Biome
             p.DriftPhase = Random.Range(0f, Mathf.PI * 2f);
             p.RotationSpeed = Random.Range(rotationSpeedMin, rotationSpeedMax);
             p.BaseScale = Random.Range(scaleMin, scaleMax);
-            p.StartX = Random.Range(-areaSize.x * 0.5f, areaSize.x * 0.5f);
+            p.HorizontalSpeed = Random.Range(horizontalSpeedMin, horizontalSpeedMax);
+
+            // Lùi điểm gốc lại NỬA quãng đường của cả vòng đời, để chỗ hạt đi qua lúc giữa đời —
+            // tức lúc nó rõ nhất — rơi đúng vào vùng phát. Không lùi thì hạt trôi ngang luôn bắt
+            // đầu trong vùng rồi trôi dần ra ngoài và nằm chết ở ngoài suốt nửa sau vòng đời.
+            // horizontalSpeed = 0 thì số hạng này bằng 0, hành vi y hệt trước đây.
+            p.StartX = Random.Range(-areaSize.x * 0.5f, areaSize.x * 0.5f)
+                       - p.HorizontalSpeed * p.Lifetime * 0.5f;
 
             float startY = randomizeY
                 ? Random.Range(-areaSize.y * 0.5f, areaSize.y * 0.5f)
                 : areaSize.y * 0.5f;
 
-            p.Transform.localPosition = new Vector3(p.StartX, startY, 0f);
-            p.Transform.localRotation = Quaternion.Euler(0f, 0f, Random.Range(0f, 360f));
+            p.Transform.localPosition = new Vector3(ComputeX(p), startY, 0f);
+            p.Transform.localRotation = randomizeInitialRotation
+                ? Quaternion.Euler(0f, 0f, Random.Range(0f, 360f))
+                : Quaternion.identity;
             p.Transform.localScale = Vector3.one * p.BaseScale;
 
             p.Renderer.sprite = sprites[Random.Range(0, sprites.Count)];
