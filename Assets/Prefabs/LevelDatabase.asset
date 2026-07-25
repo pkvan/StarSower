@@ -16,15 +16,20 @@ MonoBehaviour:
   - levelId: level_01
     displayName: Forgotten Forest
     sceneName: SampleScene
+    chapterId: chapter_01
   - levelId: level_02
     displayName: Cloud Garden
     sceneName: Level_02
+    chapterId: chapter_01
   - levelId: level_03
     displayName: Sky Ruins
     sceneName: Level_03
+    chapterId: chapter_01
   - levelId: level_04
     displayName: Aurora Cliffs
     sceneName: Level_04
+    chapterId: chapter_01
   - levelId: level_05
     displayName: Moon Gate
     sceneName: Level_05
+    chapterId: chapter_01

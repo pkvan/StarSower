@@ -12,6 +12,25 @@ namespace StarSower.Persistence
         public int starsEarned;
     }
 
+    // Số Star Fragment đã thu thập trong phạm vi 1 chapter (S1-012). Tách khỏi tổng toàn game vì
+    // tiến trình khôi phục chòm sao tính theo chapter, còn tổng toàn game chỉ là thống kê.
+    [Serializable]
+    public class ChapterSaveData
+    {
+        public string chapterId;
+        public int fragmentsCollected;
+        public bool completed;
+    }
+
+    // Chòm sao nào đã được khôi phục (S1-012). Số fragment không lưu ở đây vì mốc là giá trị CỘNG
+    // DỒN của cả chapter — đã có trong ChapterSaveData.fragmentsCollected, lưu lại là thừa và dễ lệch.
+    [Serializable]
+    public class ConstellationSaveData
+    {
+        public string constellationId;
+        public bool restored;
+    }
+
     // Toàn bộ dữ liệu lưu của 1 save slot. Plain data — SaveManager chỉ biết đọc/ghi class này,
     // không biết ý nghĩa từng field; ProgressManager mới là nơi diễn giải.
     [Serializable]
@@ -19,6 +38,11 @@ namespace StarSower.Persistence
     {
         public List<LevelSaveData> levels = new List<LevelSaveData>();
         public int totalStarFragmentsCollected;
+
+        // S1-012 — hành trình khôi phục bầu trời.
+        public string currentChapterId;
+        public List<ChapterSaveData> chapters = new List<ChapterSaveData>();
+        public List<ConstellationSaveData> constellations = new List<ConstellationSaveData>();
 
         // Level mà "Continue" (từ Main Menu, sau này) nên load vào — cập nhật mỗi khi mở khóa
         // level kế tiếp, luôn trỏ tới level mới nhất người chơi có thể tiếp tục hành trình.

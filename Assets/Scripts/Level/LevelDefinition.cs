@@ -11,5 +11,9 @@ namespace StarSower.Level
         public string levelId;
         public string displayName;
         public string sceneName;
+
+        // Chapter chứa level này (S1-012) — khớp với ConstellationData.ChapterId. Star Fragment thu
+        // được ở level sẽ được cộng vào quỹ fragment của chapter này để khôi phục chòm sao.
+        public string chapterId;
     }
 }
