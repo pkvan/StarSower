@@ -24,6 +24,12 @@ namespace StarSower.Constellations
         [Tooltip("Phần thời lượng dành cho các nét nối hiện ra.")]
         [SerializeField] private float linesWeight = 0.2f;
 
+        [Header("Bố cục")]
+        [Tooltip("Phần chiều cao màn hình chừa trống ở TRÊN cho thẻ tên chòm sao. 0 = hình vẽ tràn " +
+                 "toàn màn hình như cũ (chữ sẽ đè lên hình). 0.18 = chừa 18% phía trên.")]
+        [Range(0f, 0.5f)]
+        [SerializeField] private float shapeTopMargin = 0.18f;
+
         [Header("Look (placeholder)")]
         [SerializeField] private Color skyColor = new Color(0.02f, 0.03f, 0.10f, 0.92f);
         [SerializeField] private Color starColor = new Color(1f, 0.97f, 0.85f, 1f);
@@ -138,7 +144,7 @@ namespace StarSower.Constellations
             currentEffectScale = constellation.EffectScale;
 
             foreach (Vector2 point in constellation.StarPoints)
-                spawnedGraphics.Add(CreateStar(point));
+                spawnedGraphics.Add(CreateStar(MapPoint(point)));
 
             Vector2 containerSize = shapeContainer.rect.size;
             foreach (StarConnection connection in constellation.Connections)
@@ -147,10 +153,23 @@ namespace StarSower.Constellations
                     continue;
 
                 spawnedGraphics.Add(CreateLine(
-                    constellation.StarPoints[connection.fromIndex],
-                    constellation.StarPoints[connection.toIndex],
+                    MapPoint(constellation.StarPoints[connection.fromIndex]),
+                    MapPoint(constellation.StarPoints[connection.toIndex]),
                     containerSize));
             }
+        }
+
+        // Ép hình chòm sao xuống dưới dải tiêu đề, để thẻ tên (ConstellationNameCard) nằm gọn phía
+        // trên mà không đè lên hình. Nhân toạ độ y chuẩn hoá với (1 - shapeTopMargin): y = 1 là đỉnh
+        // màn hình, nên nhân nhỏ lại tức là đẩy mọi ngôi sao XUỐNG.
+        //
+        // Làm ở đây thay vì sửa toạ độ trong từng ConstellationData: dữ liệu hình dạng do designer
+        // vẽ (0..1 toàn màn hình) giữ nguyên ý nghĩa, còn việc "chừa chỗ cho chữ" là quyết định bố
+        // cục của lớp trình diễn. Thêm chòm sao mới không phải tự nhớ trừ hao phần đầu màn hình.
+        private Vector2 MapPoint(Vector2 normalizedPoint)
+        {
+            float usableHeight = Mathf.Clamp01(1f - shapeTopMargin);
+            return new Vector2(normalizedPoint.x, normalizedPoint.y * usableHeight);
         }
 
         private bool IsValidConnection(ConstellationData constellation, StarConnection connection)

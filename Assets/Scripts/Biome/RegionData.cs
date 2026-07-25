@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using StarSower.Audio;
 
 namespace StarSower.Biome
 {
@@ -38,6 +39,10 @@ namespace StarSower.Biome
         [Tooltip("Tên hiện lên giữa màn hình lúc vào khu vực (Region Intro).")]
         [SerializeField] private string regionName;
 
+        [Tooltip("Tên chòm sao của khu vực, hiện 1 LẦN ở đầu màn hình lần đầu vào Region (vd " +
+                 "\"The Verdant Crown\"). Để TRỐNG thì Region này không hiện title — không phải lỗi.")]
+        [SerializeField] private string constellationTitle;
+
         [Header("Sky")]
         [Tooltip("t = 0 là CHÂN TRỜI (dưới), t = 1 là ĐỈNH TRỜI (trên).")]
         [SerializeField] private Gradient skyGradient = new Gradient();
@@ -53,17 +58,40 @@ namespace StarSower.Biome
         [Range(0f, 1f)]
         [SerializeField] private float cloudDensity;
 
-        [Header("Audio (placeholder — chưa có asset thật)")]
+        [Header("Music — chỉ cần kéo Clip vào, Volume mặc định 1 là đủ")]
+        [Tooltip("Để trống là bỏ qua êm, có cảnh báo trong Console chứ không lỗi. Chưa có asset thật.")]
         [SerializeField] private AudioClip defaultMusic;
+        [Tooltip("Chỉnh khi bài này cần nhỏ/to hơn mặt bằng chung — đa số trường hợp để nguyên 1.")]
+        [Range(0f, 1f)]
+        [SerializeField] private float musicVolume = 1f;
+
+        [Header("Ambient — chỉ cần kéo Clip vào, Volume mặc định 1 là đủ")]
+        [Tooltip("Để trống là bỏ qua êm, có cảnh báo trong Console chứ không lỗi. Chưa có asset thật.")]
         [SerializeField] private AudioClip ambient;
+        [Tooltip("Chỉnh khi bài này cần nhỏ/to hơn mặt bằng chung — đa số trường hợp để nguyên 1.")]
+        [Range(0f, 1f)]
+        [SerializeField] private float ambientVolume = 1f;
+
+        [Header("Particles — chỉ cần kéo Prefab vào danh sách (S1-014)")]
+        [Tooltip("Hiệu ứng hạt đặc trưng của Region (lá bay, sương, đom đóm, sao lấp lánh...). Để trống là không có hạt nào.")]
+        [SerializeField] private List<GameObject> particlePrefabs = new List<GameObject>();
+
+        [Header("Ambient nhiều lớp (S1-014C-001, tuỳ chọn)")]
+        [Tooltip("Để trống thì Region này chỉ dùng Ambient đơn giản ở trên (nếu có). Gắn asset AmbientProfile để có gió lặp + chim/lá phát ngẫu nhiên.")]
+        [SerializeField] private AmbientProfile ambientProfile;
 
         public string RegionId => regionId;
         public string RegionName => regionName;
+        public string ConstellationTitle => constellationTitle;
         public Gradient SkyGradient => skyGradient;
         public Color CameraBackgroundColor => cameraBackgroundColor;
         public IReadOnlyList<BackgroundLayerData> BackgroundLayers => backgroundLayers;
         public float CloudDensity => cloudDensity;
         public AudioClip DefaultMusic => defaultMusic;
+        public float MusicVolume => musicVolume;
         public AudioClip Ambient => ambient;
+        public float AmbientVolume => ambientVolume;
+        public IReadOnlyList<GameObject> ParticlePrefabs => particlePrefabs;
+        public AmbientProfile AmbientProfile => ambientProfile;
     }
 }

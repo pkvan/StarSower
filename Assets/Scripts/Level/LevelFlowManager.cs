@@ -25,6 +25,12 @@ namespace StarSower.Level
         [Tooltip("Tuỳ chọn (S1-013). Để trống thì mọi thứ chạy y như cũ theo Region Display Name.")]
         [SerializeField] private BiomeManager biomeManager;
 
+        [Tooltip("Tuỳ chọn (S1-014). Để trống thì nhạc/âm thanh môi trường cứ tiếp tục chạy tới khi scene bị huỷ.")]
+        [SerializeField] private RegionAtmosphereManager regionAtmosphereManager;
+
+        [Tooltip("Tuỳ chọn (S1-014C-008). Để trống thì không hiện tên chòm sao của khu vực.")]
+        [SerializeField] private RegionTitleUI regionTitleUI;
+
         [Header("References")]
         [SerializeField] private PlayerController playerController;
         [SerializeField] private CameraFollow2D cameraFollow;
@@ -73,6 +79,11 @@ namespace StarSower.Level
             yield return regionIntroUI.ShowRegionName(ResolveRegionName());
 
             playerController.SetMovementLocked(false);
+
+            // Tên chòm sao chạy CHỒNG LÊN gameplay, không chặn: gọi SAU khi đã trả quyền điều
+            // khiển và KHÔNG yield. Người chơi vừa đi vừa đọc, đúng yêu cầu "do not interrupt
+            // gameplay". ShowOnce() tự lo phần chỉ-hiện-một-lần, LevelFlowManager không cần biết.
+            regionTitleUI?.ShowOnce();
         }
 
         // Nguồn sự thật của tên khu vực là RegionData (S1-013). Giữ lại regionDisplayName làm đường
@@ -99,6 +110,11 @@ namespace StarSower.Level
 
             yield return new WaitForSeconds(cameraDelay);
             yield return DriftCameraUp();
+
+            // Bắt đầu fade âm thanh về im lặng CÙNG LÚC màn hình bắt đầu che — không yield, để nhạc
+            // im hẳn trước khi scene bị Unity phá huỷ thay vì bị cắt cụt (xem AudioManager).
+            regionAtmosphereManager?.FadeOutForDeparture();
+
             yield return sceneTransitionController.PlayIn();
             yield return new WaitForSeconds(transitionHoldDuration);
 

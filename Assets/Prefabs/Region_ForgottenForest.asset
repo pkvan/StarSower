@@ -14,11 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier:
   regionId: forgotten_forest
   regionName: Forgotten Forest
+  constellationTitle: The Verdant Crown
   skyGradient:
     serializedVersion: 2
-    key0: {r: 0.98, g: 0.82, b: 0.62, a: 1}
-    key1: {r: 0.72, g: 0.85, b: 0.75, a: 1}
-    key2: {r: 0.45, g: 0.72, b: 0.82, a: 1}
+    key0: {r: 0.99, g: 0.88, b: 0.76, a: 1}
+    key1: {r: 0.87, g: 0.85, b: 0.82, a: 1}
+    key2: {r: 0.62, g: 0.74, b: 0.84, a: 1}
     key3: {r: 0, g: 0, b: 0, a: 0}
     key4: {r: 0, g: 0, b: 0, a: 0}
     key5: {r: 0, g: 0, b: 0, a: 0}
@@ -44,11 +45,18 @@ MonoBehaviour:
     m_ColorSpace: -1
     m_NumColorKeys: 3
     m_NumAlphaKeys: 3
-  cameraBackgroundColor: {r: 0.45, g: 0.72, b: 0.82, a: 1.0}
+  cameraBackgroundColor: {r: 0.62, g: 0.74, b: 0.84, a: 1.0}
   backgroundLayers:
   - sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-    color: {r: 0.1, g: 0.2, b: 0.1, a: 0.55}
+    color: {r: 0.13, g: 0.2, b: 0.14, a: 0.5}
     parallaxFactor: 0
   cloudDensity: 0.15
-  defaultMusic: {fileID: 0}
+  defaultMusic: {fileID: 8300000, guid: 6c835f07405074d4aab9aabace15a91f, type: 3}
+  musicVolume: 1
   ambient: {fileID: 0}
+  ambientVolume: 1
+  ambientProfile: {fileID: 11400000, guid: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb17, type: 2}
+  particlePrefabs:
+  - {fileID: 900005001, guid: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb19, type: 3}
+  - {fileID: 900006001, guid: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb20, type: 3}
+  - {fileID: 900007001, guid: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb21, type: 3}

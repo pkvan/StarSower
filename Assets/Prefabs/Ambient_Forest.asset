@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa86, type: 3}
+  m_Name: Ambient_Forest
+  m_EditorClassIdentifier:
+  layers:
+  - layerName: Birds
+    layerType: 1
+    clips:
+    - {fileID: 8300000, guid: f4fdb68322094082bbd3ccacd90183fe, type: 3}
+    - {fileID: 8300000, guid: 1e1b862a3a98430db2d56a41324ed415, type: 3}
+    volume: 0.15
+    minDelay: 10
+    maxDelay: 30
+  - layerName: Morning Bird
+    layerType: 1
+    clips:
+    - {fileID: 8300000, guid: 6222087e21904b36abcf232b982990dc, type: 3}
+    volume: 0.15
+    minDelay: 90
+    maxDelay: 180
+  - layerName: Leaves
+    layerType: 1
+    clips:
+    - {fileID: 8300000, guid: e929ae3d78e9412081631ce3321974f9, type: 3}
+    volume: 0.05
+    minDelay: 20
+    maxDelay: 45
