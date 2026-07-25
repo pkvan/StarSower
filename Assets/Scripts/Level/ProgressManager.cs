@@ -164,6 +164,44 @@ namespace StarSower.Level
             OnProgressChanged?.Invoke();
         }
 
+        // Xoá sạch tiến trình của MỘT chapter để chơi lại từ đầu: fragment về 0, cờ hoàn thành về
+        // false, và các chòm sao của chapter đó về chưa-khôi-phục.
+        //
+        // Vì sao phải có hàm riêng thay vì dùng WriteChapterProgress: hàm kia CHỈ BIẾT ĐI LÊN
+        // (completed dùng ||, constellation chỉ gán restored = true). Đó là chủ ý — tiến trình
+        // không được tự tụt trong lúc chơi bình thường. Nhưng vì thế nó không thể diễn tả được
+        // hành động "bắt đầu lại", và đó chính là chỗ đã sinh ra bug: fragment bị đưa về 0 còn cờ
+        // chòm sao thì kẹt lại true vĩnh viễn.
+        //
+        // Chỉ nhận đúng danh sách constellationId của chapter này, không quét sạch cả file — chapter
+        // khác phải không hề hấn gì.
+        public void ResetChapterProgress(string chapterId, IEnumerable<string> constellationIds)
+        {
+            if (string.IsNullOrEmpty(chapterId))
+                return;
+
+            saveData.currentChapterId = chapterId;
+
+            ChapterSaveData chapter = FindOrCreateChapter(chapterId);
+            chapter.fragmentsCollected = 0;
+            chapter.completed = false;
+
+            foreach (string constellationId in constellationIds)
+            {
+                foreach (ConstellationSaveData candidate in saveData.constellations)
+                {
+                    if (candidate.constellationId == constellationId)
+                    {
+                        candidate.restored = false;
+                        break;
+                    }
+                }
+            }
+
+            SaveManager.Save(saveData);
+            OnProgressChanged?.Invoke();
+        }
+
         private ChapterSaveData FindOrCreateChapter(string chapterId)
         {
             foreach (ChapterSaveData chapter in saveData.chapters)

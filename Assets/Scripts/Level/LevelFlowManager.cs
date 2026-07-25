@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using StarSower.Biome;
 using StarSower.Core;
 using StarSower.Player;
 using StarSower.CameraSystem;
@@ -17,8 +18,12 @@ namespace StarSower.Level
     public class LevelFlowManager : MonoBehaviour
     {
         [Header("Region")]
-        [Tooltip("Tên khu vực hiện tại — hiện lên qua RegionIntroUI ngay khi vào scene này.")]
+        [Tooltip("Tên khu vực hiện tại — CHỈ dùng khi Biome Manager để trống. Có Biome Manager thì " +
+                 "tên lấy từ RegionData để không phải khai hai nơi.")]
         [SerializeField] private string regionDisplayName;
+
+        [Tooltip("Tuỳ chọn (S1-013). Để trống thì mọi thứ chạy y như cũ theo Region Display Name.")]
+        [SerializeField] private BiomeManager biomeManager;
 
         [Header("References")]
         [SerializeField] private PlayerController playerController;
@@ -65,9 +70,19 @@ namespace StarSower.Level
             sceneTransitionController.SnapCovered();
 
             yield return sceneTransitionController.PlayOut();
-            yield return regionIntroUI.ShowRegionName(regionDisplayName);
+            yield return regionIntroUI.ShowRegionName(ResolveRegionName());
 
             playerController.SetMovementLocked(false);
+        }
+
+        // Nguồn sự thật của tên khu vực là RegionData (S1-013). Giữ lại regionDisplayName làm đường
+        // lui để scene nào chưa gắn BiomeManager vẫn chạy đúng như trước.
+        private string ResolveRegionName()
+        {
+            if (biomeManager != null && !string.IsNullOrEmpty(biomeManager.RegionName))
+                return biomeManager.RegionName;
+
+            return regionDisplayName;
         }
 
         private void HandleLevelCompleted()

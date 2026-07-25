@@ -29,6 +29,15 @@ namespace StarSower.Constellations
             chapterProgress.OnCheckpointReached -= HandleCheckpointReached;
         }
 
+        // Vẽ lại một lần nữa sau khi mọi Start() đã chạy xong. ChapterProgressManager có bắn
+        // OnFragmentsChanged trong Start() của nó, nhưng nếu nó tắt sớm (không tìm thấy ChapterData)
+        // thì sẽ không sự kiện nào tới và nhãn kẹt lại chữ cũ nằm sẵn trong scene. Refresh ở đây là
+        // idempotent nên gọi thừa cũng vô hại, đổi lại nhãn LUÔN đúng sau mỗi lần chuyển scene.
+        private void Start()
+        {
+            Refresh(chapterProgress.FragmentsCollected, chapterProgress.TotalFragments);
+        }
+
         private void HandleCheckpointReached(ConstellationData constellation)
         {
             Refresh(chapterProgress.FragmentsCollected, chapterProgress.TotalFragments);

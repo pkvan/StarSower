@@ -23,10 +23,6 @@ namespace StarSower.Constellations
         [SerializeField] private float starsWeight = 0.3f;
         [Tooltip("Phần thời lượng dành cho các nét nối hiện ra.")]
         [SerializeField] private float linesWeight = 0.2f;
-        [Tooltip("Phần thời lượng giữ chòm sao hoàn chỉnh trước khi tan.")]
-        [SerializeField] private float holdWeight = 0.15f;
-        [Tooltip("Phần thời lượng dành cho lúc tan dần.")]
-        [SerializeField] private float fadeOutWeight = 0.15f;
 
         [Header("Look (placeholder)")]
         [SerializeField] private Color skyColor = new Color(0.02f, 0.03f, 0.10f, 0.92f);
@@ -45,7 +41,11 @@ namespace StarSower.Constellations
         // hơn và nét dày hơn, không cần thêm component hay code mới.
         private float currentEffectScale = 1f;
 
-        public IEnumerator Play(ConstellationData constellation)
+        // Animation Duration của mỗi chòm sao giờ là thời gian VẼ, không gồm lúc giữ và lúc tan —
+        // hai chặng đó do ConstellationManager giữ nhịp chung cho cả chòm sao lẫn thẻ tên.
+        private float WeightSum => Mathf.Max(0.0001f, skyFadeInWeight + starsWeight + linesWeight);
+
+        public IEnumerator Reveal(ConstellationData constellation)
         {
             if (constellation == null)
                 yield break;
@@ -64,16 +64,24 @@ namespace StarSower.Constellations
             BuildShape(constellation);
 
             // Mỗi chòm sao tự khai báo tổng thời lượng; các chặng chia theo tỉ lệ nên mốc sau đặt
-            // Animation Duration dài hơn là tự động "đẹp hơn" mà không phải chỉnh 5 con số.
+            // Animation Duration dài hơn là tự động "đẹp hơn" mà không phải chỉnh từng con số.
             float total = constellation.AnimationDuration;
-            float weightSum = Mathf.Max(0.0001f,
-                skyFadeInWeight + starsWeight + linesWeight + holdWeight + fadeOutWeight);
+            float sum = WeightSum;
 
-            yield return FadeGroup(0f, 1f, total * skyFadeInWeight / weightSum);
-            yield return RevealStars(constellation, total * starsWeight / weightSum);
-            yield return RevealLines(constellation, total * linesWeight / weightSum);
-            yield return new WaitForSeconds(total * holdWeight / weightSum);
-            yield return FadeGroup(1f, 0f, total * fadeOutWeight / weightSum);
+            yield return FadeGroup(0f, 1f, total * skyFadeInWeight / sum);
+            yield return RevealStars(constellation, total * starsWeight / sum);
+            yield return RevealLines(constellation, total * linesWeight / sum);
+
+            // Dừng ở đây với chòm sao còn nguyên trên màn hình. Việc giữ bao lâu rồi tan lúc nào là
+            // của ConstellationManager, vì thẻ tên phải tan cùng nhịp.
+        }
+
+        public IEnumerator Dismiss(float duration)
+        {
+            if (rootGroup == null)
+                yield break;
+
+            yield return FadeGroup(1f, 0f, duration);
 
             rootGroup.gameObject.SetActive(false);
             ClearShape();

@@ -25,6 +25,10 @@ namespace StarSower.Constellations
         [Tooltip("Id ổn định dùng để lưu tiến trình — đổi id sẽ mất trạng thái đã khôi phục.")]
         [SerializeField] private string constellationId;
         [SerializeField] private string displayName;
+
+        [Tooltip("Câu mô tả ngắn hiện dưới tên lúc khôi phục, vd \"The Hunter\". Placeholder, sẽ viết lại sau.")]
+        [SerializeField] private string description;
+
         [SerializeField] private Sprite icon;
 
         [Header("Checkpoint")]
@@ -53,6 +57,7 @@ namespace StarSower.Constellations
 
         public string ConstellationId => constellationId;
         public string DisplayName => displayName;
+        public string Description => description;
         public Sprite Icon => icon;
         public int RequiredFragments => Mathf.Max(1, requiredFragments);
         public IReadOnlyList<Vector2> StarPoints => starPoints;

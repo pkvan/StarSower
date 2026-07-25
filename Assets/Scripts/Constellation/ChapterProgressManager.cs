@@ -78,8 +78,27 @@ namespace StarSower.Constellations
             }
 
             FragmentsCollected = fragmentsBeforeThisLevel;
-            Persist();
+
+            // Bắt đầu lại chapter phải xoá sạch CẢ HAI THỨ trong save: fragment VÀ cờ chòm sao đã
+            // khôi phục. Trước đây chỉ Persist() nên fragment về 0 còn cờ chòm sao kẹt lại true —
+            // sang level sau, restoredIds nạp lại đủ 3 chòm sao cũ và không mốc nào bắn được nữa.
+            if (restarting)
+                progressManager.ResetChapterProgress(Chapter.ChapterId, CollectConstellationIds());
+            else
+                Persist();
+
             OnFragmentsChanged?.Invoke(FragmentsCollected, TotalFragments);
+        }
+
+        private List<string> CollectConstellationIds()
+        {
+            var ids = new List<string>();
+            foreach (ConstellationData data in Chapter.Constellations)
+            {
+                if (data != null)
+                    ids.Add(data.ConstellationId);
+            }
+            return ids;
         }
 
         // Level đầu của chapter = level đầu tiên trong LevelDatabase mang chapterId này. Suy ra từ

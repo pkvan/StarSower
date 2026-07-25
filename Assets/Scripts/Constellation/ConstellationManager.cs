@@ -21,6 +21,15 @@ namespace StarSower.Constellations
         [Tooltip("Thời gian gameplay đứng lại trước khi chòm sao bắt đầu hiện ra.")]
         [SerializeField] private float pauseBeforeRestore = 1f;
 
+        [Tooltip("Giữ chòm sao hoàn chỉnh + tên bao lâu sau khi vẽ xong, trước khi cả hai cùng tan.")]
+        [SerializeField] private float holdAfterReveal = 1f;
+
+        [Tooltip("Thời lượng tan, dùng CHUNG cho cả chòm sao lẫn thẻ tên nên hai thứ biến mất cùng lúc.")]
+        [SerializeField] private float fadeOutDuration = 0.8f;
+
+        [Tooltip("Thẻ tên hiện sau khi vẽ xong chòm sao. Để trống thì bỏ qua bước này, phần còn lại chạy như cũ.")]
+        [SerializeField] private ConstellationNameCard nameCard;
+
         [Tooltip("Để trống thì tự tạo một AudioSource lúc chạy — chưa có clip nào nên vẫn im lặng.")]
         [SerializeField] private AudioSource audioSource;
 
@@ -71,7 +80,33 @@ namespace StarSower.Constellations
             PlayParticle(constellation);
             PlayAudio(constellation);
 
-            yield return sequence.Play(constellation);
+            // Tên hiện lên CÙNG LÚC với nét vẽ đầu tiên, không phải sau khi vẽ xong: người chơi
+            // đang chứng kiến chòm sao được khôi phục và biết luôn nó là ai, thay vì xem xong mới
+            // được cho biết tên. StartCoroutine (không yield) để hai thứ chạy song song.
+            Coroutine nameFadeIn = nameCard != null
+                ? StartCoroutine(nameCard.FadeIn(constellation))
+                : null;
+
+            yield return sequence.Reveal(constellation);
+
+            // Bình thường fade in tên (0.6s) xong sớm hơn phần vẽ (vài giây) nên chỗ này không chờ
+            // gì cả. Chỉ có tác dụng nếu ai đó chỉnh fade in dài hơn cả phần vẽ — khi ấy vẫn phải
+            // đợi tên hiện đủ rồi mới bắt đầu tính giờ giữ.
+            if (nameFadeIn != null)
+                yield return nameFadeIn;
+
+            yield return new WaitForSeconds(holdAfterReveal);
+
+            // Tan cùng một nhịp: khởi động fade out của tên trước, rồi chờ chòm sao tan, rồi chờ
+            // nốt tên. Cả hai bắt đầu mờ đi trong cùng một khung hình.
+            Coroutine nameFadeOut = nameCard != null
+                ? StartCoroutine(nameCard.FadeOut(fadeOutDuration))
+                : null;
+
+            yield return sequence.Dismiss(fadeOutDuration);
+
+            if (nameFadeOut != null)
+                yield return nameFadeOut;
 
             playerController.SetMovementLocked(false);
             isPlaying = false;
