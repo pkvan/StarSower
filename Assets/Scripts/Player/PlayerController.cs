@@ -24,6 +24,7 @@ namespace StarSower.Player
         private IGroundDetector groundDetector;
         private PlayerMotor motor;
         private PlayerJumpController jumpController;
+        private bool movementLocked;
 
         private void Awake()
         {
@@ -52,13 +53,14 @@ namespace StarSower.Player
 
         private void Update()
         {
-            float horizontal = input.Horizontal;
+            float horizontal = movementLocked ? 0f : input.Horizontal;
             motor.SetMoveInput(horizontal, groundDetector.IsGrounded);
 
             // Đọc đúng 1 lần — trên Mobile, JumpPressed có side-effect "tiêu thụ" input
             // (ConsumePress trong TouchButton), đọc 2 lần trong cùng frame có thể mất input.
+            // Vẫn đọc kể cả khi movementLocked để ConsumePress() chạy, tránh giữ input "kẹt".
             bool jumpPressed = input.JumpPressed;
-            if (jumpPressed)
+            if (jumpPressed && !movementLocked)
                 jumpController.NotifyJumpPressed();
 
             if (debugLogging)
@@ -84,6 +86,15 @@ namespace StarSower.Player
         {
             enabled = isEnabled;
             motor.SetPhysicsActive(isEnabled);
+        }
+
+        // Khoá riêng phần di chuyển (đứng yên, không nhảy được) nhưng GIỮ NGUYÊN vật lý/Update
+        // đang chạy — dùng khi chạm Goal, để animation (Idle/Celebrate, khi có Animator sau này)
+        // và trạng thái grounded vẫn cập nhật bình thường. Khác SetInputEnabled(false): cái đó tắt
+        // hẳn component + đóng băng Rigidbody2D, chỉ hợp cho Game Over.
+        public void SetMovementLocked(bool locked)
+        {
+            movementLocked = locked;
         }
 
         // HUD debug tạm thời — chỉ hiện khi debugLogging bật, để đọc số liệu trực tiếp qua
