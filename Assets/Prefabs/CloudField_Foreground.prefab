@@ -46,17 +46,17 @@ MonoBehaviour:
   m_EditorClassIdentifier:
   sprites:
   - {fileID: 21300000, guid: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb28, type: 3}
-  worldYMin: -6
-  worldYMax: 38
+  worldYMin: -4
+  worldYMax: 60
   xRange: 3.5
-  count: 6
-  scaleMin: 3.5
-  scaleMax: 5.0
-  opacity: 0.15
+  count: 7
+  scaleMin: 4.0
+  scaleMax: 6.0
+  opacity: 0.16
   sortingLayerName: Default
   sortingOrder: 1
   seed: 303
   driftAmplitude: 0.7
-  driftPeriodMin: 38
-  driftPeriodMax: 62
+  driftPeriodMin: 34
+  driftPeriodMax: 88
   driftActiveRange: 16

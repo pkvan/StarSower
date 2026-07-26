@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier:
   regionId: moon_gate
   regionName: Moon Gate
+  constellationTitle: Moon Gate
   skyGradient:
     serializedVersion: 2
     key0: {r: 0.1, g: 0.13, b: 0.24, a: 1}
@@ -46,9 +47,17 @@ MonoBehaviour:
     m_NumAlphaKeys: 3
   cameraBackgroundColor: {r: 0.02, g: 0.03, b: 0.09, a: 1.0}
   backgroundLayers:
-  - sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-    color: {r: 0.05, g: 0.06, b: 0.12, a: 0.65}
-    parallaxFactor: 0
+  - sprite: {fileID: 21300000, guid: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb94, type: 3}
+    color: {r: 1, g: 1, b: 1, a: 1}
+    parallaxFactor: 0.03
+  - sprite: {fileID: 21300000, guid: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb95, type: 3}
+    color: {r: 1, g: 1, b: 1, a: 0.6}
+    parallaxFactor: 0.09
   cloudDensity: 0.1
-  defaultMusic: {fileID: 0}
+  defaultMusic: {fileID: 8300000, guid: c304d5dbb30a5420c8fdfdfe0e8494cd, type: 3}
+  musicVolume: 1
   ambient: {fileID: 0}
+  ambientVolume: 1
+  ambientProfile: {fileID: 0}
+  particlePrefabs:
+  - {fileID: 900032001, guid: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbc31, type: 3}

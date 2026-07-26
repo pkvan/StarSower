@@ -38,6 +38,10 @@ namespace StarSower.Player
         private Rigidbody2D rb;
         private float targetHorizontalSpeed;
         private float ascentGraceTimer;
+        private float surfaceFriction = 1f;
+        private float surfaceDriftSpeed;
+        private bool isGrounded;
+        private float lastFacing = 1f;
 
         // Chỉ đọc — PlayerMotor vẫn là nơi duy nhất ghi Rigidbody2D. Dùng cho
         // PlayerMovementStateMachine (và Animation/Audio sau này) suy ra trạng thái.
@@ -57,8 +61,23 @@ namespace StarSower.Player
         // Chỉ lưu ý định di chuyển — an toàn khi gọi từ Update(), không ghi Rigidbody2D.
         public void SetMoveInput(float horizontal, bool isGrounded)
         {
+            this.isGrounded = isGrounded;
+
             float controlScale = isGrounded ? 1f : airControlMultiplier;
             targetHorizontalSpeed = horizontal * moveSpeed * controlScale;
+
+            // Nhớ hướng vừa đi để lúc buông tay trên băng còn biết trôi về phía nào.
+            if (!Mathf.Approximately(horizontal, 0f))
+                lastFacing = Mathf.Sign(horizontal);
+        }
+
+        // Ma sát của bề mặt đang đứng (S1-017). API CỘNG THÊM, giống Launch() — không đụng luồng
+        // Move/Jump/Tick sẵn có. Chỉ lưu số, việc áp dụng nằm trong Tick() để PlayerMotor vẫn là
+        // nơi DUY NHẤT ghi Rigidbody2D.
+        public void SetSurface(float frictionMultiplier, float driftSpeed)
+        {
+            surfaceFriction = Mathf.Max(0.01f, frictionMultiplier);
+            surfaceDriftSpeed = Mathf.Max(0f, driftSpeed);
         }
 
         public void Jump()
@@ -96,8 +115,33 @@ namespace StarSower.Player
         {
             Vector2 velocity = rb.linearVelocity;
 
-            float rate = Mathf.Abs(targetHorizontalSpeed) > Mathf.Abs(velocity.x) ? acceleration : deceleration;
-            velocity.x = Mathf.MoveTowards(velocity.x, targetHorizontalSpeed, rate * deltaTime);
+            // Đứng trên mặt trơn mà buông tay thì KHÔNG đứng im được: thay vì hãm về 0, nhân vật bị
+            // đẩy tới một vận tốc trôi. Đây mới là thứ làm nên cảm giác băng — chỉ giảm ma sát là
+            // chưa đủ, vì đứng im vốn đã có vận tốc 0 nên chẳng có gì để hãm.
+            //
+            // Hướng trôi = hướng đang đi; đứng yên hẳn thì lấy hướng vừa nhìn. Không random, không
+            // đẩy về phía mép — người chơi luôn đoán được mình sắp trôi đi đâu.
+            bool releasedOnSlippery = isGrounded
+                                      && surfaceDriftSpeed > 0f
+                                      && Mathf.Approximately(targetHorizontalSpeed, 0f);
+
+            if (releasedOnSlippery)
+            {
+                float direction = Mathf.Abs(velocity.x) > 0.05f ? Mathf.Sign(velocity.x) : lastFacing;
+                float driftTarget = surfaceDriftSpeed * direction;
+                velocity.x = Mathf.MoveTowards(velocity.x, driftTarget,
+                                               deceleration * surfaceFriction * deltaTime);
+            }
+            else
+            {
+                // CHỈ deceleration bị bề mặt làm chậm lại. acceleration giữ nguyên là có chủ ý: trên
+                // băng, người chơi vẫn tăng tốc nhanh như thường (điều khiển còn nhạy), chỉ là DỪNG
+                // lâu hơn. Nếu bóp cả acceleration thì nhân vật hoá ra ì ạch — đúng kiểu ức chế mà
+                // yêu cầu thiết kế cấm. Nhờ vậy bấm ngược lại là ghìm được ngay, trôi không thành bẫy.
+                bool speedingUp = Mathf.Abs(targetHorizontalSpeed) > Mathf.Abs(velocity.x);
+                float rate = speedingUp ? acceleration : deceleration * surfaceFriction;
+                velocity.x = Mathf.MoveTowards(velocity.x, targetHorizontalSpeed, rate * deltaTime);
+            }
 
             bool effectiveJumpHeld = jumpHeld || ascentGraceTimer > 0f;
             ascentGraceTimer = Mathf.Max(0f, ascentGraceTimer - deltaTime);

@@ -16,6 +16,8 @@ MonoBehaviour:
   chapterName: Chapter 1
   totalFragments: 53
   constellations:
-  - {fileID: 11400000, guid: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb08, type: 2}
   - {fileID: 11400000, guid: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb09, type: 2}
   - {fileID: 11400000, guid: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb06, type: 2}
+  - {fileID: 11400000, guid: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbc20, type: 2}
+  - {fileID: 11400000, guid: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbc21, type: 2}
+  - {fileID: 11400000, guid: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb08, type: 2}

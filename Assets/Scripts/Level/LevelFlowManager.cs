@@ -1,9 +1,11 @@
 using System.Collections;
 using UnityEngine;
 using StarSower.Biome;
+using StarSower.Constellations;
 using StarSower.Core;
 using StarSower.Player;
 using StarSower.CameraSystem;
+using StarSower.Cinematic;
 using StarSower.Collectibles;
 using StarSower.Transition;
 using StarSower.UI;
@@ -30,6 +32,14 @@ namespace StarSower.Level
 
         [Tooltip("Tuỳ chọn (S1-014C-008). Để trống thì không hiện tên chòm sao của khu vực.")]
         [SerializeField] private RegionTitleUI regionTitleUI;
+
+        [Tooltip("Tuỳ chọn (S1-019). CHỈ chạy ở khu vực cuối cùng — nơi không còn level kế tiếp. " +
+                 "Để trống thì màn cuối kết thúc y như cũ (che màn hình rồi mở lại).")]
+        [SerializeField] private JourneyCinematic journeyCinematic;
+
+        [Tooltip("Tuỳ chọn (S1-020A). Hiện SAU khi đã lưu tiến trình khu vực, TRƯỚC khi nạp khu kế. " +
+                 "Để trống thì bỏ qua hoàn toàn, luồng cũ không đổi.")]
+        [SerializeField] private ConstellationScreen constellationScreen;
 
         [Header("References")]
         [SerializeField] private PlayerController playerController;
@@ -109,6 +119,31 @@ namespace StarSower.Level
             playerController.SetMovementLocked(true);
 
             yield return new WaitForSeconds(cameraDelay);
+
+            // Khu vực CUỐI CÙNG: thay vì che màn hình rồi load scene kế (không còn scene nào), chiếu
+            // cảnh kết Chapter 1. Chặn bằng HasNextLevel chứ không hardcode tên scene — thêm khu vực
+            // mới vào LevelDatabase là cảnh này tự dời sang khu mới, không phải sửa dòng nào.
+            //
+            // KHÔNG gọi FadeOutForDeparture() ở nhánh này: cảnh kết tự crossfade sang nhạc riêng của
+            // nó, gọi thêm sẽ dập nhạc về im lặng ngay giữa lúc đang chuyển.
+            if (journeyCinematic != null && !levelManager.HasNextLevel)
+            {
+                // Lưu TRƯỚC, để màn hình chòm sao ngay dưới đây tính được cả khu vực vừa xong.
+                int finalStars = ProgressManager.ComputeStarRating(collectibleManager.CollectedStars, collectibleManager.TotalStars);
+                progressManager.CompleteLevel(levelManager.CurrentLevelId, finalStars,
+                    collectibleManager.CollectedStars, levelTimer.ElapsedTime);
+
+                // Chòm sao ĐI TRƯỚC cảnh kết (S1-020B): phần thưởng phải đến trước lời tạm biệt.
+                // Xem cảnh kết xong rồi mới mở chòm sao thì cảm giác như một khúc đuôi thừa.
+                if (constellationScreen != null)
+                    yield return constellationScreen.Show();
+
+                yield return journeyCinematic.Play();
+
+                playerController.SetMovementLocked(false);
+                yield break;
+            }
+
             yield return DriftCameraUp();
 
             // Bắt đầu fade âm thanh về im lặng CÙNG LÚC màn hình bắt đầu che — không yield, để nhạc
@@ -121,6 +156,11 @@ namespace StarSower.Level
             int starRating = ProgressManager.ComputeStarRating(collectibleManager.CollectedStars, collectibleManager.TotalStars);
             progressManager.CompleteLevel(levelManager.CurrentLevelId, starRating,
                 collectibleManager.CollectedStars, levelTimer.ElapsedTime);
+
+            // Chòm sao hiện SAU khi tiến trình đã lưu (nên số sao mở ra luôn tính cả khu vực vừa
+            // xong) và TRƯỚC khi nạp scene kế — nạp scene sẽ phá huỷ luôn màn hình này.
+            if (constellationScreen != null)
+                yield return constellationScreen.Show();
 
             if (autoLoadNextScene && levelManager.HasNextLevel)
             {

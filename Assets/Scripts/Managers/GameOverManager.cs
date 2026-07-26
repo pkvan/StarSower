@@ -13,8 +13,23 @@ namespace StarSower.Managers
     public class GameOverManager : MonoBehaviour
     {
         [SerializeField] private Transform playerTransform;
+
+        [Tooltip("CŨ (S1-00x). Để trống là đúng — CameraFollowY đã bị CameraFollow2D thay thế và " +
+                 "tắt đi từ lâu, kéo theo cả hệ thống chết-do-rơi ngừng hoạt động. Giữ field để " +
+                 "scene cũ không hỏng, nhưng luật chết giờ dùng Kill Floor ở dưới.")]
         [SerializeField] private CameraFollowY cameraFollow;
-        [SerializeField] private float maxFallDistance = 6f;
+
+        [Tooltip("CHỈ dùng khi Camera Follow (cũ) còn được gán. Cảnh báo: Player nhảy cao tới 7.34 " +
+                 "unit nên mọi giá trị dưới ~8 sẽ giết oan người chơi ngay giữa một cú nhảy bình thường.")]
+        [SerializeField] private float maxFallDistance = 12f;
+
+        [Tooltip("Ngưỡng Y mà dưới đó coi như đã rơi ra khỏi màn. Đặt THẤP HƠN HẲN platform thấp " +
+                 "nhất (platform đầu ở y = -1.5) nên không thể báo nhầm: chỉ khi rơi qua hết mọi " +
+                 "chỗ có thể đáp mới xuống tới đây.\n\n" +
+                 "Cách này thay cho 'rơi quá N unit so với đỉnh cao nhất' — luật cũ báo nhầm liên " +
+                 "tục ở các màn mới, nơi hụt một cú nhảy là tụt cả chục unit xuống platform dưới " +
+                 "mà vẫn còn sống.")]
+        [SerializeField] private float killFloorY = -12f;
 
         [Tooltip("Thời gian chờ trước khi reload lại level, để người chơi kịp nhận ra vừa rơi chết.")]
         [SerializeField] private float reloadDelay = 1.5f;
@@ -30,11 +45,24 @@ namespace StarSower.Managers
 
         private void Update()
         {
-            CurrentFallDistance = cameraFollow.HighestY - playerTransform.position.y;
-
             if (isGameOver)
                 return;
 
+            float playerY = playerTransform.position.y;
+
+            // Kill Floor là luật chính: không thể báo nhầm vì mọi platform đều nằm trên nó.
+            if (playerY <= killFloorY)
+            {
+                TriggerGameOver();
+                return;
+            }
+
+            // Luật cũ chỉ còn chạy khi scene vẫn gán CameraFollowY. Không gán thì bỏ qua hoàn toàn
+            // thay vì ném NullReference — đó chính là thứ khiến component này bị tắt trước đây.
+            if (cameraFollow == null)
+                return;
+
+            CurrentFallDistance = cameraFollow.HighestY - playerY;
             if (CurrentFallDistance >= maxFallDistance)
                 TriggerGameOver();
         }

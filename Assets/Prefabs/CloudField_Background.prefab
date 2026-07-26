@@ -48,17 +48,17 @@ MonoBehaviour:
   - {fileID: 21300000, guid: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb26, type: 3}
   - {fileID: 21300000, guid: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb27, type: 3}
   - {fileID: 21300000, guid: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb28, type: 3}
-  worldYMin: -8
-  worldYMax: 40
+  worldYMin: -4
+  worldYMax: 60
   xRange: 4.0
-  count: 14
-  scaleMin: 1.8
-  scaleMax: 3.2
-  opacity: 0.45
+  count: 16
+  scaleMin: 2.4
+  scaleMax: 4.4
+  opacity: 0.5
   sortingLayerName: Default
   sortingOrder: -10
   seed: 202
-  driftAmplitude: 0.5
-  driftPeriodMin: 55
-  driftPeriodMax: 85
+  driftAmplitude: 0.55
+  driftPeriodMin: 50
+  driftPeriodMax: 110
   driftActiveRange: 14

@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Name:
   m_EditorClassIdentifier:
   sprites:
-  - {fileID: 21300000, guid: c2e3e737a2b146ca8ba870ee08ef9bc1, type: 3}
+  - {fileID: 21300000, guid: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb58, type: 3}
   areaSize: {x: 8, y: 12}
   maxParticles: 16
   fallSpeedMin: 0.01

@@ -57,6 +57,93 @@ namespace StarSower.Level
             return entry != null ? entry.starsEarned : 0;
         }
 
+        // ---- Chòm sao theo khu vực (S1-020A) ----
+
+        // Số khu vực ĐÃ HOÀN THÀNH. Suy ra từ starsEarned > 0 chứ không thêm field "completed" mới:
+        // ComputeStarRating() luôn trả về tối thiểu 1 sao khi hoàn thành, còn mặc định là 0 — nên
+        // starsEarned > 0 chính là "đã qua màn này". Cách này đọc đúng cả với save đã tồn tại từ
+        // trước, thứ mà một field mới sẽ luôn thấy là false.
+        public int CompletedRegionCount
+        {
+            get
+            {
+                int count = 0;
+                foreach (LevelSaveData entry in saveData.levels)
+                {
+                    if (entry.starsEarned > 0)
+                        count++;
+                }
+                return count;
+            }
+        }
+
+        public int TotalRegionCount => saveData.levels.Count;
+        public int ConstellationStarsUnlocked => saveData.constellationStarsUnlocked;
+        public int ConstellationStarsAnimated => saveData.constellationStarsAnimated;
+
+        // Quy đổi tiến trình khu vực thành số sao. KHÔNG hardcode 5: chòm sao có bao nhiêu ngôi
+        // cũng chia đúng tỉ lệ, và luôn mở trọn vẹn khi hoàn thành khu vực cuối.
+        public int ComputeUnlockedStars(int totalStars)
+        {
+            if (totalStars <= 0 || TotalRegionCount <= 0)
+                return 0;
+
+            int completed = CompletedRegionCount;
+            if (completed >= TotalRegionCount)
+                return totalStars;
+
+            return Mathf.Clamp(Mathf.RoundToInt(totalStars * (float)completed / TotalRegionCount), 0, totalStars);
+        }
+
+        // ---- Trạng thái RIÊNG của từng chòm sao (S1-020B) ----
+
+        public bool IsConstellationAnimated(string constellationId)
+        {
+            foreach (ConstellationSaveData entry in saveData.constellations)
+            {
+                if (entry.constellationId == constellationId)
+                    return entry.animationPlayed;
+            }
+            return false;
+        }
+
+        // Ghi CỘNG DỒN, không bao giờ ghi đè: mỗi chòm có bản ghi riêng nên mở chòm 3 không đụng
+        // gì tới chòm 1 và 2 — đúng yêu cầu "never overwrite previous progress".
+        public void MarkConstellationUnlocked(string constellationId, bool animationPlayed)
+        {
+            if (string.IsNullOrEmpty(constellationId))
+                return;
+
+            foreach (ConstellationSaveData entry in saveData.constellations)
+            {
+                if (entry.constellationId != constellationId)
+                    continue;
+
+                entry.restored = true;
+                entry.animationPlayed |= animationPlayed;
+                SaveManager.Save(saveData);
+                OnProgressChanged?.Invoke();
+                return;
+            }
+
+            saveData.constellations.Add(new ConstellationSaveData
+            {
+                constellationId = constellationId,
+                restored = true,
+                animationPlayed = animationPlayed,
+            });
+            SaveManager.Save(saveData);
+            OnProgressChanged?.Invoke();
+        }
+
+        public void WriteConstellationStars(int unlocked, int animated)
+        {
+            saveData.constellationStarsUnlocked = Mathf.Max(saveData.constellationStarsUnlocked, unlocked);
+            saveData.constellationStarsAnimated = Mathf.Max(saveData.constellationStarsAnimated, animated);
+            SaveManager.Save(saveData);
+            OnProgressChanged?.Invoke();
+        }
+
         // Gọi khi Player hoàn thành 1 level (Goal chạm được, không cần đủ sao). Ghi nhận số sao
         // CAO NHẤT từng đạt (không hạ xuống nếu chơi lại tệ hơn), cộng dồn Star Fragment + thời
         // gian chơi vào thống kê toàn game, mở khóa level kế tiếp (đồng thời là level "Continue"

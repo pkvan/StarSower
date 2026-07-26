@@ -14,13 +14,26 @@ namespace StarSower.UI
 
         public float Horizontal { get; private set; }
 
+        // Ngón nào đang "sở hữu" joystick. Không có nó thì ngón thứ hai chạm vào joystick sẽ
+        // giành quyền, và quan trọng hơn: ngón thứ hai nhả ra sẽ ĐẶT LẠI joystick về 0 dù ngón
+        // thứ nhất vẫn đang giữ — nhân vật khựng lại giữa lúc đang chạy.
+        private const int NoPointer = -999;
+        private int activePointerId = NoPointer;
+
         public void OnPointerDown(PointerEventData eventData)
         {
+            if (activePointerId != NoPointer)
+                return;
+
+            activePointerId = eventData.pointerId;
             OnDrag(eventData);
         }
 
         public void OnDrag(PointerEventData eventData)
         {
+            if (eventData.pointerId != activePointerId)
+                return;
+
             RectTransformUtility.ScreenPointToLocalPointInRectangle(
                 background, eventData.position, eventData.pressEventCamera, out Vector2 localPoint);
 
@@ -31,8 +44,22 @@ namespace StarSower.UI
 
         public void OnPointerUp(PointerEventData eventData)
         {
+            if (eventData.pointerId != activePointerId)
+                return;
+
+            activePointerId = NoPointer;
             handle.anchoredPosition = Vector2.zero;
             Horizontal = 0f;
+        }
+
+        // Tay bị nhấc khỏi màn hình bất thường (cuộc gọi đến, chuyển app...) — nhả quyền sở hữu,
+        // nếu không joystick sẽ kẹt ở giá trị cuối và nhân vật tự chạy mãi.
+        private void OnDisable()
+        {
+            activePointerId = NoPointer;
+            Horizontal = 0f;
+            if (handle != null)
+                handle.anchoredPosition = Vector2.zero;
         }
     }
 }

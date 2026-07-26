@@ -45,18 +45,18 @@ MonoBehaviour:
   m_Name:
   m_EditorClassIdentifier:
   sprites:
-  - {fileID: 21300000, guid: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb29, type: 3}
-  worldYMin: -8
-  worldYMax: 40
+  - {fileID: 21300000, guid: d1881b6917552472c8a48c48ad6b5199, type: 3}
+  worldYMin: -4
+  worldYMax: 60
   xRange: 4.5
-  count: 40
+  count: 44
   scaleMin: 0.05
-  scaleMax: 0.13
-  opacity: 0.3
+  scaleMax: 0.11
+  opacity: 0.26
   sortingLayerName: Default
   sortingOrder: -60
   seed: 101
-  driftAmplitude: 0
-  driftPeriodMin: 40
-  driftPeriodMax: 80
+  driftAmplitude: 0.12
+  driftPeriodMin: 70
+  driftPeriodMax: 110
   driftActiveRange: 14

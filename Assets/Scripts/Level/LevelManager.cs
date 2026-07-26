@@ -35,9 +35,15 @@ namespace StarSower.Level
         }
 
         // Gọi bởi LevelSelectController khi Player chọn 1 level đã mở khóa.
+        //
+        // So sánh bằng levelId, KHÔNG bằng tên scene: levelId là danh tính thật của một màn, còn
+        // sceneName chỉ là chỗ nó đang nằm. Đổi tên file scene, hay để hai levelId cùng trỏ vào một
+        // scene (bản dễ/khó, biến thể theo cốt truyện...) đều làm phép so tên trả lời sai — sai theo
+        // kiểu im lặng: chọn một màn khác mà game tưởng bạn đang ở đó rồi, nên chỉ đóng Level Select
+        // và đứng yên.
         public void LoadLevel(LevelDefinition level)
         {
-            if (level.sceneName == SceneManager.GetActiveScene().name)
+            if (level.levelId == currentLevelId)
             {
                 levelSelect.Hide();
                 return;

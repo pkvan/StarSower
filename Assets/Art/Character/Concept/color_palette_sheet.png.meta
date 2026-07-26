@@ -1,0 +1,2483 @@
+fileFormatVersion: 2
+guid: e73f624175136444aa4d472d35204739
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -2378996621187113331
+    second: color_palette_sheet_0
+  - first:
+      213: -7982703870414688597
+    second: color_palette_sheet_1
+  - first:
+      213: 2484493373250821325
+    second: color_palette_sheet_2
+  - first:
+      213: 2917079817335780805
+    second: color_palette_sheet_3
+  - first:
+      213: -2914335455581992016
+    second: color_palette_sheet_4
+  - first:
+      213: 2234881791399458959
+    second: color_palette_sheet_5
+  - first:
+      213: -5597751118639667917
+    second: color_palette_sheet_6
+  - first:
+      213: 4897864167421170262
+    second: color_palette_sheet_7
+  - first:
+      213: 8180444547428395979
+    second: color_palette_sheet_8
+  - first:
+      213: 214113955032243533
+    second: color_palette_sheet_9
+  - first:
+      213: -6113712346614814326
+    second: color_palette_sheet_10
+  - first:
+      213: -3224244975701482500
+    second: color_palette_sheet_11
+  - first:
+      213: -180178636189313545
+    second: color_palette_sheet_12
+  - first:
+      213: -2238929410849927691
+    second: color_palette_sheet_13
+  - first:
+      213: 1838953906977115412
+    second: color_palette_sheet_14
+  - first:
+      213: 1635424764834464468
+    second: color_palette_sheet_15
+  - first:
+      213: 892130205621883536
+    second: color_palette_sheet_16
+  - first:
+      213: -3671865798353794351
+    second: color_palette_sheet_17
+  - first:
+      213: -6592565128851097221
+    second: color_palette_sheet_18
+  - first:
+      213: 4142936341995332680
+    second: color_palette_sheet_19
+  - first:
+      213: 176174637486064051
+    second: color_palette_sheet_20
+  - first:
+      213: -8062420777337133934
+    second: color_palette_sheet_21
+  - first:
+      213: -8664506752875797520
+    second: color_palette_sheet_22
+  - first:
+      213: -5491780405756491476
+    second: color_palette_sheet_23
+  - first:
+      213: 2974548677340704535
+    second: color_palette_sheet_24
+  - first:
+      213: -6114167288343075739
+    second: color_palette_sheet_25
+  - first:
+      213: -2512857371134966526
+    second: color_palette_sheet_26
+  - first:
+      213: 6075504992728009729
+    second: color_palette_sheet_27
+  - first:
+      213: -5812031844626137821
+    second: color_palette_sheet_28
+  - first:
+      213: 2127576608048478851
+    second: color_palette_sheet_29
+  - first:
+      213: 5136990325237493905
+    second: color_palette_sheet_30
+  - first:
+      213: -213567560272821107
+    second: color_palette_sheet_31
+  - first:
+      213: 2490227242588074392
+    second: color_palette_sheet_32
+  - first:
+      213: 6772580187939296108
+    second: color_palette_sheet_33
+  - first:
+      213: 332017668791030807
+    second: color_palette_sheet_34
+  - first:
+      213: -2841346376765617943
+    second: color_palette_sheet_35
+  - first:
+      213: -1318621861380597547
+    second: color_palette_sheet_36
+  - first:
+      213: -3137354383104191354
+    second: color_palette_sheet_37
+  - first:
+      213: 7746102335351020745
+    second: color_palette_sheet_38
+  - first:
+      213: -2305372287148971439
+    second: color_palette_sheet_39
+  - first:
+      213: 6858340910835723444
+    second: color_palette_sheet_40
+  - first:
+      213: 4349249687843029579
+    second: color_palette_sheet_41
+  - first:
+      213: -4957188586560012186
+    second: color_palette_sheet_42
+  - first:
+      213: 7309135133691658098
+    second: color_palette_sheet_43
+  - first:
+      213: 1994098419875897018
+    second: color_palette_sheet_44
+  - first:
+      213: -1253962716451307687
+    second: color_palette_sheet_45
+  - first:
+      213: -2683388637962241705
+    second: color_palette_sheet_46
+  - first:
+      213: -2192385593254586209
+    second: color_palette_sheet_47
+  - first:
+      213: 8766480732064642677
+    second: color_palette_sheet_48
+  - first:
+      213: 4729715521642502854
+    second: color_palette_sheet_49
+  - first:
+      213: -8664812560546878417
+    second: color_palette_sheet_50
+  - first:
+      213: -5542797800441791645
+    second: color_palette_sheet_51
+  - first:
+      213: -2659457136008735483
+    second: color_palette_sheet_52
+  - first:
+      213: -913259929826449162
+    second: color_palette_sheet_53
+  - first:
+      213: 1648177709494248699
+    second: color_palette_sheet_54
+  - first:
+      213: -1851912042404942271
+    second: color_palette_sheet_55
+  - first:
+      213: -1904468601987600585
+    second: color_palette_sheet_56
+  - first:
+      213: -8096498996007448330
+    second: color_palette_sheet_57
+  - first:
+      213: 816201419072855557
+    second: color_palette_sheet_58
+  - first:
+      213: -2573326012274812648
+    second: color_palette_sheet_59
+  - first:
+      213: -1601967745119247391
+    second: color_palette_sheet_60
+  - first:
+      213: 2666641410085648460
+    second: color_palette_sheet_61
+  - first:
+      213: 1925998446024126275
+    second: color_palette_sheet_62
+  - first:
+      213: -8421959540173155176
+    second: color_palette_sheet_63
+  - first:
+      213: -6934313071263500613
+    second: color_palette_sheet_64
+  - first:
+      213: -3907527804822489879
+    second: color_palette_sheet_65
+  - first:
+      213: -5085474726415022816
+    second: color_palette_sheet_66
+  - first:
+      213: -8754774123796531809
+    second: color_palette_sheet_67
+  - first:
+      213: -7771715811310996957
+    second: color_palette_sheet_68
+  - first:
+      213: 7597241490086655174
+    second: color_palette_sheet_69
+  - first:
+      213: -3452306543033525305
+    second: color_palette_sheet_70
+  - first:
+      213: -638016572275219944
+    second: color_palette_sheet_71
+  - first:
+      213: 738554188889266794
+    second: color_palette_sheet_72
+  - first:
+      213: -6817846122545815411
+    second: color_palette_sheet_73
+  - first:
+      213: 3680792401836000551
+    second: color_palette_sheet_74
+  - first:
+      213: -1612880627202290184
+    second: color_palette_sheet_75
+  - first:
+      213: 941192297107051168
+    second: color_palette_sheet_76
+  - first:
+      213: -7324746561803869292
+    second: color_palette_sheet_77
+  - first:
+      213: 592206235269979639
+    second: color_palette_sheet_78
+  - first:
+      213: 6714613566213181782
+    second: color_palette_sheet_79
+  - first:
+      213: -2137062169122930253
+    second: color_palette_sheet_80
+  - first:
+      213: 6672762673428104885
+    second: color_palette_sheet_81
+  - first:
+      213: 3057264826714100463
+    second: color_palette_sheet_82
+  - first:
+      213: -2121934544842852286
+    second: color_palette_sheet_83
+  - first:
+      213: 7353140268116053223
+    second: color_palette_sheet_84
+  - first:
+      213: -5252385811754332744
+    second: color_palette_sheet_85
+  - first:
+      213: 6255816469093945130
+    second: color_palette_sheet_86
+  - first:
+      213: -1257046281012286284
+    second: color_palette_sheet_87
+  - first:
+      213: -338805352645313010
+    second: color_palette_sheet_88
+  - first:
+      213: 6909753385983116507
+    second: color_palette_sheet_89
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: iOS
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: color_palette_sheet_0
+      rect:
+        serializedVersion: 2
+        x: 30
+        y: 828
+        width: 342
+        height: 191
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d8e99407d2b1cfed0800000000000000
+      internalID: -2378996621187113331
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_1
+      rect:
+        serializedVersion: 2
+        x: 446
+        y: 841
+        width: 252
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: baeebc0cf1db73190800000000000000
+      internalID: -7982703870414688597
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_2
+      rect:
+        serializedVersion: 2
+        x: 700
+        y: 937
+        width: 6
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dcc5d6f3f81ba7220800000000000000
+      internalID: 2484493373250821325
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_3
+      rect:
+        serializedVersion: 2
+        x: 701
+        y: 885
+        width: 491
+        height: 129
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5c5b2c573ac8b7820800000000000000
+      internalID: 2917079817335780805
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_4
+      rect:
+        serializedVersion: 2
+        x: 543
+        y: 824
+        width: 250
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0bb85bd08533e87d0800000000000000
+      internalID: -2914335455581992016
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_5
+      rect:
+        serializedVersion: 2
+        x: 907
+        y: 743
+        width: 286
+        height: 91
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f887a5bf525e30f10800000000000000
+      internalID: 2234881791399458959
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_6
+      rect:
+        serializedVersion: 2
+        x: 942
+        y: 832
+        width: 202
+        height: 46
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 335ef68040bc052b0800000000000000
+      internalID: -5597751118639667917
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_7
+      rect:
+        serializedVersion: 2
+        x: 1258
+        y: 821
+        width: 175
+        height: 47
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 652d041a285b8f340800000000000000
+      internalID: 4897864167421170262
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_8
+      rect:
+        serializedVersion: 2
+        x: 58
+        y: 744
+        width: 386
+        height: 83
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bcb204a59f6c68170800000000000000
+      internalID: 8180444547428395979
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_9
+      rect:
+        serializedVersion: 2
+        x: 79
+        y: 719
+        width: 82
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d4d9627f18fa8f200800000000000000
+      internalID: 214113955032243533
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_10
+      rect:
+        serializedVersion: 2
+        x: 167
+        y: 719
+        width: 82
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a89aa19330bb72ba0800000000000000
+      internalID: -6113712346614814326
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_11
+      rect:
+        serializedVersion: 2
+        x: 260
+        y: 719
+        width: 80
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cf3a972074e2143d0800000000000000
+      internalID: -3224244975701482500
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_12
+      rect:
+        serializedVersion: 2
+        x: 353
+        y: 719
+        width: 84
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7f552d92c70ef7df0800000000000000
+      internalID: -180178636189313545
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_13
+      rect:
+        serializedVersion: 2
+        x: 489
+        y: 657
+        width: 383
+        height: 168
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5fd8d1d2099bde0e0800000000000000
+      internalID: -2238929410849927691
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_14
+      rect:
+        serializedVersion: 2
+        x: 505
+        y: 719
+        width: 88
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 41d00bfc5d6458910800000000000000
+      internalID: 1838953906977115412
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_15
+      rect:
+        serializedVersion: 2
+        x: 598
+        y: 719
+        width: 83
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4d2c5d4a82232b610800000000000000
+      internalID: 1635424764834464468
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_16
+      rect:
+        serializedVersion: 2
+        x: 687
+        y: 719
+        width: 84
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0921d7ff1bb716c00800000000000000
+      internalID: 892130205621883536
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_17
+      rect:
+        serializedVersion: 2
+        x: 775
+        y: 719
+        width: 89
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1da4732c289ea0dc0800000000000000
+      internalID: -3671865798353794351
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_18
+      rect:
+        serializedVersion: 2
+        x: 919
+        y: 719
+        width: 82
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b79f338b1f08284a0800000000000000
+      internalID: -6592565128851097221
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_19
+      rect:
+        serializedVersion: 2
+        x: 995
+        y: 707
+        width: 97
+        height: 39
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 84420bf17aaae7930800000000000000
+      internalID: 4142936341995332680
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_20
+      rect:
+        serializedVersion: 2
+        x: 1089
+        y: 699
+        width: 104
+        height: 46
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3b14acd36e5e17200800000000000000
+      internalID: 176174637486064051
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_21
+      rect:
+        serializedVersion: 2
+        x: 1214
+        y: 745
+        width: 273
+        height: 78
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 294671105078c1090800000000000000
+      internalID: -8062420777337133934
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_22
+      rect:
+        serializedVersion: 2
+        x: 1222
+        y: 713
+        width: 82
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0f36dd8c30d71c780800000000000000
+      internalID: -8664506752875797520
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_23
+      rect:
+        serializedVersion: 2
+        x: 1310
+        y: 720
+        width: 82
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c290f6251d649c3b0800000000000000
+      internalID: -5491780405756491476
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_24
+      rect:
+        serializedVersion: 2
+        x: 1399
+        y: 718
+        width: 87
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 71f20002348b74920800000000000000
+      internalID: 2974548677340704535
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_25
+      rect:
+        serializedVersion: 2
+        x: 149
+        y: 649
+        width: 239
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5646ff8de3d162ba0800000000000000
+      internalID: -6114167288343075739
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_26
+      rect:
+        serializedVersion: 2
+        x: 559
+        y: 655
+        width: 201
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 205474ed889802dd0800000000000000
+      internalID: -2512857371134966526
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_27
+      rect:
+        serializedVersion: 2
+        x: 967
+        y: 653
+        width: 169
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 10c4aaaf997805450800000000000000
+      internalID: 6075504992728009729
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_28
+      rect:
+        serializedVersion: 2
+        x: 1276
+        y: 656
+        width: 157
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 32dfccda4d3875fa0800000000000000
+      internalID: -5812031844626137821
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_29
+      rect:
+        serializedVersion: 2
+        x: 58
+        y: 565
+        width: 385
+        height: 86
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 38af82317aba68d10800000000000000
+      internalID: 2127576608048478851
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_30
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 496
+        width: 90
+        height: 75
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 190366edb714a4740800000000000000
+      internalID: 5136990325237493905
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_31
+      rect:
+        serializedVersion: 2
+        x: 489
+        y: 561
+        width: 377
+        height: 91
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d84446a7f61490df0800000000000000
+      internalID: -213567560272821107
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_32
+      rect:
+        serializedVersion: 2
+        x: 599
+        y: 541
+        width: 82
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 891767cbb701f8220800000000000000
+      internalID: 2490227242588074392
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_33
+      rect:
+        serializedVersion: 2
+        x: 686
+        y: 541
+        width: 83
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c6358fa5cc90dfd50800000000000000
+      internalID: 6772580187939296108
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_34
+      rect:
+        serializedVersion: 2
+        x: 775
+        y: 542
+        width: 86
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 71451778f409b9400800000000000000
+      internalID: 332017668791030807
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_35
+      rect:
+        serializedVersion: 2
+        x: 906
+        y: 565
+        width: 287
+        height: 85
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9e8ca0146828198d0800000000000000
+      internalID: -2841346376765617943
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_36
+      rect:
+        serializedVersion: 2
+        x: 1214
+        y: 569
+        width: 272
+        height: 78
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5d85857476053bde0800000000000000
+      internalID: -1318621861380597547
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_37
+      rect:
+        serializedVersion: 2
+        x: 1228
+        y: 541
+        width: 76
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6845f8c9fc0e574d0800000000000000
+      internalID: -3137354383104191354
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_38
+      rect:
+        serializedVersion: 2
+        x: 1311
+        y: 542
+        width: 79
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9ccdb6c880faf7b60800000000000000
+      internalID: 7746102335351020745
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_39
+      rect:
+        serializedVersion: 2
+        x: 1396
+        y: 542
+        width: 83
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 15aa4758e1ca100e0800000000000000
+      internalID: -2305372287148971439
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_40
+      rect:
+        serializedVersion: 2
+        x: 165
+        y: 542
+        width: 87
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4bc64eaa8b8bd2f50800000000000000
+      internalID: 6858340910835723444
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_41
+      rect:
+        serializedVersion: 2
+        x: 263
+        y: 541
+        width: 89
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b42cc5b3c83ab5c30800000000000000
+      internalID: 4349249687843029579
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_42
+      rect:
+        serializedVersion: 2
+        x: 353
+        y: 541
+        width: 79
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 660487dae37843bb0800000000000000
+      internalID: -4957188586560012186
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_43
+      rect:
+        serializedVersion: 2
+        x: 494
+        y: 465
+        width: 99
+        height: 103
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 27fb40bbda34f6560800000000000000
+      internalID: 7309135133691658098
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_44
+      rect:
+        serializedVersion: 2
+        x: 919
+        y: 529
+        width: 82
+        height: 39
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: abededb92f57cab10800000000000000
+      internalID: 1994098419875897018
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_45
+      rect:
+        serializedVersion: 2
+        x: 995
+        y: 520
+        width: 97
+        height: 47
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 95ff55c9d87099ee0800000000000000
+      internalID: -1253962716451307687
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_46
+      rect:
+        serializedVersion: 2
+        x: 1095
+        y: 542
+        width: 97
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 759f0ff3040b2cad0800000000000000
+      internalID: -2683388637962241705
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_47
+      rect:
+        serializedVersion: 2
+        x: 171
+        y: 479
+        width: 170
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f98506f2be41391e0800000000000000
+      internalID: -2192385593254586209
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_48
+      rect:
+        serializedVersion: 2
+        x: 591
+        y: 479
+        width: 161
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 576f40d67cbc8a970800000000000000
+      internalID: 8766480732064642677
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_49
+      rect:
+        serializedVersion: 2
+        x: 918
+        y: 389
+        width: 274
+        height: 97
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6ca1724353353a140800000000000000
+      internalID: 4729715521642502854
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_50
+      rect:
+        serializedVersion: 2
+        x: 967
+        y: 479
+        width: 178
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f2ca24362e660c780800000000000000
+      internalID: -8664812560546878417
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_51
+      rect:
+        serializedVersion: 2
+        x: 1262
+        y: 479
+        width: 178
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 36bb9da74c60413b0800000000000000
+      internalID: -5542797800441791645
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_52
+      rect:
+        serializedVersion: 2
+        x: 56
+        y: 392
+        width: 383
+        height: 81
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 50552d043d5b71bd0800000000000000
+      internalID: -2659457136008735483
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_53
+      rect:
+        serializedVersion: 2
+        x: 77
+        y: 360
+        width: 76
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6f8a817bee27353f0800000000000000
+      internalID: -913259929826449162
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_54
+      rect:
+        serializedVersion: 2
+        x: 255
+        y: 362
+        width: 85
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bf42f15f4e08fd610800000000000000
+      internalID: 1648177709494248699
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_55
+      rect:
+        serializedVersion: 2
+        x: 494
+        y: 312
+        width: 313
+        height: 158
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 14e6f2d2fcfac46e0800000000000000
+      internalID: -1851912042404942271
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_56
+      rect:
+        serializedVersion: 2
+        x: 1226
+        y: 393
+        width: 254
+        height: 78
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 73fe4a495e7f195e0800000000000000
+      internalID: -1904468601987600585
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_57
+      rect:
+        serializedVersion: 2
+        x: 169
+        y: 362
+        width: 80
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6f05baa6f0573af80800000000000000
+      internalID: -8096498996007448330
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_58
+      rect:
+        serializedVersion: 2
+        x: 350
+        y: 359
+        width: 88
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 50ed101cddab35b00800000000000000
+      internalID: 816201419072855557
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_59
+      rect:
+        serializedVersion: 2
+        x: 521
+        y: 363
+        width: 79
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 819561b30a5b94cd0800000000000000
+      internalID: -2573326012274812648
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_60
+      rect:
+        serializedVersion: 2
+        x: 615
+        y: 360
+        width: 81
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1e3a88ac2daa4c9e0800000000000000
+      internalID: -1601967745119247391
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_61
+      rect:
+        serializedVersion: 2
+        x: 711
+        y: 362
+        width: 85
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c487087eb30d10520800000000000000
+      internalID: 2666641410085648460
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_62
+      rect:
+        serializedVersion: 2
+        x: 928
+        y: 353
+        width: 81
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 34fe83dd1658aba10800000000000000
+      internalID: 1925998446024126275
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_63
+      rect:
+        serializedVersion: 2
+        x: 1015
+        y: 347
+        width: 83
+        height: 43
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 894544f6b603f1b80800000000000000
+      internalID: -8421959540173155176
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_64
+      rect:
+        serializedVersion: 2
+        x: 1103
+        y: 362
+        width: 80
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bb6bdf1500f54cf90800000000000000
+      internalID: -6934313071263500613
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_65
+      rect:
+        serializedVersion: 2
+        x: 1228
+        y: 359
+        width: 84
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9e4f79b1a2ca5c9c0800000000000000
+      internalID: -3907527804822489879
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_66
+      rect:
+        serializedVersion: 2
+        x: 1314
+        y: 361
+        width: 78
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0254ec92ea3cc69b0800000000000000
+      internalID: -5085474726415022816
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_67
+      rect:
+        serializedVersion: 2
+        x: 1399
+        y: 360
+        width: 76
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f957356b15bc08680800000000000000
+      internalID: -8754774123796531809
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_68
+      rect:
+        serializedVersion: 2
+        x: 83
+        y: 293
+        width: 308
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 322758b55a1552490800000000000000
+      internalID: -7771715811310996957
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_69
+      rect:
+        serializedVersion: 2
+        x: 558
+        y: 303
+        width: 71
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6c4797122e2de6960800000000000000
+      internalID: 7597241490086655174
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_70
+      rect:
+        serializedVersion: 2
+        x: 623
+        y: 293
+        width: 85
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7cbdabe7d71f610d0800000000000000
+      internalID: -3452306543033525305
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_71
+      rect:
+        serializedVersion: 2
+        x: 710
+        y: 303
+        width: 94
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 81229b0de4f4527f0800000000000000
+      internalID: -638016572275219944
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_72
+      rect:
+        serializedVersion: 2
+        x: 936
+        y: 295
+        width: 256
+        height: 47
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a6a1f1c2f1fdf3a00800000000000000
+      internalID: 738554188889266794
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_73
+      rect:
+        serializedVersion: 2
+        x: 1243
+        y: 295
+        width: 233
+        height: 41
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d80e164f2152261a0800000000000000
+      internalID: -6817846122545815411
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_74
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 0
+        width: 150
+        height: 216
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7254463103dc41330800000000000000
+      internalID: 3680792401836000551
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_75
+      rect:
+        serializedVersion: 2
+        x: 56
+        y: 212
+        width: 374
+        height: 81
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8fd8f7e6d95ed99e0800000000000000
+      internalID: -1612880627202290184
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_76
+      rect:
+        serializedVersion: 2
+        x: 251
+        y: 189
+        width: 78
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0a256665869cf0d00800000000000000
+      internalID: 941192297107051168
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_77
+      rect:
+        serializedVersion: 2
+        x: 494
+        y: 1
+        width: 457
+        height: 291
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 493aae96fc5495a90800000000000000
+      internalID: -7324746561803869292
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_78
+      rect:
+        serializedVersion: 2
+        x: 599
+        y: 190
+        width: 76
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7fdd90fee60f73800800000000000000
+      internalID: 592206235269979639
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_79
+      rect:
+        serializedVersion: 2
+        x: 775
+        y: 189
+        width: 84
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 651d72286791f2d50800000000000000
+      internalID: 6714613566213181782
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_80
+      rect:
+        serializedVersion: 2
+        x: 919
+        y: 215
+        width: 273
+        height: 79
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3b18082a741a752e0800000000000000
+      internalID: -2137062169122930253
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_81
+      rect:
+        serializedVersion: 2
+        x: 997
+        y: 2
+        width: 196
+        height: 216
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5b60b243c4a6a9c50800000000000000
+      internalID: 6672762673428104885
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_82
+      rect:
+        serializedVersion: 2
+        x: 1241
+        y: 215
+        width: 232
+        height: 76
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fe2179c69269d6a20800000000000000
+      internalID: 3057264826714100463
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_83
+      rect:
+        serializedVersion: 2
+        x: 1263
+        y: 190
+        width: 80
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 248f20226cf5d82e0800000000000000
+      internalID: -2121934544842852286
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_84
+      rect:
+        serializedVersion: 2
+        x: 1371
+        y: 187
+        width: 85
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7ec8da08d1a9b0660800000000000000
+      internalID: 7353140268116053223
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_85
+      rect:
+        serializedVersion: 2
+        x: 159
+        y: 190
+        width: 85
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8bdc41bbee6cb17b0800000000000000
+      internalID: -5252385811754332744
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_86
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 187
+        width: 90
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a2f02641fef11d650800000000000000
+      internalID: 6255816469093945130
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_87
+      rect:
+        serializedVersion: 2
+        x: 513
+        y: 190
+        width: 79
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4bc690a41131e8ee0800000000000000
+      internalID: -1257046281012286284
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_88
+      rect:
+        serializedVersion: 2
+        x: 685
+        y: 189
+        width: 81
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e0e339ba3525c4bf0800000000000000
+      internalID: -338805352645313010
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: color_palette_sheet_89
+      rect:
+        serializedVersion: 2
+        x: 948
+        y: 187
+        width: 85
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bd48319581064ef50800000000000000
+      internalID: 6909753385983116507
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      color_palette_sheet_0: -2378996621187113331
+      color_palette_sheet_1: -7982703870414688597
+      color_palette_sheet_10: -6113712346614814326
+      color_palette_sheet_11: -3224244975701482500
+      color_palette_sheet_12: -180178636189313545
+      color_palette_sheet_13: -2238929410849927691
+      color_palette_sheet_14: 1838953906977115412
+      color_palette_sheet_15: 1635424764834464468
+      color_palette_sheet_16: 892130205621883536
+      color_palette_sheet_17: -3671865798353794351
+      color_palette_sheet_18: -6592565128851097221
+      color_palette_sheet_19: 4142936341995332680
+      color_palette_sheet_2: 2484493373250821325
+      color_palette_sheet_20: 176174637486064051
+      color_palette_sheet_21: -8062420777337133934
+      color_palette_sheet_22: -8664506752875797520
+      color_palette_sheet_23: -5491780405756491476
+      color_palette_sheet_24: 2974548677340704535
+      color_palette_sheet_25: -6114167288343075739
+      color_palette_sheet_26: -2512857371134966526
+      color_palette_sheet_27: 6075504992728009729
+      color_palette_sheet_28: -5812031844626137821
+      color_palette_sheet_29: 2127576608048478851
+      color_palette_sheet_3: 2917079817335780805
+      color_palette_sheet_30: 5136990325237493905
+      color_palette_sheet_31: -213567560272821107
+      color_palette_sheet_32: 2490227242588074392
+      color_palette_sheet_33: 6772580187939296108
+      color_palette_sheet_34: 332017668791030807
+      color_palette_sheet_35: -2841346376765617943
+      color_palette_sheet_36: -1318621861380597547
+      color_palette_sheet_37: -3137354383104191354
+      color_palette_sheet_38: 7746102335351020745
+      color_palette_sheet_39: -2305372287148971439
+      color_palette_sheet_4: -2914335455581992016
+      color_palette_sheet_40: 6858340910835723444
+      color_palette_sheet_41: 4349249687843029579
+      color_palette_sheet_42: -4957188586560012186
+      color_palette_sheet_43: 7309135133691658098
+      color_palette_sheet_44: 1994098419875897018
+      color_palette_sheet_45: -1253962716451307687
+      color_palette_sheet_46: -2683388637962241705
+      color_palette_sheet_47: -2192385593254586209
+      color_palette_sheet_48: 8766480732064642677
+      color_palette_sheet_49: 4729715521642502854
+      color_palette_sheet_5: 2234881791399458959
+      color_palette_sheet_50: -8664812560546878417
+      color_palette_sheet_51: -5542797800441791645
+      color_palette_sheet_52: -2659457136008735483
+      color_palette_sheet_53: -913259929826449162
+      color_palette_sheet_54: 1648177709494248699
+      color_palette_sheet_55: -1851912042404942271
+      color_palette_sheet_56: -1904468601987600585
+      color_palette_sheet_57: -8096498996007448330
+      color_palette_sheet_58: 816201419072855557
+      color_palette_sheet_59: -2573326012274812648
+      color_palette_sheet_6: -5597751118639667917
+      color_palette_sheet_60: -1601967745119247391
+      color_palette_sheet_61: 2666641410085648460
+      color_palette_sheet_62: 1925998446024126275
+      color_palette_sheet_63: -8421959540173155176
+      color_palette_sheet_64: -6934313071263500613
+      color_palette_sheet_65: -3907527804822489879
+      color_palette_sheet_66: -5085474726415022816
+      color_palette_sheet_67: -8754774123796531809
+      color_palette_sheet_68: -7771715811310996957
+      color_palette_sheet_69: 7597241490086655174
+      color_palette_sheet_7: 4897864167421170262
+      color_palette_sheet_70: -3452306543033525305
+      color_palette_sheet_71: -638016572275219944
+      color_palette_sheet_72: 738554188889266794
+      color_palette_sheet_73: -6817846122545815411
+      color_palette_sheet_74: 3680792401836000551
+      color_palette_sheet_75: -1612880627202290184
+      color_palette_sheet_76: 941192297107051168
+      color_palette_sheet_77: -7324746561803869292
+      color_palette_sheet_78: 592206235269979639
+      color_palette_sheet_79: 6714613566213181782
+      color_palette_sheet_8: 8180444547428395979
+      color_palette_sheet_80: -2137062169122930253
+      color_palette_sheet_81: 6672762673428104885
+      color_palette_sheet_82: 3057264826714100463
+      color_palette_sheet_83: -2121934544842852286
+      color_palette_sheet_84: 7353140268116053223
+      color_palette_sheet_85: -5252385811754332744
+      color_palette_sheet_86: 6255816469093945130
+      color_palette_sheet_87: -1257046281012286284
+      color_palette_sheet_88: -338805352645313010
+      color_palette_sheet_89: 6909753385983116507
+      color_palette_sheet_9: 214113955032243533
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

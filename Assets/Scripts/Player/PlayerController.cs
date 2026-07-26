@@ -56,6 +56,11 @@ namespace StarSower.Player
             float horizontal = movementLocked ? 0f : input.Horizontal;
             motor.SetMoveInput(horizontal, groundDetector.IsGrounded);
 
+            // Bề mặt trơn (S1-017). Dùng "as" chứ không ép kiểu: IGroundDetector cố tình KHÔNG khai
+            // báo ma sát — mọi detector khác (test double, AI...) vẫn hợp lệ mà không phải cài thêm gì.
+            if (groundDetectorSource is ISurfaceProvider surfaceProvider)
+                motor.SetSurface(surfaceProvider.SurfaceFriction, surfaceProvider.SurfaceDriftSpeed);
+
             // Đọc đúng 1 lần — trên Mobile, JumpPressed có side-effect "tiêu thụ" input
             // (ConsumePress trong TouchButton), đọc 2 lần trong cùng frame có thể mất input.
             // Vẫn đọc kể cả khi movementLocked để ConsumePress() chạy, tránh giữ input "kẹt".

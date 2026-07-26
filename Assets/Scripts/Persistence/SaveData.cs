@@ -29,6 +29,11 @@ namespace StarSower.Persistence
     {
         public string constellationId;
         public bool restored;
+
+        // S1-020B — đã CHIẾU hoạt ảnh mở khoá cho chòm này chưa. Tách khỏi `restored` vì hai câu
+        // hỏi khác nhau: "đã mở chưa" quyết định VẼ, "đã diễn chưa" quyết định CÓ DIỄN LẠI KHÔNG.
+        // Gộp làm một thì mở lại màn hình sẽ diễn lại từ đầu mỗi lần.
+        public bool animationPlayed;
     }
 
     // Toàn bộ dữ liệu lưu của 1 save slot. Plain data — SaveManager chỉ biết đọc/ghi class này,
@@ -43,6 +48,20 @@ namespace StarSower.Persistence
         public string currentChapterId;
         public List<ChapterSaveData> chapters = new List<ChapterSaveData>();
         public List<ConstellationSaveData> constellations = new List<ConstellationSaveData>();
+
+        // S1-020A — chòm sao mở dần theo SỐ KHU VỰC đã hoàn thành, không còn theo mốc Star Fragment.
+        //
+        // Hai con số tách riêng có chủ ý:
+        //   starsUnlocked  = đã mở tới ngôi sao thứ mấy (dùng để VẼ).
+        //   starsAnimated  = đã CHIẾU hoạt ảnh mở khoá tới ngôi thứ mấy.
+        // Nhờ vậy mở lại màn hình lần sau sẽ hiện chòm sao hoàn chỉnh ngay lập tức thay vì diễn
+        // lại từ đầu — yêu cầu "unlock animation only plays the first time".
+        //
+        // Các field chòm sao CŨ (constellations[]) được giữ nguyên, không xoá: save đang có của
+        // người chơi vẫn đọc được, và xoá field khỏi class Serializable sẽ làm JsonUtility bỏ qua
+        // dữ liệu đó vĩnh viễn.
+        public int constellationStarsUnlocked;
+        public int constellationStarsAnimated;
 
         // Level mà "Continue" (từ Main Menu, sau này) nên load vào — cập nhật mỗi khi mở khóa
         // level kế tiếp, luôn trỏ tới level mới nhất người chơi có thể tiếp tục hành trình.
