@@ -31,10 +31,21 @@ namespace StarSower.Collectibles
         private Vector3 basePosition;
         private bool isCollected;
 
+        // S2-005. Co thi nhuong toan bo phan nhin + thoi diem cong diem cho no; khong co thi moi
+        // thu chay y nhu truoc. Nho vay man nao chua gan hieu ung moi van hoat dong binh thuong.
+        private StarSower.FX.StarCollectEffect collectEffect;
+        private bool hasIdleAnimator;
+
         private void Awake()
         {
             if (collectibleManager == null)
                 collectibleManager = FindFirstObjectByType<CollectibleManager>();
+
+            collectEffect = GetComponent<StarSower.FX.StarCollectEffect>();
+
+            // StarIdleAnimator cung ghi transform. Chi mot trong hai duoc phep — neu de ca hai
+            // chay thi hai cong thuc lo lung dap len nhau moi frame.
+            hasIdleAnimator = GetComponent<StarSower.FX.StarIdleAnimator>() != null;
         }
 
         private void Start()
@@ -44,7 +55,7 @@ namespace StarSower.Collectibles
 
         private void Update()
         {
-            if (isCollected)
+            if (isCollected || hasIdleAnimator)
                 return;
 
             transform.Rotate(Vector3.forward, rotationSpeed * Time.deltaTime);
@@ -67,6 +78,13 @@ namespace StarSower.Collectibles
         private void Collect()
         {
             isCollected = true;
+
+            // Co hieu ung moi thi no lam chu toan bo tu day: dien hoat anh, va cong diem KHI SAO
+            // BAY TOI TUI chu khong phai ngay bay gio. Van la CollectibleManager.RegisterCollected()
+            // duoc goi, van dung mot bo dem — chi khac thoi diem.
+            if (collectEffect != null && collectEffect.TryBeginCollect())
+                return;
+
             collectibleManager.RegisterCollected();
 
             if (collectParticlePrefab != null)

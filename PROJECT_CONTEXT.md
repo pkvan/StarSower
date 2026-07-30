@@ -1,9 +1,10 @@
 # PROJECT_CONTEXT.md — Starsower
 
-> Tài liệu context chính thức của dự án. Cập nhật đến hết **S1-014C (xong)**; **S1-015 đang làm**.
-> Dùng làm nguồn tham chiếu duy nhất khi tiếp tục phát triển sau compact.
+> Nguồn tham chiếu duy nhất khi tiếp tục phát triển sau compact.
+> Cập nhật đến hết **S2-006 (xong)**. Chapter 1 chơi được trọn vẹn, nhân vật thật, khung hình dọc,
+> hiệu ứng nhặt sao và đoạn phim chòm sao đã vào game.
 >
-> **Ngày cập nhật:** 2026-07-25
+> **Ngày cập nhật:** 2026-07-30
 
 ---
 
@@ -19,6 +20,8 @@
 | **Ngôn ngữ** | C# |
 | **Thư mục gốc** | `/Users/admin/Documents/Project/StarSower` |
 | **Mục tiêu cuối cùng** | Một hành trình leo lên bầu trời liên tục, nơi người chơi khôi phục lại các chòm sao đã lụi tắt bằng những Star Fragment thu thập dọc đường. |
+
+---
 
 ---
 
@@ -39,6 +42,8 @@
 - **Đây là hành trình xúc cảm, không phải mechanic phức tạp.** Bản sắc mỗi Region đến từ 5 thứ: **không khí riêng · nhạc riêng · bản sắc hình ảnh · tên chòm sao · mạch cảm xúc đáng nhớ**.
 - **Mechanic mới là thứ yếu** so với việc dựng một thế giới liền mạch và đáng nhớ.
 - **Gameplay đọc được quan trọng hơn hiệu ứng hình ảnh.** Không khí phải làm gameplay rõ hơn, tuyệt đối không được che nó.
+
+---
 
 ---
 
@@ -77,216 +82,220 @@ t=1.0   ┌ vẽ chòm sao (trời tối → sao sáng dần → nối nét), ch
 
 Tổng thời gian khoá: Lyra 6.3s · Cassiopeia 7.8s · Orion 9.8s.
 
+> ⚠️ **Trình tự trên đã bị thay ở S2-006.** Cảnh khôi phục giờ chiếu sau khi hoàn thành màn, trong không gian thế giới, Hero chạy vào khung rồi tự bắn sao vẽ chòm — xem **6.9**. Nhánh UI cũ vẫn còn nguyên làm dự phòng.
+
 ---
 
-## 4. ARCHITECTURE
+---
+
+## 4. KIẾN TRÚC
 
 ### 4.1 Nguyên tắc nền
 
-- **Hướng phụ thuộc:** `Core ← Systems ← Managers/Level ← UI`. Tầng dưới không biết tầng trên.
-- **Single-Writer Principle** — mỗi thứ chỉ có đúng MỘT class được ghi:
+- **Hướng phụ thuộc:** `Core ← Systems ← Managers/Level ← UI`.
+- **Single-Writer** — mỗi tài nguyên chỉ MỘT class được ghi:
 
   | Đối tượng | Chỉ được ghi bởi |
   |---|---|
   | `Rigidbody2D` Player | `PlayerMotor` |
-  | `transform.position` Main Camera | `CameraFollow2D` (trừ lúc `LevelFlowManager` chủ động tắt component để tự lái) |
+  | `transform.position` Camera | `CameraFollow2D` (trừ khi `LevelFlowManager`/`JourneyCinematic` chủ động tắt component để tự lái) |
   | File save | `ProgressManager` |
   | `SpriteRenderer` nền | `BackgroundManager` |
   | Sky Plane + `Camera.backgroundColor` | `SkyManager` |
-  | `AudioSource` nhạc/ambient | `AudioManager` |
-  | Hiệu ứng hạt của Region | `ParticleController` |
-  | Vị trí hạt parallax | `ParallaxLayer` (đọc `Camera.main`, ghi transform của chính nó — không parent vào Camera) |
-  | Vị trí vật trang trí world | `WorldAmbientField` (ghi transform con của chính nó, chỉ khi có trôi ngang) |
+  | `AudioSource` | `AudioManager` |
+  | Hạt của Region | `ParticleController` |
+  | Vị trí lớp parallax | `ParallaxLayer` |
+  | Vật trang trí world | `WorldAmbientField` |
+  | `localScale` sao chòm sao | `ConstellationScreen` — coroutine **hoặc** `Update()`, không đồng thời (cờ `isAnimating`) |
 
-- **Event hub:** `GameEvents` (static) để các hệ thống không tham chiếu trực tiếp lẫn nhau.
-- **Interface để thay thế:** `ITransitionEffect`, `IConstellationRestoreSequence`, `IInputProvider`, `IGroundDetector`, `ILaunchable`, `ICameraTarget/Shake/Zoom`, `IPlatformPool`.
-- **Không Singleton.** Mọi phụ thuộc gán qua `[SerializeField]` trong Inspector, kể cả khi component được spawn động (đọc `Camera.main`/tự tạo con lúc `Awake()` thay vì kéo-thả).
+- **Không Singleton, không `DontDestroyOnLoad`.** Hệ quả chấp nhận: crossfade nhạc xuyên scene là không thể; chỉ crossfade thật trong cùng một scene (dùng ở `JourneyCinematic`).
+- **Event hub:** `GameEvents` (static).
+- **Interface để thay thế:** `IInputProvider`, `IGroundDetector`, `ISurfaceProvider`, `IGroundSurface`, `ILaunchable`, `ITransitionEffect`, `ICameraTarget/Shake/Zoom`, `IPlatformPool`.
 
-### 4.2 Danh sách script theo namespace
+### 4.2 Script theo namespace *(chỉ ghi thay đổi so với bản trước)*
 
-| Namespace | Script chính | Vai trò |
-|---|---|---|
-| `StarSower.Core` | `GameEvents`, `IInputProvider`, `IGroundDetector`, `ILaunchable`, `ICameraTarget/Shake/Zoom`, `ITransitionEffect`, `IPlatformPool`, `PlayerMovementState` | Hợp đồng dùng chung, không phụ thuộc tầng trên |
-| `StarSower.Player` | `PlayerController`, `PlayerMotor`, `PlayerJumpController`, `GroundChecker`, `PlayerMovementStateMachine`, `InputManager` + 2 provider | Di chuyển, nhảy, input |
-| `StarSower.CameraSystem` | `CameraFollow2D` (đang dùng) · `CameraFollowY` (tắt) · `CameraShake`/`CameraZoom` (có sẵn, chưa dùng trong content) | Camera bám Player |
-| `StarSower.Platform` | `Platform`, `MovingPlatform`, `FallingPlatform`, `SpringPlatform`, `OneWayPlatform`, `PlatformStandDetector` (đang dùng) · `BreakablePlatform`, `PlatformSpawner`/`Recycler`/`SimplePlatformPool` (tắt, level là bố cục thủ công) | Nền |
-| `StarSower.Collectibles` | `StarFragment`, `CollectibleManager` | Thu thập sao, đếm tự động |
-| `StarSower.Constellations` *(S1-012, S1-013.2)* | `ChapterData`/`ChapterDatabase`/`ConstellationData` (SO), `ChapterProgressManager`, `ConstellationManager` (giữ nhịp trình diễn), `ConstellationUI`, `ConstellationNameCard`, `IConstellationRestoreSequence`, `ConstellationRestoreSequence` | Hệ khôi phục chòm sao |
-| `StarSower.Biome` *(S1-013, mở rộng S1-014/S1-014C)* | `RegionData` (SO), `BiomeManager` (nền+trời), `BackgroundManager`, `SkyManager`, `BiomeSession`, `RegionAtmosphereManager` (điều phối audio+particle), `ParticleController`, `AmbientParticleField`, `ParallaxLayer`, `WorldAmbientField` | Bản sắc hình ảnh + không khí từng Region |
-| `StarSower.Audio` *(S1-014, S1-014C)* | `AudioManager` (crossfade nhạc+ambient 2 kênh), `AmbientLayerData`/`AmbientProfile` (SO), `LayeredAmbientPlayer` | Nhạc nền + ambient nhiều lớp |
-| `StarSower.Level` | `GoalController`, `LevelFlowManager`, `LevelManager`, `LevelDefinition`, `LevelDatabase` (SO), `ProgressManager`, `LevelTimer` (đang dùng) · `LevelCompleteUI` (nghỉ hưu, trái vision) | Điều phối level/region |
-| `StarSower.Transition` | `SceneTransitionController`, `TransitionEffectBase`, `ColorFadeEffect`/`CloudFadeEffect`/`LightFadeEffect` | Che/mở màn hình |
-| `StarSower.Persistence` | `SaveData`, `SaveManager` | JSON I/O |
-| `StarSower.UI` *(+ S1-014C)* | `CollectibleHUD`, `RegionIntroUI`, `OnScreenJoystick`/`TouchButton`, `RegionTitleUI`, `RegionTitleSession` (đang dùng) · `LevelTitleView` (tắt) · `LevelSelectController`/`EntryView` (cô lập, không lối vào) | HUD, intro, title chòm sao Region |
-| `StarSower.Managers` | `GameOverManager` (tắt — không chết khi rơi) · `LevelIntroSequence` (tắt, thay bằng `RegionIntroUI`) | — |
-| `StarSower.Effects` | `GroundImpactVFX`, `SpringLaunchVFX` | Placeholder |
+| Namespace | Bổ sung / thay đổi |
+|---|---|
+| `StarSower.Core` | **+`IGroundSurface`** (ma sát + độ trôi của bề mặt), **+`ISurfaceProvider`** (tách khỏi `IGroundDetector` để mọi detector cũ không phải sửa) |
+| `StarSower.Player` | `PlayerMotor` +`SetSurface(friction, drift)`; `GroundChecker` implement `ISurfaceProvider` |
+| `StarSower.Platform` | **+`IcePlatform`**, **+`MoonPlatform`**, **+`MoonlightRevealPlatform`**. `FallingPlatform` không còn dùng ở Level_05 |
+| `StarSower.Cinematic` *(mới)* | **`JourneyCinematic`** — cảnh kết Chapter 1 |
+| `StarSower.Constellations` | **+`ConstellationScreen`** (hệ mới). `ConstellationManager`/`RestoreSequence`/`NameCard` **đã tắt ở cả 5 scene** |
+| `StarSower.UI` | **+`SafeAreaFitter`**, **+`AspectEnvelopeFitter`**; `OnScreenJoystick`/`TouchButton` thêm theo dõi `pointerId` |
+| `StarSower.Managers` | `GameOverManager` **đã bật lại**, dùng Kill Floor thay `CameraFollowY` |
+| `Assets/Editor` *(mới, không vào build)* | `PlayModeStartSceneMenu` (chọn scene khi bấm Play), `SaveToolsMenu` (xoá/reset save) |
+| `StarSower.Player` *(S2-002)* | **+`PlayerAnimationController`** (cầu nối MỘT CHIỀU trạng thái → Animator; `SetScriptedMotion()` cho cảnh diễn), **+`GroundShadowController`** |
+| `StarSower.Camera` *(S2-004)* | **+`CameraAspectFitter`** — tính `orthographicSize` theo tỉ lệ máy để bề ngang sân luôn vừa khung |
+| `StarSower.FX` *(S2-005, mới)* | `StarFXPool` · `PooledStarFX` · `StarFXType` · `StarCollectEffect` · `StarFlyAnimator` · `StarIdleAnimator` · `PocketFXController` · `IStarFlightListener` |
+| `StarSower.Constellations` *(S2-006)* | **+`ConstellationCinematic`** (điều phối cảnh) · **+`ConstellationNode`** · **+`ConstellationLineDrawer`** · **+`ConstellationSkyBackdrop`**. 5 class cũ dời sang `Constellation/Legacy/`, GameObject `ConstellationSystem` đặt `m_IsActive: 0` ở cả 5 scene |
 
 ### 4.3 Scenes
 
-| Scene | Region | Build Index |
-|---|---|---|
-| `SampleScene.unity` | Forgotten Forest | 0 |
-| `Level_02.unity` | Cloud Garden | 1 |
-| `Level_03.unity` | Sky Ruins | 2 |
-| `Level_04.unity` | Aurora Cliffs | 3 |
-| `Level_05.unity` | Moon Gate | 4 |
+| Scene | Region | Cao | Gap | Cú phải giữ nút |
+|---|---|---|---|---|
+| `SampleScene` | Forgotten Forest | 39.4 | 2.4–3.4 | 0/14 |
+| `Level_02` | Cloud Garden | 54.7 | 3.0–4.0 | 6/16 |
+| `Level_03` | Sky Ruins | 61.0 | 2.9–4.5 | 8/17 |
+| `Level_04` | Aurora Cliffs | 86.0 | 3.4–4.9 | 13/16 |
+| `Level_05` | Moon Gate | 102.4 | 3.6–5.2 | 17/18 |
 
-Mỗi scene chứa cùng một bộ hệ thống: `ConstellationSystem`, `BiomeSystem`, `Canvas_ConstellationName`, `AtmosphereSystem`, `Canvas_RegionTitle`. **Chỉ `SampleScene` (Forgotten Forest) và `Level_02` (Cloud Garden) có nội dung audio/particle/title thật** — 3 scene còn lại có đủ hệ thống nhưng field dữ liệu còn trống (xem mục 9.1).
+**81/81 cú nhảy đã verify là tới được.** Camera đồng nhất tuyệt đối 5/5 scene (ortho 5, deadzone 2, smoothX 0.25, smoothY 0.12).
 
-`AudioManager` và các hạt `AmbientParticleField` đều **tự tạo GameObject con lúc `Awake()`**, không wire `AudioSource`/particle sẵn trong scene — giảm rủi ro sửa YAML tay.
-
-### 4.4 Data Objects chính
-
-| Asset | Nội dung |
-|---|---|
-| `LevelDatabase.asset` / `ChapterDatabase.asset` / `Chapter_01.asset` | 5 level cùng `chapter_01`, tổng 53 fragment, 3 chòm sao |
-| `Constellation_Lyra` / `Cassiopeia` / `Orion` | Mốc 12/30/53, hình dạng + thời lượng + description riêng |
-| `Region_ForgottenForest.asset` | **Đầy đủ nhất** — sky gradient bình minh ấm, nhạc, `AmbientProfile` (chim+lá), 3 particle prefab parallax, `constellationTitle: The Verdant Crown` |
-| `Region_CloudGarden/SkyRuins/AuroraCliffs/MoonGate.asset` | Có sky gradient + màu nền; **chưa có** nhạc/ambient/particle/title |
-| `Ambient_Forest.asset` | 3 layer `RandomOneShot`: Birds, Morning Bird, Leaves — **không có Wind** (bỏ có chủ đích, xem 5. S1-014C) |
-| `Particle_SunDust` / `Particle_BackgroundLeaves` / `Particle_ForegroundLeaves` | 3 prefab hạt parallax của Forgotten Forest (xem 5. S1-014C) |
-| `CloudField_SkyMotes` / `CloudField_Background` / `CloudField_Foreground` | 3 prefab mây **cố định trong world** của Cloud Garden, dùng `WorldAmbientField` (xem 5. S1-015) |
-| `StarFragment.prefab`, `Platform_Basic/Wide.prefab` | Prefab gameplay cơ bản |
-
-### 4.5 Save System
-
-- JSON qua `JsonUtility`, tại `~/Library/Application Support/DefaultCompany/StarSower/starsower_save.json`.
-- `ProgressManager` là **lớp diễn giải + nơi ghi đĩa duy nhất**. `SaveManager` chỉ biết đọc/ghi, không hiểu ý nghĩa dữ liệu.
-- **Hai chiều ghi tách bạch, không được gộp** *(bài học S1-013.1)*: `WriteChapterProgress()` chỉ đi lên (dùng lúc chơi bình thường); `ResetChapterProgress()` chỉ đi xuống (dùng khi bắt đầu lại chapter).
-- `BiomeSession`, `RegionTitleSession` cố tình **không** nằm trong save — là trạng thái một phiên chơi, không phải tiến trình người chơi.
-
-### 4.6 Bộ số tham chiếu nhanh
+### 4.4 Bộ số tham chiếu nhanh
 
 | Component | Giá trị |
 |---|---|
-| `PlayerMotor` | moveSpeed 5 · jumpForce 12 · fallMultiplier 2.5 · airControl 0.8 |
-| `PlayerJumpController` | jumpBufferTime 0.15 · coyoteTime 0.15 |
-| `CameraFollow2D` | offset (0,1) · deadZoneWidth 2 (ngang) · smoothTimeY 0.12, **không deadzone dọc** |
-| `LevelFlowManager` | cameraDelay 0.4 · driftDuration 0.6 · transitionHold 0.3 |
-| `ConstellationManager` | pauseBeforeRestore 1.0 · holdAfterReveal 1.0 · fadeOutDuration 0.8 |
-| `ConstellationRestoreSequence` | tỉ lệ vẽ 0.2/0.3/0.2 (sky/stars/lines) · **shapeTopMargin 0.18** (chừa chỗ cho thẻ tên) |
-| `ConstellationNameCard` | anchor top, tên tại -60, mô tả tại -175 |
-| `AudioManager` | masterVolume/musicVolume/ambientVolume mặc định 1 (mixing không live-reactive) |
-| `LayeredAmbientPlayer` (Forest) | Birds/Morning Bird/Leaves volume 0.15/0.15/0.05 = % nghe được cuối cùng trực tiếp |
-| `AmbientParticleField` × 3 (Forest) | SunDust 16 hạt · BackgroundLeaves 5 hạt · ForegroundLeaves 2 hạt |
-| `ParallaxLayer` × 3 (Forest) | **`parallaxFactor` là `Vector2`**, X thấp (0.2/0.3/0.9) cho chiều sâu ngang, Y sát 1 (0.94/0.95/0.98) để nhảy không làm hạt trôi. `executionOrder: 100` (chạy sau `CameraFollow2D`) |
-| `RegionTitleUI` (Forest) | fadeIn 1s · hold 2.5s · fadeOut 1.2s · `sortingOrder 26` |
+| `PlayerMotor` | moveSpeed 5 · jumpForce 12 · fallMultiplier 2.5 · airControl 0.8 → **apex 7.34**, short-hop 3.67, tầm ngang ~8 |
+| `SpringPlatform` | launchVelocity 18/20 → apex 16.5/20.4 |
+| `IcePlatform` | friction 0.25 (dừng lâu gấp 4) · driftSpeed 1.2 (buông tay là trôi, không đứng im được) |
+| `MoonPlatform` | activationRadius 9 · hiddenAlpha 0.55 · maxReveal 1.0 (0.6/0.45 cho 2 cái ẩn cuối màn) · warning 0.8s · vanish 4s |
+| `MoonlightRevealPlatform` | detectionRadius 7 · hintAlpha 0.12/0.07 · colliderThreshold 0.35 |
+| `GameOverManager` | **killFloorY −12** · reloadDelay 1.5 |
+| `JourneyCinematic` | zoom 2.5s → giữ 4s → về 2s · ortho 5→44 · framingBias 0.75 |
+| `ConstellationScreen` | fadeIn 0.8 · starPop 0.55 · lineDraw 0.5 · hold 1.6 · fadeOut 0.7 · pulse ±6% *(nhánh UI dự phòng)* |
+| `CameraAspectFitter` *(S2-004)* | playableWidth 5.2 · minOrthographicSize 5 · `ortho = Max(5.2 / (2×aspect), 5)` |
+| `Hero` prefab *(S2-002)* | root scale 0.75 (collider 1×1 → 0.75 world) · `Visual` scale 1.25, local `(0, −0.5)` · PPU 225 · pivot (0.5, 0.125) |
+| `ConstellationCinematic` *(S2-006)* | fadeIn 0.8 · heroRun 1.4 (margin 1.2, đứng ở 0.78 nửa khung tính từ tâm xuống) · pocketGlow 0.5 · launchDelay 0.55 · flight 1.1 · lineDraw 1.4 · glow 1.2 · nameReveal 0.5 · hold 1.4 · fadeOut 1.3 · cameraRise 0.5 · finalZoom 1.35 · skipGrace 0.6 |
+
+### 4.5 Save
+
+`~/Library/Application Support/DefaultCompany/StarSower/starsower_save.json`
+
+Mới ở S1-020A/B: `ConstellationSaveData.animationPlayed` (tách khỏi `restored` — một cái quyết định *vẽ*, cái kia quyết định *có diễn lại không*). `MarkConstellationUnlocked()` ghi **cộng dồn theo từng id**, không bao giờ ghi đè chòm khác.
+
+Mới ở S2-006: **`ConstellationSaveData.nodesRestored`** — SỐ ngôi sao đã khôi phục trong chòm, để bầu trời lành **dần** qua nhiều lượt chơi. Trường cộng thêm nên save cũ đọc vào mặc định 0, **tương thích ngược**. Luật: `ceil(tổngSao × sốSaoĐạt / 3)`, kẹp trong `[0, tổng]`, **đơn điệu** — `SetConstellationNodes()` chỉ nhận giá trị lớn hơn, chơi lại kém hơn không làm tắt bớt sao. `GetConstellationNodes()` kẹp lại lúc đọc phòng khi số sao của chòm bị đổi sau này.
 
 ---
 
-## 5. LỊCH SỬ SPRINT *(đã xong + đang làm)*
+## 5. CƠ CHẾ GAMEPLAY ĐÃ CÓ
 
-### S1-001 → S1-011 — Nền tảng gameplay & trình bày
-Kiến trúc SOLID (S1-001) → di chuyển + nhảy có coyote/buffer (S1-002/003) → camera bám (S1-004) → 5 loại platform (S1-005) → mobile input (S1-006) → level chơi được đầu tiên + Goal flow chuẩn hoá (S1-007/008.1) → Star Fragment + Save/Progress (S1-008/009) → 5 region dạy mechanic (S1-010) → chuyển region liền mạch không UI cắt ngang (S1-011, `LevelFlowManager`/`SceneTransitionController`/`RegionIntroUI` ra đời, `LevelCompleteUI` nghỉ hưu).
-**Không nên đổi:** Single-Writer, không Singleton, không hardcode số level/sao, Goal chỉ phát event.
-
-### S1-012 — Constellation Restoration System
-Star Fragment thành mảnh ánh sáng, không phải điểm. `ChapterData`/`ConstellationData` (data, không hardcode Chapter 1), `ChapterProgressManager` cộng dồn fragment + phát hiện mốc 12/30/53, `ConstellationManager` chạy sự kiện khôi phục giữa gameplay (không chuyển scene/menu/popup).
-**Không nên đổi:** Fragment đếm lúc nhặt; không reset khi qua level; Không sửa Player/Camera/Platform/Transition/Goal.
-
-### S1-013 — Biome Presentation System
-Mỗi Region có bản sắc hình ảnh: `RegionData` gom toàn bộ diện mạo 1 asset; `BiomeManager` áp nền+trời trong `Awake()` (không cần sửa Transition); `SkyManager` nướng `Gradient` thành `Texture2D` runtime; `SkyPlane` làm con Camera (không sửa Camera). `BiomeSession` nhớ region trước để bầu trời đổi màu mượt qua ranh giới scene, không ghi save.
-**S1-013.1 (regression fix):** Bug "tiến trình reset" **không phải do S1-013** (xác nhận bằng `git diff`) — lỗi tiềm ẩn của S1-012: `restartChapterOnFirstLevel` dùng hàm ghi save chỉ-biết-đi-lên nên xoá fragment nhưng không xoá được cờ `restored`. Fix: tách `WriteChapterProgress` (lên) / `ResetChapterProgress` (xuống) — **không được gộp lại**.
-**S1-013.2:** Tên chòm sao hiện đồng thời với nét vẽ, tan cùng lúc — `Reveal()`/`Dismiss()` tách khỏi `Play()` gộp, `ConstellationManager` giữ nhịp chung.
-
-### S1-014 — Atmosphere & Audio Foundation
-Nền tảng kỹ thuật cho không khí Region: `AudioManager` (crossfade 2 kênh, không Singleton/DontDestroyOnLoad), `RegionAtmosphereManager` (đọc Region qua `BiomeManager.Region`, không tự có field riêng), `ParticleController`. **Giới hạn có chủ đích:** crossfade thật xuyên ranh giới scene là bất khả thi nếu giữ luật No Singleton (mỗi Region là 1 scene, `LoadScene` phá huỷ mọi thứ) — giải pháp là scene cũ fade nhạc về 0 trước khi bị huỷ, scene mới fade in từ im lặng.
-
-**S1-014B — Forgotten Forest BGM.** Gán `BGM_ForgottenForest.mp3` vào `RegionData.defaultMusic`. Không sửa script/scene — toàn bộ pipeline (auto-play, loop, fade, mixing) đã có sẵn từ S1-014.
-
-### S1-014C — Forgotten Forest Atmosphere Complete
-Region đầu tiên có **bản sắc trọn vẹn**. Từ đây trở đi, "không khí một Region" = 5 thành phần cố định: **BGM · Ambient Audio · Particles · Sky & Lighting · Constellation Title**. Toàn bộ hệ thống bên dưới đã tổng quát hoá, Region sau chỉ cần asset + gán field.
-
-**Ambient Audio** — chim + lá xào xạc phát ngẫu nhiên, **không có gió** (bỏ có chủ đích: "yên tĩnh, huyền ảo" thay vì "hiệu ứng rừng chung chung").
-- `AmbientLayerData`/`AmbientProfile` (SO) — layer `Loop` hoặc `RandomOneShot`, gom trong 1 asset per-Region.
-- `LayeredAmbientPlayer` — layer Loop có `AudioSource` riêng; mọi layer `RandomOneShot` dùng CHUNG 1 `AudioSource.PlayOneShot` (overlap tự nhiên).
-- `Ambient_Forest.asset`: Birds (delay 10–30s) · Morning Bird (delay 90–180s — **độ hiếm đến từ delay dài hơn**, không dùng trọng số ngẫu nhiên) · Leaves (delay 20–45s). Volume 0.15/0.15/0.05 = **trực tiếp là % nghe được cuối cùng**.
-- `wind_soft.mp3` còn trên đĩa nhưng không còn tham chiếu nào — không xoá tài nguyên người dùng đã import.
-
-**Particles** — lá rơi + bụi nắng, **parallax 3 lớp**: "thế giới di chuyển quanh người chơi", không phải "cả khu rừng bám theo người chơi".
-- `AmbientParticleField` — hạt 2D **tự pool bằng code, KHÔNG dùng Unity ParticleSystem (Shuriken)**: dự án không có Editor để dựng/kiểm tra asset Shuriken bằng tay. 1 vòng lặp dịch chuyển N `SpriteRenderer` tạo sẵn, không `Instantiate`/`Destroy` lúc chạy.
-- `ParallaxLayer` — đọc `Camera.main`, tự ghi vị trí mình bằng `parallaxFactor` kiểu `Vector2` (tách X/Y), tự neo lại khi lệch xa.
-- `Particle_SunDust` (−60) · `Particle_BackgroundLeaves` (−10) · `Particle_ForegroundLeaves` (**+1**, cố ý trước Player — an toàn nhờ chỉ 2 hạt).
-
-**Bốn bài học kỹ thuật, rút ra qua nhiều vòng vá lỗi thật:**
-1. **`Instantiate(prefab, position, rotation, parent)` ép world position tuyệt đối**, xoá offset prefab tự khai báo — từng khiến hạt sinh đúng tại vị trí Camera (gần hơn Near Clip Plane, bị cắt sạch). Dùng `Instantiate(prefab)` → `SetParent(..., false)` → copy tường minh `localPosition`.
-2. **`spritePixelsToUnits` phải khớp độ phân giải ảnh nguồn** — để mặc định 100 với ảnh 1024px khiến hạt to gần bằng màn hình.
-3. **Ngẫu nhiên hoá vị trí phải áp dụng ở MỌI lần tái sinh, không chỉ lúc khởi động** — chỉ random Y một lần lúc `Awake()` rồi ép về đỉnh mãi khiến hạt dồn hết lên 1/3 trên màn hình.
-4. **Parallax mạnh (factor thấp) chỉ an toàn trên trục camera đi chậm.** Camera leo dọc bám Y gần 1:1 mỗi cú nhảy — dùng chung 1 factor cho X/Y khiến hạt quét ngược 25–28% màn hình mỗi lần nhảy. Fix: `Vector2`, giữ Y sát 1 (0.94–0.98), chỉ hạ X. Kèm `executionOrder: 100` cho `ParallaxLayer` — hai `LateUpdate` phụ thuộc nhau mà cùng để 0 gây trễ 1 khung hình không xác định.
-
-**Sky & Lighting** — bầu trời bình minh dịu, Global Light 2D từ tint xanh lá sang trắng ấm, intensity 0.9→1.0. **"Softer" đạt bằng tông ấm, không phải giảm sáng.** Lighting để riêng trong từng scene, **không đưa vào `RegionData`** — đưa lẻ 1 Region sẽ tạo 2 nguồn sự thật (migrate cả 5 scene là việc backlog).
-
-**Constellation Title** — hệ tái sử dụng cho mọi Region:
-- `RegionData.constellationTitle`. Forgotten Forest = `The Verdant Crown` → hiện `✦ The Verdant Crown ✦`. Region để trống thì không hiện, không lỗi.
-- `RegionTitleUI` — fade in → giữ 2.5s → fade out, đúng **1 lần mỗi Region mỗi phiên** (`RegionTitleSession`, static, không ghi save — giống `BiomeSession`). `ShowOnce()` trả `void` chứ không `IEnumerator`, để không ai lỡ chặn gameplay.
-- `LevelFlowManager` gọi **sau** khi trả quyền điều khiển, không yield.
-- **Rủi ro chưa xác nhận: glyph ✦ (U+2726) nhiều khả năng ra ô vuông rỗng** vì Arial builtin thiếu. Chữa bằng 1 field Inspector (`{0}` hoặc `★ {0} ★`).
-- Bugfix kèm theo: thẻ tên chòm sao lúc khôi phục từng đè lên chính hình chòm sao (cả hai neo giữa màn hình). Fix hai phía: label lên đỉnh + `shapeTopMargin` 0.18 đẩy hình xuống — áp cho cả 5 scene.
-
-**Không nên đổi:** Không parent hạt trực tiếp vào Camera để tạo chiều sâu (triệt tiêu parallax). Không hạ `parallaxFactor.y` dưới ~0.9. Không hardcode tên chòm sao. Không cho `ShowOnce()` trả `IEnumerator`. Không gộp `LayeredAmbientPlayer` vào `AudioManager`.
-
-### S1-015 — Cloud Garden Atmosphere *(ĐANG LÀM)*
-Bản sắc thứ hai, cố tình **tương phản hoàn toàn** với Forgotten Forest: ấm/bám đất/rậm → sáng/thoáng/trôi nổi. Chứng minh khuôn mẫu Region tổng quát hoá thật sự — **không thêm manager nào**, `AudioManager`/`RegionTitleUI`/`RegionAtmosphereManager`/`ParticleController` không sửa một dòng.
-
-**Đã làm xong:**
-- **BGM** `BGM_CloudGarden.mp3` gán vào `RegionData.defaultMusic`. Luồng chuyển dùng nguyên hạ tầng S1-014: rời Region fade out 1s trước khi scene bị huỷ, vào Region fade in 2s. Chống phát trùng sẵn trong `FadeChannel.Play()`.
-- **Constellation Title** `The Cloud Veil` → `✦ The Cloud Veil ✦`. `Canvas_RegionTitle` port sang `Level_02`, nối `LevelFlowManager.regionTitleUI`.
-- **Sprite mây tự sinh** (`Assets/Particles/CloudGarden/`): **hợp (union) các đĩa tròn** + méo toạ độ bằng nhiễu mềm → đáy phẳng, đỉnh nhiều múi. **Đã thử tổng gaussian trước, ra vòm nhẵn không thành mây** — ghi lại để khỏi thử lại.
-- **Bảng màu đã cân theo tương phản đo được** *(xem 8.4)* — thủ phạm chính của tình trạng "trắng xoá không đọc được" là **Global Light 2D `@1.15`**, không phải bảng màu: nó nhân lên mọi sprite và đẩy trời/mây/platform động vào vùng cắt trắng (luminance 0.99–1.00, tương phản 1.00:1). Hạ về `@1.00` rồi tách 3 tầng độ sáng.
-  Kết quả: platform vs mây `1.17 → 2.76`, platform tĩnh vs động `1.18 → 1.33`, Player vs trời `1.08 → 1.57`, mây vs trời `1.01 → 1.41`, điểm sáng nhất màn hình `1.00 → 0.68`.
-- **Sprite platform có shading** (`Assets/Sprites/CloudGarden/platform_cloudgarden.png`) — gradient dọc, đáy chìm bóng lệch lam. Ba ràng buộc bắt buộc: **256×256 + PPU 256** trùng `Square.png` builtin nên thay vào không đổi kích thước; **tràn viền alpha = 255** vì `BoxCollider2D` không đổi theo sprite; **chỉ gradient dọc, không bo góc** vì platform kéo giãn ngang tới scale 3. Màu tint chia cho 0.843 (nhân sáng trung bình của ảnh) để màu *hiển thị* đúng bằng con số đã duyệt.
-- **Mây nằm trong WORLD, không bám camera** — `WorldAmbientField` (component mới): rải sprite có vị trí cố định, người chơi leo xuyên qua. **Không** làm con Camera, **không** `ParallaxLayer`, **không** bám Player.
-  - **Hệ thứ HAI, cố ý không gộp với `AmbientParticleField`** — hai bài toán ngược nhau: `AmbientParticleField` = hạt sống *quanh người chơi*, có vòng đời, tái sinh liên tục (đúng cho lá Forest); `WorldAmbientField` = vật thể *đứng yên trong thế giới*, không vòng đời, ra khỏi khung hình là hết — đúng như platform.
-  - **Không recycle**: hành trình chỉ ~45 unit nên rải thẳng một lần lúc `Awake()`. 60 `SpriteRenderer` tĩnh, Unity tự frustum-cull. **Tự bật/tắt `SetActive` mỗi khung hình CHẬM HƠN culling có sẵn** — cái bỏ qua theo khoảng cách là *phép tính trôi*, không phải việc render.
-  - **Rải phân tầng** (chia dải Y thành `count` khoảng, mỗi khoảng 1 vật thể + xê dịch), **seed cố định + trả lại `Random.state`**, **trôi ngang là dao động SIN** (trôi đều thì sau vài phút lệch khỏi cột chơi).
-  - `CloudField_SkyMotes` (−60, 40 vật thể) · `CloudField_Background` (−10, 14) · `CloudField_Foreground` (+1, 6), dải Y −8..40.
-
-**Còn lại:**
-- **Chưa có Ambient Audio** — Cloud Garden mới chỉ có BGM, chưa có `AmbientProfile` (chưa có asset âm thanh).
-- **Chưa playtest.** Toàn bộ mới qua audit tĩnh.
-- 3 prefab `Particle_SkyMotes`/`Particle_BackgroundClouds`/`Particle_ForegroundClouds` (bản bám camera cũ) **giờ không ai trỏ tới — asset chết**, chưa dọn.
-
-**Cần biết:** mây cố định nghĩa là mỗi cú nhảy 3.5 unit làm bầu trời quét xuống ~35% màn hình — *nhiều hơn* trường hợp từng gây bug "nhức đầu" ở S1-014C. Vẫn đúng, vì mây giờ trượt **đúng nhịp** với platform (mắt đọc ra "tôi vừa nhảy") thay vì **lệch nhịp** ("cái nền bị trôi"). Nếu playtest thấy chóng mặt thì chữa bằng **deadzone dọc cho `CameraFollow2D`** (hiện `followY: 1`, không deadzone), **KHÔNG** quay lại parallax cao.
-
-**Không nên đổi:** Không gắn `ParallaxLayer` trở lại `CloudField_*`. Không gộp `WorldAmbientField` vào `AmbientParticleField`. Không nâng Global Light quá 1.0 ở Cloud Garden. Không tô sáng riêng Player ở một region. Không thêm mép trong suốt vào sprite platform. Mây không được xoay.
+| Cơ chế | Khu vực | Ghi chú |
+|---|---|---|
+| Platforming chuẩn | tất cả | coyote 0.15 + jump buffer 0.15 |
+| Moving Platform | CG, SR, AC, MG | quét ngang ±moveDistance, đặt `x=0` để không ra ngoài màn dọc |
+| Falling Platform | SR, AC | chạm là rơi sau `fallDelay` |
+| Spring Platform | AC, MG | bật cao 16.5–20.4 |
+| **Ice Platform** *(S1-017)* | Aurora Cliffs | giảm **deceleration**, KHÔNG giảm acceleration → nhảy vẫn nhạy; thêm trôi chủ động nên không đứng im được. Crystal island không trơn |
+| **Moon Platform** *(S1-018)* | Moon Gate | 4 trạng thái: Hidden (xa, mờ) → Activated (gần, sáng) → Vanishing (rời đi mới tan) → Restore |
+| **Moonlight Reveal** *(S1-018)* | Moon Gate | vô hình khi xa, **collider tắt**; hiện + bật collider khi lại gần. 2 cái đặt lệch trục 1.6 để không chặn đường bay lò xo |
+| Chết khi rơi | tất cả | Kill Floor −12 |
 
 ---
 
-## 6. CURRENT FEATURES
+## 6. NỘI DUNG ĐÃ HOÀN THÀNH
 
-### Player & Camera
-Di chuyển có gia tốc, nhảy với coyote time (0.15s) + jump buffer (0.15s), khoá di chuyển không tắt animation. Camera bám Player gần 1:1 theo Y (không deadzone dọc), deadzone ngang 2 unit.
+### 6.1 Region — **5/5 xong**
 
-### Platform, Collectibles, Save
-5 loại platform (tĩnh/di chuyển/rơi/lò xo/một chiều). Star Fragment đếm tự động từ scene. Save JSON lưu ngay khi chạm Goal / nhặt sao.
+Mỗi khu có: bố cục riêng · art platform riêng · 2 lớp nền parallax world-space · sky gradient · BGM · constellation title · hạt không khí.
 
-### Constellation Restoration
-Fragment cộng dồn toàn chapter (`★☆☆ 12/53` trên HUD) → chạm mốc → dừng ~1s → chòm sao + tên hiện đồng thời, chừa 18% màn hình trên cho tên → giữ 1s → cả hai tan cùng lúc → chơi tiếp. Mốc sau hoành tráng hơn (thời lượng + scale).
+### 6.2 Audio — **6/6 BGM đã tích hợp**
 
-### Biome Presentation
-Mỗi Region có nền + sky gradient + màu camera riêng trong `RegionData`. Bầu trời đổi màu mượt 1.5s qua ranh giới scene. Gradient nướng thành texture runtime — không cần asset ảnh.
+`BGM_ForgottenForest` · `BGM_CloudGarden` · `BGM_SkyRuins` · `BGM_AuroraCliffs` · `BGM_MoonGate` · `BGM_JourneyCinematic`
 
-### Atmosphere & Audio
-Nhạc + ambient 2 kênh độc lập, fade in/out, chống phát trùng. **Chỉ Forgotten Forest có nội dung thật**: BGM + ambient (chim, lá — không gió) + 3 lớp particle parallax (bụi nắng, lá nền, lá tiền cảnh) + title chòm sao "The Verdant Crown". 4 Region còn lại có đủ hệ thống, field dữ liệu còn trống.
+Import settings đã sửa cho iOS *(S1-020B)*: `loadType: CompressedInMemory` · `preloadAudioData: 1` · `loadInBackground: 1` · `3D: 0`. Và `ProjectSettings.muteOtherAudioSources: 1` để **bỏ qua công tắc gạt im lặng của iPhone**.
 
-### Chapter Progress
-Chapter suy ra từ `chapterId` của level. `Restart Chapter On First Level` (mặc định bật): vào region đầu chapter thì fragment về 0, chòm sao khôi phục lại từ đầu — chơi lại luôn trải nghiệm trọn vẹn.
+**Ambient: chỉ Forgotten Forest có** (`Ambient_Forest.asset`). 4 khu còn lại chưa có file.
+
+### 6.3 Environment art — xong cho cả 5 khu
+
+`Assets/Environment/<Region>/` gồm `Backgrounds/` (far+near) và `Platforms/` (4–5 biến thể). Toàn bộ đã crop sát viền, PPU = bề rộng ảnh, và **tách sprite sang GameObject con `Visual`** để giữ đúng tỉ lệ ảnh mà không đụng collider.
+
+### 6.4 Constellation — dữ liệu chòm sao *(S1-020A/B)*
+
+> Phần **trình diễn** của mục này đã được thay ở S2-006 (xem **6.9**). Phần **dữ liệu + ánh xạ** dưới đây vẫn đúng nguyên.
+
+**Một level = một chòm sao riêng**, mở trọn vẹn, không nhỏ giọt từng ngôi.
+
+| Màn | Chòm sao | Sao |
+|---|---|---|
+| Forgotten Forest | Cassiopeia | 5 |
+| Cloud Garden | Orion | 7 |
+| Sky Ruins | **Cygnus** *(mới)* | 6 |
+| Aurora Cliffs | **Draco** *(mới)* | 7 |
+| Moon Gate | Lyra | 5 |
+
+Ánh xạ theo **chỉ số** trong `LevelDatabase` ↔ `ChapterData.constellations`, không hardcode id. Sao + nét nối dựng lúc chạy từ toạ độ chuẩn hoá 0..1 nên tự co giãn mọi màn hình. Hoạt ảnh chỉ diễn **một lần**, tên chòm sao hiện trên cùng.
+
+### 6.5 Journey Cinematic *(S1-019)* — xong
+
+Chạy khi `!HasNextLevel` (không hardcode tên scene). Camera zoom 5→44 kèm pan, easing SmoothStep. Phông hành trình = 5 ảnh `background_far` xếp dọc chồng mép, `sortingOrder −50`. Crossfade thật sang `BGM_JourneyCinematic`. Ẩn HUD + MobileInput trong lúc chiếu.
+
+**Thứ tự cuối cùng** *(S1-020B)*: hoàn thành Moon Gate → lưu → **Chòm sao** → **Cảnh kết**.
+
+### 6.6 Character — **xong** *(S2-002)*
+
+Ô vuông hồng placeholder **đã biến mất khỏi cả 5 scene**. Player giờ là instance của `Assets/Prefabs/Player/Hero.prefab`.
+
+**Nguồn art là ảnh trình bày, không phải sprite sheet.** 4/5 file không có kênh alpha — nền trong suốt bị nướng thành hoa văn ca-rô ngay trong RGB. Cứu bằng flood-fill từ biên (giữ răng cưa, không premultiply). **7 file gốc giữ nguyên từng byte**, bản dùng được nằm ở `Sheets/`.
+
+Frame không nằm trên lưới đều: Jump xếp theo vòng cung, Fall lệch chân tới 140 px, tỉ lệ nhân vật khác nhau giữa các sheet. Chuẩn hoá bằng **diện tích bóng phần thân** (đã loại áo choàng), kiểm chéo bằng khoảng cách hông→mặt đất — hai phép đo độc lập lệch nhau **0.2–0.6%**.
+
+| Sheet | Frame |
+|---|---|
+| `Hero_Idle` | 6 |
+| `Hero_Run` | 8 |
+| `Hero_Jump` | 6 |
+| `Hero_Fall` | 4 |
+| `Hero_Landing` | 5 |
+
+**29 sprite**, PPU 225, ô 384, **một pivot duy nhất (0.5, 0.125)**, đường chân y=336, trôi ngang ≤ 0.004 unit giữa các frame.
+
+`Hero_Animator.controller` 5 state. `PlayerAnimationController` chỉ **đọc** `PlayerMotor` + `IGroundDetector` rồi ghi tham số Animator — xoá đi thì gameplay chạy y nguyên, chỉ mất phần hình. Lật hướng bằng `SpriteRenderer.flipX` trên child `Visual`, **không bao giờ lật scale root** (root mang Rigidbody2D + Collider2D). **Art gốc vẽ nhân vật nhìn TRÁI** nên `flipX = velocity.x > 0`.
+
+**Vật lý không đổi một con số nào** — `moveSpeed 5`, `jumpForce 12`, collider 1×1. 81/81 cú nhảy đã verify vẫn nguyên.
+
+### 6.7 Khung hình dọc — **xong** *(S2-004)*
+
+Nội dung 5 màn nằm trong X ∈ [−2.40, +2.50]. Ở `ortho 5` cố định, **mọi iPhone đời cao cắt mất ~0.29 unit** hai bên.
+
+`CameraAspectFitter` tính `ortho = Max(playableWidth / (2 × aspect), 5)` lúc chạy. Khoá `followX` của `CameraFollow2D`, kẹp Player trong `[−2.225, +2.225]` (đã trừ nửa bề ngang collider) ngay trong `PlayerMotor`. `ProjectSettings`: chỉ cho xoay **Portrait + PortraitUpsideDown**, tắt cả hai chiều ngang.
+
+**Không dịch một vật thể nào trong màn.**
+
+### 6.8 Hiệu ứng nhặt sao — **xong** *(S2-005)*
+
+19 sprite FX (bộ này bạn xuất lại có alpha thật), **shader additive tự viết** — URP `Sprite-Unlit-Default` hardcode `Blend SrcAlpha OneMinusSrcAlpha` nên không cộng sáng được. 17 prefab FX + `StarFXPool` prewarm **137 object**: luồng nhặt sao **không `Instantiate` lần nào**.
+
+Chuỗi: chớp → 3 lớp bung → sao chổi bay theo Bezier bậc hai (đuôi/bụi/lấp lánh) → quầng sáng túi → **rồi mới cộng điểm**. Vẫn đúng một bộ đếm cũ, chỉ đổi thời điểm gọi.
+
+Hai chi tiết dễ sai:
+- Điểm đến đọc lại **mỗi frame** từ Transform của túi, còn điểm đầu + điểm điều khiển **chốt một lần** — Hero chạy tiếp thì sao vẫn đập đúng chỗ mà đường cong không vặn theo bước chân.
+- Mảnh sao **không** bị `Destroy` lúc chạm. Huỷ ngay thì callback lúc sao tới túi rơi vào hư vô và **mất luôn phần thưởng**.
+
+Âm thanh: 3 file `SFX_StarCollect_01/02/03.mp3` bốc ngẫu nhiên, phát qua một `AudioSource` dùng chung, không cấp phát.
+
+### 6.9 Đoạn phim chòm sao — **xong** *(S2-006)*
+
+Dựng mới hoàn toàn trong **không gian thế giới**, ngay trong scene đang chơi, để **tái dùng nguyên si** `StarFXPool` / `PooledStarFX` / `StarFlyAnimator` / `PocketFXController`. Prefab `ConstellationRig.prefab`.
+
+`ConstellationScreen.Show()` **giữ nguyên chữ ký** nên `LevelFlowManager` không sửa một dòng. Bên trong rẽ nhánh: có `cinematic` thì chiếu cảnh, không thì chạy nhánh UI cũ (giữ lại theo yêu cầu).
+
+Thứ tự: mờ vào → **Hero chạy từ mép trái vào giữa** (mặt quay phải) → túi sáng → sao bắn lên **từng ngôi**, tự tay vẽ thành chòm → nét nối sáng dần → **cả chòm sáng bừng** → tên hiện → **phóng to riêng chòm + tên** trong lúc màn mờ dần → sang thẳng màn kế.
+
+- **Chỉ phóng to chòm sao và tên, không đụng camera** — đụng camera là Hero bị cắt mất.
+- Hero được đặt vào **một độ cao cố định trong khung**, không dùng vị trí lúc chạm đích — lúc đó nó có thể đang bay lơ lửng.
+- Bỏ qua toàn bộ cảnh bằng một cú chạm, có **0.6s ân hạn** đầu cảnh.
 
 ---
 
-## 7. CURRENT CONTENT
+## 7. THƯ MỤC *(thay đổi so với bản trước)*
 
-| # | Region | Scene | Star Fragment | Mốc chòm sao | Nội dung Atmosphere |
-|---|---|---|---|---|---|
-| 1 | **Forgotten Forest** | `SampleScene` | 10 | Lyra @ 12 | **Đầy đủ** — sky/light polish, BGM, ambient chim+lá, 3 particle parallax, title "The Verdant Crown" |
-| 2 | **Cloud Garden** | `Level_02` | 10 | — | **Đang làm** — BGM, mây cố định trong world, bảng màu đã cân theo tương phản đo, sprite platform riêng, title "The Cloud Veil". **Chưa có ambient audio** |
-| 3 | **Sky Ruins** | `Level_03` | 10 | Cassiopeia @ 30 | Sky gradient + màu nền có sẵn. Chưa có audio/particle/title |
-| 4 | **Aurora Cliffs** | `Level_04` | 11 | — | Sky gradient + màu nền có sẵn. Chưa có audio/particle/title |
-| 5 | **Moon Gate** | `Level_05` | 12 | Orion @ 53 | Sky gradient + màu nền có sẵn. Chưa có audio/particle/title |
-
-Fragment cộng dồn: 10 → 20 → 30 → 41 → 53. Mốc chòm sao giả định nhặt đủ sao; bỏ sót thì mốc dời về sau.
-
-**Bảng màu Sky đã khai cho 3 Region còn lại** (chưa polish như Forest/Cloud Garden): Sky Ruins xám lam→xanh đêm · Aurora Cliffs tím→tím đen · Moon Gate xanh đêm→đen.
+```
+Assets/
+├── Animations/Player/      Hero_Animator.controller + 5 .anim
+├── Art/Character/Hero/     Concept/ (7 sheet gốc) · Sheets/ (5 sheet dùng được) · Production/ · Animation/
+├── Audio/Music/            6 file BGM
+├── Audio/SFX/Star/         SFX_StarCollect_01/02/03.mp3
+├── Constellation/          bg, star_glow, constellation_line, sparkle
+├── Prefabs/Player/         Hero.prefab
+├── Prefabs/FX/StarCollection/  17 prefab FX + StarFXPool + ConstellationRig + Constellation_Node
+├── Editor/                 công cụ dev, KHÔNG vào build
+├── Environment/<Region>/   art 5 khu — thay cho Assets/Particles cũ
+├── UI/                     ui_panel_round (9-slice), ui_circle
+├── Prefabs/ Scenes/ Scripts/ Settings/ Sprites/
+├── Enviroment/             ⚠ THƯ MỤC RỖNG, sai chính tả — nên xoá
+└── Particles/              ⚠ THƯ MỤC RỖNG sau khi dời — nên xoá
+```
 
 ---
 
@@ -307,86 +316,99 @@ Fragment cộng dồn: 10 → 20 → 30 → 41 → 53. Mốc chòm sao giả đ�
 22. Mỗi Region phải có bản sắc hình ảnh + không khí + ambient + chòm sao riêng — không chỉ khác gameplay. 23. Chuyển Region: bầu trời đổi màu mượt, không nhảy màu. 24. Diện mạo Region nằm trong `RegionData`, không rải rác scene. 25. Biome/Atmosphere không được ảnh hưởng ngược lên gameplay. 26. Trạng thái phiên chơi (`BiomeSession`, `RegionTitleSession`) không ghi save. 27. Nhạc + ambient là 2 kênh độc lập, không cắt đột ngột, chống phát trùng. 28. **Không dùng Singleton/DontDestroyOnLoad để giải quyết crossfade xuyên scene** — giới hạn "fade out rồi fade in" là đánh đổi có chủ đích. 29. `RegionAtmosphereManager`/`ParallaxLayer` đọc Region/Camera qua tham chiếu gián tiếp (`BiomeManager.Region`, `Camera.main`) — không tự có field riêng dễ lệch. 30. **Parallax mạnh chỉ an toàn trên trục camera di chuyển chậm** — trục giật nhanh (Y trong game leo dọc) phải giữ factor sát 1.
 
 ### 8.5 Gameplay
-31. Không chết khi rơi. 32. Không cơ chế kéo-thả kiểu ná. 33. Nhảy tha thứ lỗi bấm (coyote + buffer). 34. Khoá di chuyển không tắt animation.
+31. **Chết khi rơi khỏi màn** — Kill Floor `y = -12`, thấp hơn hẳn platform thấp nhất (`-1.5`) nên không thể báo nhầm *(đổi ở S1-020; luật cũ “rơi quá N unit so với đỉnh” báo nhầm vì Player nhảy cao 7.34)*. 32. Không cơ chế kéo-thả kiểu ná. 33. Nhảy tha thứ lỗi bấm (coyote + buffer). 34. Khoá di chuyển không tắt animation.
 
 ### 8.6 Kiến trúc
 35. Không Singleton. 36. Không hardcode số lượng/tên bất kỳ nội dung nào. 37. Single-Writer cho mọi tài nguyên chia sẻ (xem bảng 4.1). 38. Goal chỉ phát event. 39. Một class một trách nhiệm. 40. Mở rộng qua kế thừa/composition, không sửa lõi. 41. `[SerializeField]`, không `public` field. 42. Interface khi có nhiều cách hiện thực. 43. ScriptableObject cho dữ liệu designer, SaveData cho tiến trình — không trộn lẫn. 44. Không refactor/rename chủ động. 45. **Phép ghi save "đi lên" và "đi xuống" phải là hai hàm riêng.** 46. Class nào giữ nhịp thì sở hữu con số thời gian dùng chung, không để mỗi bên tự tính rồi lệch. 47. **`Instantiate(prefab, position, rotation, parent)` không được dùng khi parent không đứng ở gốc toạ độ có ý nghĩa** — ép world position tuyệt đối, xoá offset prefab tự khai. 48. **Hai `LateUpdate`/`Update` phụ thuộc thứ tự lẫn nhau bắt buộc phải đặt `executionOrder` tường minh.**
 
 ---
 
-## 9. KNOWN ISSUES
+### 8.7 Bài học từ S1-016 → S1-020B *(bổ sung)*
+49. **Sprite phải mã hoá hành vi.** Platform trông vỡ mà không rơi, hoặc trông lành mà sẽ rơi, đều là nói dối người chơi. Đa dạng hình ảnh không bao giờ được đè lên tín hiệu gameplay.
+50. **Ảnh nền dùng `AspectEnvelopeFitter` (fill), không dùng `Image.preserveAspect` (fit).** Ảnh ngang đặt trong màn dọc mà dùng *fit* chỉ phủ ~56% chiều cao.
+51. **Mọi UI chạm mép màn hình phải nằm trong `SafeAreaFitter`.**
+52. **Component chạm phải theo dõi `pointerId`.** Không có nó, ngón thứ hai xoá trạng thái ngón thứ nhất.
+53. **`GetComponentsInChildren` trả về cả component trên chính mình** — lọc `enabled` trước khi cache, nếu không sẽ bật lại thứ đã cố tình tắt.
+54. **Không để `Update()` và coroutine cùng ghi một thuộc tính.** Đây là Single-Writer áp dụng ở cấp thuộc tính, không chỉ cấp đối tượng.
+55. **Sửa file khi Unity đang mở thì Unity có thể ghi đè ngược.** Asset/ProjectSettings phải Reimport hoặc khởi động lại Editor.
+56. **Reset save trong lúc đang Play là vô nghĩa** — `ProgressManager` giữ bản trong bộ nhớ và ghi đè khi hoàn thành màn.
 
-### 9.1 Nội dung còn thiếu (kiến trúc đã xong, chỉ thiếu asset/data)
-
-| Hạng mục | Tình trạng |
-|---|---|
-| **Ambient Audio cho Cloud Garden** | Chưa có asset âm thanh. Hạ tầng (`AmbientProfile` + `LayeredAmbientPlayer`) đã sẵn, chỉ cần file + 1 asset |
-| **Audio/Ambient/Particle/Title cho Sky Ruins, Aurora Cliffs, Moon Gate** | **Chưa có gì.** Toàn bộ hệ thống (`AudioManager`, `LayeredAmbientPlayer`, `AmbientParticleField`, `ParallaxLayer`, `RegionTitleUI`) đã tổng quát hoá xong ở Forgotten Forest, chỉ cần tạo asset + gán field cho 4 Region còn lại, không cần sửa code. Cloud Garden (S1-015) đã chứng minh chỉ cần asset + gán field, không cần sửa code. Đây là khoảng cách lớn nhất hiện tại. |
-| **Art chòm sao / Icon / particle khôi phục / âm thanh khôi phục** | Placeholder hình học đơn giản. Ô Inspector đã có, chưa có asset thật |
-| **Camera nhìn lên bầu trời lúc khôi phục** | TODO — hiện thay bằng lớp phủ tối toàn màn hình |
-| **`ConstellationReward`** | Đã gỡ khỏi data, chưa có hệ thống phần thưởng |
-| **Cloud Density / `parallaxFactor` của `BackgroundLayerData`** | Có field, chưa component nào đọc (khác `ParallaxLayer` của hạt, đã dùng) |
-| **Glyph ✦ (U+2726) trong `RegionTitleUI`** | Rủi ro cao ra ô vuông rỗng — Arial builtin không có. Chưa xác nhận trong Editor |
-| **VFX tiếp đất/lò xo, Animation Player, Object pooling thật** | Placeholder / chưa tối ưu |
-| **`backgroundLayers[0].sprite` của cả 5 Region** | GUID `311925a002…` **không tồn tại trong project** — tham chiếu treo có từ S1-013. Unity đọc thành null → `BackgroundManager` giữ nguyên sprite sẵn trong scene và chỉ áp màu, nên không crash, nhưng ô Inspector đang trỏ vào hư không |
-| **3 prefab `Particle_*Clouds`/`Particle_SkyMotes`** | Bản mây bám camera cũ, giờ không asset nào trỏ tới — asset chết, chưa dọn |
-| **`Assets/Particles/Forest/leaf_01.png`** | `spritePixelsToUnits` = 100 trong khi leaf_02/03 = 1024 → lá này to gấp ~10 lần hai lá kia. Do Unity tự sinh lại meta, xoá mất giá trị đặt tay ở S1-014C |
-
-### 9.2 Feature chưa hoàn thiện
-Chapter Complete chưa có màn kết chương (chỉ lưu `completed: true`). Moon Gate là ngõ cụt. Level Select cô lập, chưa có Main Menu. `LevelCompleteUI` nghỉ hưu nhưng chưa xoá hẳn.
-
-### 9.3 Rủi ro thiết kế cần theo dõi
-- **Mốc 3 = 53/53 = 100% tổng fragment** — bỏ sót 1 sao là Orion không bao giờ khôi phục. Hệ quả trực tiếp của spec, không phải lỗi.
-- **Chưa playtest cân bằng độ khó** cho cả 5 region.
-- **Không có "tiến trình vĩnh viễn" cho Constellation** — chơi lại từ đầu chapter xoá sạch tiến trình cũ, mâu thuẫn với tầm nhìn "gieo lại các vì sao" nếu sau này làm sky gallery.
-- **Crossfade audio không thật sự chồng lớp qua ranh giới scene** — giới hạn có chủ đích (mục 8.4 #28), không phải bug.
-- **S1-014C và S1-015 chưa playtest trong Unity** — chỉ qua audit tĩnh (fileID, tham chiếu, GUID font, tên field khớp C#↔scene). S1-012 và bản vá S1-013.1 đã xác nhận qua save file thật; S1-013 → S1-015 thì chưa.
-- **Field thiếu trong prefab YAML dựa vào giá trị khởi tạo trong C#** — `horizontalSpeed*` và `randomizeInitialRotation` không ghi trong 3 prefab Forest, tin rằng Unity lấy default của class (0 và `true`). Đúng theo hiểu biết hiện tại nhưng **chưa xác nhận trong Editor**; Unity sẽ ghi đủ field khi prefab được lưu lại lần tới.
-
-### 9.4 Bài học kỹ thuật đã ghim (áp dụng khi viết code mới)
-- Font builtin dùng GUID `0000000000000000e000000000000000`, fileID `10102`. Text legacy cần `CanvasRenderer`.
-- Phân biệt rõ fileID GameObject vs Component khi viết YAML tay; `m_Children`/`m_Father` phải đối ứng.
-- Đổi API phải grep toàn bộ call site, kể cả code đã nghỉ hưu.
-- **Trước khi nhận một sprint có regression, phải `git diff` để xác định phạm vi thật** — trùng thời điểm phát hiện ≠ trùng nguyên nhân.
-- **Mọi thay đổi chạm tiến trình phải test hai lượt chơi liên tiếp**, đối chiếu trực tiếp file save.
-- `Instantiate(prefab, position, rotation, parent)` ép world position tuyệt đối — chỉ an toàn khi parent ở gốc toạ độ có ý nghĩa.
-- Hai `LateUpdate` phụ thuộc nhau (vd Camera → Parallax) phải đặt `executionOrder` tường minh, không để mặc định 0 cả hai.
-- Parallax factor phải tách theo trục — trục camera giật nhanh giữ sát 1.
-- `spritePixelsToUnits` phải khớp độ phân giải ảnh nguồn, đừng để mặc định rồi bù bằng scale cực nhỏ.
-- Sinh sprite hữu cơ (mây, khói): dùng **hợp các hình cơ bản**, đừng dùng tổng gaussian — tổng sẽ tan thành một khối nhẵn, mất hết đường viền.
-- Thêm khả năng mới vào hệ dùng chung thì **giá trị mặc định phải bằng hành vi cũ**, để Region đã xong không đổi một chút nào.
-- Vật trang trí thuộc về THẾ GIỚI (mây, tàn tích nền) phải đặt cố định trong world; chỉ hạt sống *quanh người chơi* mới được bám camera. Bám camera = người chơi vác bầu trời đi theo, leo mãi không thấy tiến.
-- Đổi màu vì lý do **đọc được** thì phải đo luminance + tỉ lệ tương phản, tính cả `Light2D` và alpha blend — đừng chỉnh bằng cảm giác.
-- Sprite thay cho `Square.png` builtin phải **256×256, PPU 256, alpha tràn viền** — lệch cái nào cũng làm hình lệch khỏi `BoxCollider2D`.
-- Khi người dùng chỉ mô tả chung chung ("tên chòm sao", "hạt kỳ kỳ"), **phải xác định đúng component trước khi sửa** nếu project có nhiều thứ cùng tên gọi — hỏi lại hoặc xin ảnh/video thay vì đoán.
+### 8.8 Bài học từ S2-002 → S2-006 *(bổ sung)*
+57. **Project là URP — material mặc định của sprite là `Sprite-Lit-Default.mat`** (`a97c105638bdf8b4a8650670310a4cd3`). Ghi GUID default-resources của pipeline built-in vào là nhân vật thành **khối magenta**. Mọi script kiểm tra sau khi sửa YAML **phải kiểm cả material**, không chỉ sprite.
+58. **Stub `stripped` của MonoBehaviour cần 9 trường, kể cả `m_Script`** — native type (GameObject/Transform) chỉ cần 3. Thiếu là tham chiếu prefab trong scene thành null, lỗi chỉ nổ ở màn 2 trở đi.
+59. **GUID bắt buộc đúng 32 ký tự hex.** Đặt `fx01…` là Unity từ chối cả loạt meta. Và khi sửa: **sửa ở script sinh ra file, không phải sửa file đầu ra** — sửa mỗi đầu ra thì lần chạy sau hỏng lại y nguyên.
+60. **Canvas screen-space luôn vẽ đè lên mọi thứ trong không gian thế giới**, bất kể `sortingOrder` của SpriteRenderer. Cảnh diễn world-space nằm dưới một `Canvas_Transition` là **không thấy gì cả**.
+61. **`Input.touchCount > 0` nghĩa là "ngón đang chạm", không phải "vừa chạm".** Người chơi còn đang giữ joystick lúc qua màn là cờ bỏ-qua bật ngay frame đầu, nuốt trọn cả đoạn phim. Phải xét `TouchPhase.Began` + một khoảng ân hạn.
+62. **`Mathf.LerpUnchecked` là internal** — không gọi được.
+63. **Đừng mở màn che trong `Cleanup()`.** Mở sớm một frame là loé lại màn cũ trước khi màn mới nạp xong.
+64. **Unity không import asset khi đang ở Play Mode**, và chỉ refresh khi cửa sổ Editor được người dùng bấm vào. Mọi sửa file từ ngoài đều phải chờ điều đó.
 
 ---
 
-## 10. ROADMAP
+## 9. LỖI & VIỆC CÒN LẠI
 
-### 10.1 Đã hoàn thành
-`S1-001` → … → `S1-014` → `S1-014B` (Forgotten Forest BGM) → **`S1-014C`** (Forgotten Forest Atmosphere Complete)
+### 9.1 Chưa xác minh trên máy thật
+**Chưa có một giây nào của game được chơi thử bởi tôi.** Mọi con số bố cục/độ khó là tính toán tĩnh. Các hạng mục cần chạy thử:
+- Ngưỡng **Kill Floor −12**: rơi từ đỉnh Moon Gate mất ~4.7s — có thể quá lâu.
+- Nhịp **Moon Platform** (warning 0.8s / vanish 4s) và **Ice drift** 1.2.
+- **BGM trên iPhone**: khi test, gạt công tắc im lặng sang chế độ có chuông trước.
+- Safe Area trên máy có tai thỏ.
+- Joystick + Jump đồng thời.
 
-### 10.2 Đang làm
-**`S1-015` — Cloud Garden Atmosphere.** Xong: BGM, mây world-space, bảng màu readability, sprite platform, constellation title. Còn: **ambient audio**, và **playtest toàn bộ**.
+Bổ sung sau S2-002 → S2-006 *(cũng chưa chơi thử giây nào)*:
+- **Nhịp đoạn phim chòm sao** — tổng ~9s khi chiếu đủ. Có thể quá dài khi chơi lại nhiều lần.
+- **Hero chạy vào khung** ở cảnh chòm sao: xuất phát ngoài mép trái 1.2 unit, 1.4s. Chưa biết trên máy thật có bị hụt hay thừa đường chạy không.
+- **Contrast nhân vật vs nền** ở từng khu — chưa soi bằng mắt trên máy thật.
+- **Hiệu năng pool 137 object** trên máy yếu.
+- **`SFX_StarCollect_02/03` chồng tiếng** khi nhặt sao liên tiếp.
 
-> Lịch sử đặt tên đã đổi số nhiều lần do trùng tên giữa các lượt yêu cầu — **mục 10.1 này luôn là nguồn sự thật duy nhất**, không tin vào số sprint nhắc tới trong hội thoại cũ.
-
-### 10.3 Tiếp theo (đã lên kế hoạch)
-
-| Sprint | Nội dung |
+### 9.2 Thiếu nội dung
+| Hạng mục | Trạng thái |
 |---|---|
-| **S1-016 – Sky Ruins Atmosphere** | Tương tự, bản sắc "tàn tích cổ, cô độc". Có Cassiopeia @ mốc 30. |
-| **S1-017 – Aurora Cliffs Atmosphere** | Tương tự, bản sắc "huyền bí, ánh sáng tím". |
-| **S1-018 – Moon Gate Atmosphere** | Tương tự, bản sắc "tĩnh lặng, không gian". Có Orion @ mốc 53 — chòm sao cuối chapter. |
-| **S1-018.5 – Region Transition Polish** | Sau khi cả 5 Region có atmosphere đầy đủ: rà lại cảm giác chuyển tiếp giữa các Region liên tiếp (âm thanh, ánh sáng, particle) có mượt không, có "va" nhau không. |
-| **S1-019 – Journey Cinematic & World Feeling** | Nhìn lại tổng thể hành trình sau khi có đủ 5 bản sắc — có thể là camera nhìn lên trời lúc khôi phục (đã treo từ 9.1), hoặc cinematic nhỏ khi hoàn thành chapter. |
+| Sprite nhân vật | ~~chưa có~~ → **xong ở S2-002** |
+| Ambient audio | 4/5 khu chưa có file (Aurora Cliffs · Moon Gate · Sky Ruins · Cloud Garden) |
+| SFX | mới có **3 file tiếng nhặt sao**. Nhảy / tiếp đất / mở chòm sao vẫn trống |
+| Nhạc cảnh chòm sao | thiếu 3 file: **completion chime · ambient wind · magical resonance** — field để trống có chủ ý, thiếu tiếng thì cảnh vẫn chạy im lặng, không bao giờ được đứng hình |
+| Art chòm sao | `star_glow.png` + `constellation_line.png` **xanh lạnh**, còn `Star_Fly_Core` **vàng ấm** — lệch tông, đang dùng tạm chờ quyết định |
+| Nút Pause | **chưa từng tồn tại** |
+| Hệ thống máu | **chưa từng tồn tại** |
+| Particle khi Moon Platform tan | chưa làm (đánh đổi hiệu năng mobile) |
+| Vignette cảnh kết | chưa làm (project tắt post-processing) |
 
-### 10.4 Backlog (chưa xếp lịch)
-Chapter Complete & Chapter 2, Main Menu, hệ thống phần thưởng chòm sao, tiến trình Constellation vĩnh viễn (sky gallery), playtest cân bằng, animation Player.
+### 9.3 Nợ kỹ thuật
+- **Nhạc không bài nào sáng tác để lặp liền mạch.** Forest tắt dần về im lặng; 4 bài kia cắt ngang giữa câu. Chơi quá 60s là nghe rõ chỗ nối. **Giải pháp đã thiết kế nhưng chưa được duyệt:** crossfade vòng lặp, tái dùng 2 `AudioSource` sẵn có của `FadeChannel`.
+- `Debug.Log` chẩn đoán trong `ConstellationScreen.Show()` — log tạm, cần gỡ khi xác nhận xong.
+- **`[Cine]` `Debug.Log` trong `ConstellationCinematic.Play()`** — log tinh chỉnh, gỡ khi chốt xong nhịp.
+- **`devAlwaysReplay` trên `ConstellationScreen`** — cờ dev bắt cảnh diễn lại mỗi lần. Trên đĩa đang **tắt** (chưa được ghi vào scene nào nên nạp lên là `false`); nếu tick trong Inspector rồi lưu scene thì **nhớ tắt trước khi build**, không thì bầu trời không bao giờ lành dần.
+- `ChapterProgressManager` đã dời sang `Constellation/Legacy/` cùng 4 class cũ; GameObject `ConstellationSystem` đặt `m_IsActive: 0` ở cả 5 scene. **Chưa xoá hẳn** theo yêu cầu giữ nhánh UI dự phòng.
+- `SFX_StarCollect_02/03` dài **3.05s** trong khi `_01` chỉ **1.06s** — nhặt sao liên tiếp thì hai tiếng dài có thể chồng nhau.
+- `platform_cloud_broken` dùng trên 3 platform Static ở Cloud Garden — vi phạm quy tắc 49 nhưng **do người dùng quyết định**; khe hở đo được 0.209 so với Player 0.75 nên vô hại.
+- `Platform_Basic/Wide.prefab` mang tint tím/xanh lá không khớp khu nào; chỉ `PlatformSpawner` (đang tắt) tham chiếu.
+- 2 thư mục rỗng `Enviroment/` (sai chính tả) và `Particles/`.
+- `Particle_FallingLeaves.prefab` không ai dùng.
 
-### 10.5 Ý tưởng chưa duyệt *(không tự làm)*
-`LoadSceneAsync`/additive scene (cũng mở khoá crossfade audio thật xuyên scene), object pooling thật, TextMeshPro (giải quyết luôn glyph ✦/✨ thiếu), dọn `CS0618`, đưa Global Light 2D vào `RegionData` (cần migrate cả 5 scene cùng lúc).
+### 9.4 Bẫy đã biết khi phát triển
+- **Sửa asset/ProjectSettings khi Unity đang mở → Unity ghi đè ngược.** Phải Reimport hoặc khởi động lại Editor. *(Đã xảy ra 2 lần với `LevelDatabase`.)*
+- **Reset save khi đang Play là vô nghĩa.** Stop trước. `SaveToolsMenu` giờ đã chặn.
+- **Editor Play chạy scene ĐANG MỞ**, không theo Build Settings. Dùng menu `StarSower → Play Mode Start Scene`.
+
+---
+
+## 10. SPRINT KẾ TIẾP — ĐỀ XUẤT
+
+**S2-007 — Playtest Pass & Tuning** *(ưu tiên cao nhất)*
+Cả 4 sprint vừa rồi **chưa có một giây nào được tôi chơi thử**. Cần chạy thật toàn Chapter 1 và chỉnh: Kill Floor −12, nhịp Moon Platform, Ice drift, và toàn bộ nhịp đoạn phim chòm sao. Đây là việc **tôi không làm thay được**.
+
+**S2-008 — Art chòm sao đồng bộ tông màu**
+Quyết định giữa: đổi sao/nét sang vàng ấm cho khớp `Star_Fly_Core`, hay đổi `Star_Fly_Core` sang xanh lạnh. Đang lệch tông rõ trên màn hình.
+
+**S2-009 — Audio Completion**
+3 file cho cảnh chòm sao · ambient cho 4 khu · SFX nhảy/tiếp đất · xử lý `_02/_03` dài 3.05s chồng tiếng.
+
+*(còn treo từ Chapter 1)*
+
+**S1-024 — Pause & Settings**
+Nút Pause chưa từng tồn tại. Kèm luôn màn Settings để `AudioManager.SetMasterVolume/SetMusicVolume` có nơi tiêu thụ.
 
 ---
 
@@ -407,38 +429,13 @@ Không dừng chờ duyệt giữa chừng. Chỉ hỏi lại khi yêu cầu mơ
 
 ---
 
-## 12. PROJECT STATUS
-
-### Đánh giá: **VERTICAL SLICE, đang tiến vào giai đoạn Content Pass**
-
-**Đã đạt:**
-- Vòng lặp gameplay cốt lõi hoàn chỉnh end-to-end.
-- Kiến trúc ổn định qua 17+ sprint, ranh giới trách nhiệm rõ.
-- Save đã xác nhận qua file thật (S1-012, S1-013.1).
-- **Forgotten Forest là bản mẫu hoàn chỉnh** cho "1 Region đầy đủ bản sắc" — BGM, ambient, particle parallax, sky & lighting, constellation title (S1-014C).
-- **Cloud Garden (S1-015) đã xác nhận khuôn mẫu tái sử dụng được**: dựng gần trọn một Region thứ hai mà **không thêm manager nào**. Hai component mới sinh ra là để giải bài toán MỚI (`WorldAmbientField` cho vật trang trí world-space), không phải để vá hệ cũ.
-
-**Chưa đạt:**
-- **S1-015 chưa xong**: Cloud Garden còn thiếu ambient audio.
-- 3/5 Region (Sky Ruins, Aurora Cliffs, Moon Gate) vẫn chỉ có sky gradient — công việc của S1-016 → S1-018.
-- **Chưa có sprint nào từ S1-013 trở đi được playtest trong Unity** — mới chỉ qua audit tĩnh.
-- Chưa playtest cân bằng độ khó.
-- Chưa có Main Menu, Chapter 2, animation Player.
-
 ---
 
-## 13. TÓM TẮT NHANH CHO PHIÊN LÀM VIỆC MỚI
+## 12. TÓM TẮT NHANH CHO PHIÊN MỚI
 
-1. Starsower là **một hành trình xúc cảm leo lên bầu trời**, không phải game nhiều mechanic. Đọc mục 2 và 8 trước khi đề xuất thay đổi.
-2. Không Combat/Enemy/Boss. Không tự thêm mechanic ngoài roadmap.
-3. **`S1-014C` đã xong, `S1-015` ĐANG LÀM.** Forgotten Forest là bản mẫu đầy đủ 5 thành phần. Cloud Garden đã có gần đủ nhưng **còn thiếu ambient audio** — chưa được tính là xong. **3 Region còn lại trống trơn** — việc của S1-016 → S1-018 (mục 10.3).
-4. Hệ thống ổn định, không sửa khi không được yêu cầu: Player, Camera, Platform, Transition, Goal, Biome, Atmosphere.
-5. `ProgressManager` là nơi duy nhất ghi save. `AudioManager` là nơi duy nhất ghi `AudioSource`. `ParallaxLayer` là nơi duy nhất ghi vị trí hạt parallax.
-6. Trả lời mỗi story theo 5 phần ở mục 11.3.
-7. Khi nghi có regression: `git diff` với commit S1-012 (`1add22d`) trước, đừng quy lỗi cho sprint mới nhất chỉ vì trùng thời điểm.
-8. Test tiến trình phải chạy hai lượt chơi liên tiếp.
-9. **Chưa playtest trong Unity**: toàn bộ chuỗi S1-013 → S1-015. Rủi ro cụ thể: glyph ✦ (U+2726) trong title nhiều khả năng ra ô vuông rỗng (giờ ảnh hưởng 2 Region).
-10. Bài học kỹ thuật ghim lại (mục 9.4): `Instantiate` với parent tuỳ ý phải copy tường minh local transform; `executionOrder` tường minh cho các `LateUpdate` phụ thuộc nhau; `parallaxFactor` phải tách trục theo tốc độ camera; `spritePixelsToUnits` phải khớp ảnh nguồn; mở rộng hệ dùng chung thì default phải bằng hành vi cũ.
-11. Khi người dùng mô tả lỗi chung chung mà project có nhiều thứ trùng tên gọi (vd "tên chòm sao" = `RegionTitleUI` hay `ConstellationNameCard`?), phải hỏi lại hoặc xin ảnh/video trước khi sửa.
-12. Không dùng Singleton/DontDestroyOnLoad để "sửa" giới hạn crossfade audio xuyên scene — đánh đổi kiến trúc có chủ đích.
-13. Tên sprint từng đổi số nhiều lần trong lịch sử tài liệu — **luôn tin mục 10.1 làm nguồn sự thật**.
+1. **Chapter 1 chơi được trọn vẹn** từ Forgotten Forest đến cảnh kết + chòm sao. 5 khu, 5 cơ chế riêng, độ khó tăng đều 0→6→8→13→17 cú phải giữ nút.
+2. **Nhân vật thật đã vào game** (S2-002), **khung hình dọc đã khoá** (S2-004), **hiệu ứng nhặt sao có pool, không cấp phát** (S2-005), **đoạn phim chòm sao chạy trong scene, có tiến trình lành dần** (S2-006).
+3. **Không có Editor access** — mọi sửa scene/prefab làm bằng YAML tay + script Python có assert, sau đó audit: trùng fileID, tham chiếu treo, đối ứng cha-con, khớp tên field C#↔YAML. Unity chỉ import khi người dùng bấm vào cửa sổ Editor, và **không import khi đang Play**.
+4. **Chưa playtest.** Vẫn là rủi ro lớn nhất của dự án — giờ còn lớn hơn vì đã chồng thêm 4 sprint chưa ai chơi thử.
+5. **Trước khi build:** gỡ `[Cine]` log, gỡ log trong `ConstellationScreen.Show()`, xác nhận `devAlwaysReplay` tắt.
+6. Đọc mục **8 (Design Decisions)** trước khi đề xuất bất kỳ thay đổi thiết kế nào — đó là phần không được tự ý đảo ngược.

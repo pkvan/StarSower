@@ -61,6 +61,12 @@ namespace StarSower.Level
         [SerializeField] private float transitionHoldDuration = 0.3f;
         [SerializeField] private bool autoLoadNextScene = true;
 
+        [Tooltip("Bật (S2-006): chạm Goal là che màn hình NGAY — bỏ qua quãng đứng yên và cú lướt " +
+                 "camera lên. Dùng khi ngay sau đó là cảnh chòm sao: cảnh đó tự dựng khung hình " +
+                 "riêng nên nấn ná ở khu vực cũ chỉ làm chậm, và Hero lúc đó có thể đang bay lơ " +
+                 "lửng — lướt camera theo chỉ tổ khoe ra chỗ dở. Tắt thì luồng cũ y nguyên.")]
+        [SerializeField] private bool instantDepartureFade;
+
         private void OnEnable()
         {
             GameEvents.OnLevelCompleted += HandleLevelCompleted;
@@ -118,7 +124,8 @@ namespace StarSower.Level
             levelTimer.StopTimer();
             playerController.SetMovementLocked(true);
 
-            yield return new WaitForSeconds(cameraDelay);
+            if (!instantDepartureFade)
+                yield return new WaitForSeconds(cameraDelay);
 
             // Khu vực CUỐI CÙNG: thay vì che màn hình rồi load scene kế (không còn scene nào), chiếu
             // cảnh kết Chapter 1. Chặn bằng HasNextLevel chứ không hardcode tên scene — thêm khu vực
@@ -144,7 +151,8 @@ namespace StarSower.Level
                 yield break;
             }
 
-            yield return DriftCameraUp();
+            if (!instantDepartureFade)
+                yield return DriftCameraUp();
 
             // Bắt đầu fade âm thanh về im lặng CÙNG LÚC màn hình bắt đầu che — không yield, để nhạc
             // im hẳn trước khi scene bị Unity phá huỷ thay vì bị cắt cụt (xem AudioManager).

@@ -107,6 +107,65 @@ namespace StarSower.Level
             return false;
         }
 
+        // ---- S2-006: bầu trời lành DẦN ----
+
+        // Số ngôi sao của chòm đã khôi phục. Kẹp về [0, totalNodes] ngay tại đây: save cũ hoặc
+        // save hỏng có thể mang số lớn hơn số node hiện tại (designer bớt node đi chẳng hạn),
+        // để nguyên sẽ làm màn trình diễn dựng thiếu/thừa node.
+        public int GetConstellationNodes(string constellationId, int totalNodes)
+        {
+            if (string.IsNullOrEmpty(constellationId) || totalNodes <= 0)
+                return 0;
+
+            foreach (ConstellationSaveData entry in saveData.constellations)
+            {
+                if (entry.constellationId == constellationId)
+                    return Mathf.Clamp(entry.nodesRestored, 0, totalNodes);
+            }
+            return 0;
+        }
+
+        // Ghi số node đã khôi phục. ĐƠN ĐIỆU: chỉ nhận giá trị lớn hơn, nên chơi lại một màn với
+        // hạng sao thấp hơn không bao giờ làm bầu trời tối lại.
+        public void SetConstellationNodes(string constellationId, int nodes, int totalNodes)
+        {
+            if (string.IsNullOrEmpty(constellationId) || totalNodes <= 0)
+                return;
+
+            int clamped = Mathf.Clamp(nodes, 0, totalNodes);
+
+            foreach (ConstellationSaveData entry in saveData.constellations)
+            {
+                if (entry.constellationId != constellationId)
+                    continue;
+
+                if (clamped > entry.nodesRestored)
+                {
+                    entry.nodesRestored = clamped;
+                    SaveManager.Save(saveData);
+                }
+                return;
+            }
+
+            saveData.constellations.Add(new ConstellationSaveData
+            {
+                constellationId = constellationId,
+                nodesRestored = clamped,
+            });
+            SaveManager.Save(saveData);
+        }
+
+        // Hạng sao (0..3) đã đạt của một level. Dùng để quy ra số node được khôi phục.
+        public int GetLevelStars(string levelId)
+        {
+            foreach (LevelSaveData entry in saveData.levels)
+            {
+                if (entry.levelId == levelId)
+                    return entry.starsEarned;
+            }
+            return 0;
+        }
+
         // Ghi CỘNG DỒN, không bao giờ ghi đè: mỗi chòm có bản ghi riêng nên mở chòm 3 không đụng
         // gì tới chòm 1 và 2 — đúng yêu cầu "never overwrite previous progress".
         public void MarkConstellationUnlocked(string constellationId, bool animationPlayed)

@@ -34,6 +34,14 @@ namespace StarSower.Persistence
         // hỏi khác nhau: "đã mở chưa" quyết định VẼ, "đã diễn chưa" quyết định CÓ DIỄN LẠI KHÔNG.
         // Gộp làm một thì mở lại màn hình sẽ diễn lại từ đầu mỗi lần.
         public bool animationPlayed;
+
+        // S2-006 — SỐ ngôi sao trong chòm đã khôi phục. Bầu trời lành DẦN qua nhiều lượt chơi:
+        // 1 sao mở ~1/3 chòm, 2 sao ~2/3, 3 sao trọn chòm. Chỉ tăng, không bao giờ giảm.
+        //
+        // Trường CỘNG THÊM, tương thích ngược: save cũ không có khoá này thì JsonUtility để
+        // nguyên giá trị mặc định 0 — không làm hỏng file, không phải chuyển đổi gì.
+        // `restored` và `animationPlayed` giữ nguyên ý nghĩa cũ.
+        public int nodesRestored;
     }
 
     // Toàn bộ dữ liệu lưu của 1 save slot. Plain data — SaveManager chỉ biết đọc/ghi class này,

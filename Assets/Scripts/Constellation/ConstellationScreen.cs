@@ -27,6 +27,22 @@ namespace StarSower.Constellations
 
         [SerializeField] private ProgressManager progressManager;
 
+        [Header("Cinematic (S2-006)")]
+        [Tooltip("Gan vao thi chay doan phim khoi phuc trong khong gian the gioi. DE TRONG thi roi " +
+                 "ve man hinh UI cu — duong cu duoc GIU LAI nguyen ven lam duong lui.")]
+        [SerializeField] private ConstellationCinematic cinematic;
+
+        [Tooltip("Lop che chuyen canh. LevelFlowManager che kin man hinh TRUOC khi goi Show(), ma " +
+                 "lop che do la canvas screen-space nen no up len toan bo hinh hoc world cua doan " +
+                 "phim. Phai mo ra roi che lai. De trong thi tu tim luc Awake.")]
+        [SerializeField] private StarSower.Transition.SceneTransitionController sceneTransition;
+
+        [Tooltip("CONG TAC DEV: bat len thi lan nao hoan thanh man cung dien lai tu node 0, bat ke " +
+                 "save da khoi phuc toi dau. Dung luc dang chinh doan phim de khoi phai xoa save " +
+                 "moi lan. TAT khi giao cho nguoi choi that — neu khong bau troi se khong bao gio " +
+                 "co cam giac lanh dan.")]
+        [SerializeField] private bool devAlwaysReplay;
+
         [Tooltip("Tên chòm sao, hiện ở TRÊN CÙNG màn hình.")]
         [SerializeField] private Text nameLabel;
 
@@ -82,6 +98,9 @@ namespace StarSower.Constellations
 
         private void Awake()
         {
+            if (sceneTransition == null)
+                sceneTransition = FindFirstObjectByType<StarSower.Transition.SceneTransitionController>();
+
             if (canvasGroup != null)
             {
                 canvasGroup.alpha = 0f;
@@ -118,14 +137,71 @@ namespace StarSower.Constellations
                 yield break;
             }
 
-            // Đã diễn rồi thì lần sau chỉ hiện chòm sao hoàn chỉnh, không diễn lại.
-            bool alreadyAnimated = progressManager.IsConstellationAnimated(constellation.ConstellationId);
+            // Co doan phim thi chay doan phim; khong co thi giu nguyen duong UI cu.
+            if (cinematic != null)
+            {
+                yield return PlayCinematic(totalStars);
+                yield break;
+            }
 
-            // Log chẩn đoán: đây là nơi duy nhất quyết định CÓ DIỄN hay KHÔNG, nên khi hoạt ảnh
-            // không chạy thì dòng này nói thẳng lý do.
-            Debug.Log($"[Constellation] level='{levelManager.CurrentLevelId}' -> " +
-                      $"'{constellation.DisplayName}' ({totalStars} sao) | daDien={alreadyAnimated} " +
-                      $"=> {(alreadyAnimated ? "HIEN NGAY, khong dien" : "SE DIEN hoat anh")}", this);
+            yield return PlayLegacyUIScreen(totalStars);
+        }
+
+        // Quy hang sao cua man ra so ngoi sao duoc khoi phuc, roi dien phan MOI.
+        //
+        //     targetNodes = ceil(total * starRating / 3)
+        //
+        // Lam tron LEN: dat duoc hang sao nao cung phai thay bau troi sang them, khong bao gio
+        // "duoc 1 sao ma chom van y nguyen". Va khong gia dinh so node chia het cho 3.
+        private IEnumerator PlayCinematic(int totalStars)
+        {
+            string id = constellation.ConstellationId;
+
+            int litBefore = devAlwaysReplay ? 0 : progressManager.GetConstellationNodes(id, totalStars);
+            int starRating = progressManager.GetLevelStars(levelManager != null ? levelManager.CurrentLevelId : null);
+            int target = Mathf.Clamp(Mathf.CeilToInt(totalStars * starRating / 3f), 0, totalStars);
+
+            // DON DIEU: choi lai voi hang sao thap hon khong bao gio lam bau troi toi lai.
+            // O che do dev, ep dien it nhat mot ngoi de con co gi ma xem.
+            int litAfter = devAlwaysReplay ? Mathf.Max(1, target) : Mathf.Max(litBefore, target);
+
+            // Che den bang man cua chinh doan phim TRUOC, roi moi mo lop chuyen canh — nguoc thu
+            // tu se loe mot khung hinh man choi cu.
+            cinematic.SnapCovered();
+            if (sceneTransition != null)
+                yield return sceneTransition.PlayOut();
+
+            yield return cinematic.Play(constellation, litBefore, litAfter);
+
+            // Doan phim ket thuc voi man hinh DA den kin va giu nguyen nhu vay.
+            //
+            // Con man ke: dua lop chuyen canh len (den chong den, khong thay doi gi tren man) roi
+            // nha man che cua doan phim ra. Nho vay khong co khung hinh nao lo lai man choi cu —
+            // nguoi choi di thang tu chom sao sang man moi.
+            //
+            // Man cuoi: khong ai nap scene ke, phai tu mo man hinh cho Journey Cinematic dien.
+            if (levelManager != null && levelManager.HasNextLevel)
+            {
+                if (sceneTransition != null)
+                    yield return sceneTransition.PlayIn();
+                cinematic.ClearCover();
+            }
+            else
+            {
+                cinematic.ClearCover();
+            }
+
+            // Ghi SAU khi trang thai cuoi da ap xong — bo qua giua chung van ap dung litAfter, nen
+            // du nguoi choi bam bo qua tien trinh cung khong mat.
+            progressManager.SetConstellationNodes(id, litAfter, totalStars);
+            if (litAfter >= totalStars)
+                progressManager.MarkConstellationUnlocked(id, true);
+        }
+
+        // Duong CU, giu nguyen khong doi — dung khi chua gan Cinematic.
+        private IEnumerator PlayLegacyUIScreen(int totalStars)
+        {
+            bool alreadyAnimated = progressManager.IsConstellationAnimated(constellation.ConstellationId);
 
             gameObject.SetActive(true);
             Build(totalStars);
@@ -143,7 +219,6 @@ namespace StarSower.Constellations
                     yield return UnlockStar(i);
                 isAnimating = false;
 
-                // Lưu NGAY sau khi diễn xong: mỗi chòm một bản ghi riêng, không đụng chòm nào khác.
                 progressManager.MarkConstellationUnlocked(constellation.ConstellationId, true);
             }
 

@@ -56,8 +56,8 @@ MonoBehaviour:
   cloudDensity: 0.85
   defaultMusic: {fileID: 8300000, guid: 7f48bc995aeec4f19bcb61030f105af3, type: 3}
   musicVolume: 1
-  ambient: {fileID: 0}
-  ambientVolume: 1
+  ambient: {fileID: 8300000, guid: 53631af8181f408f8f2a53fe178c2470, type: 3}
+  ambientVolume: 0.6
   ambientProfile: {fileID: 0}
   particlePrefabs:
   - {fileID: 900011001, guid: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb33, type: 3}

@@ -35,6 +35,21 @@ namespace StarSower.Player
                  "lowJumpMultiplier dập tắt ngay từ khung hình đầu tiên do đọc jumpHeld không kịp.")]
         [SerializeField] private float minAscentGraceTime = 0.08f;
 
+        [Header("Gioi han ngang (S2-004)")]
+        [Tooltip("Chan Player ra khoi be rong choi duoc. Tat thi moi thu chay y nhu truoc.")]
+        [SerializeField] private bool useHorizontalBounds = true;
+
+        [Tooltip("Tam ngang cua man — trung voi Level Center X cua CameraAspectFitter.")]
+        [SerializeField] private float boundsCenterX;
+
+        [Tooltip("Nua be rong choi duoc = playableWidth / 2. Phai khop CameraAspectFitter, " +
+                 "neu khong Player se dung o cho khac voi mep man hinh.")]
+        [SerializeField] private float boundsHalfWidth = 2.6f;
+
+        [Tooltip("Nua be ngang cua Player, tru vao gioi han de nguoi choi khong bi lo nua nguoi ra " +
+                 "ngoai mep. 0.375 = collider 1x1 nhan scale root 0.75, chia doi.")]
+        [SerializeField] private float playerHalfWidth = 0.375f;
+
         private Rigidbody2D rb;
         private float targetHorizontalSpeed;
         private float ascentGraceTimer;
@@ -158,7 +173,43 @@ namespace StarSower.Player
                 velocity.y += extraGravity * deltaTime;
             }
 
+            ApplyHorizontalBounds(ref velocity, deltaTime);
+
             rb.linearVelocity = velocity;
+        }
+
+        // Giu Player trong be rong choi duoc. Dat o day vi PlayerMotor la nơi DUY NHAT duoc ghi
+        // Rigidbody2D — kep vi tri o mot component khac se thanh hai nguoi cung ghi.
+        //
+        // Tru playerHalfWidth de moc tinh theo MEP nguoi choi chu khong phai tam: kep theo tam thi
+        // nua nguoi van tho ra ngoai khung hinh.
+        //
+        // Triet tieu velocity.x khi cham moc, neu khong van toc doi vao "tuong" cu tich lai, buong
+        // tay ra la bat nguoc — va tren bang trôi (surfaceDriftSpeed) se ri ra ngoai tung chut mot.
+        private void ApplyHorizontalBounds(ref Vector2 velocity, float deltaTime)
+        {
+            if (!useHorizontalBounds)
+                return;
+
+            float limit = boundsHalfWidth - playerHalfWidth;
+            if (limit <= 0f)
+                return;
+
+            float minX = boundsCenterX - limit;
+            float maxX = boundsCenterX + limit;
+            float x = rb.position.x;
+
+            // Chan TRUOC khi vuot, khong phai keo ve sau khi da vuot: bop van toc vua du de buoc
+            // physics ke tiep dung lai chinh xac tai moc. Kep vi tri sau khi lo se lo toi
+            // moveSpeed * fixedDeltaTime = 0.1 unit roi moi giat nguoc lai — nhin thay ro o mep.
+            if (velocity.x < 0f && x + velocity.x * deltaTime < minX)
+                velocity.x = deltaTime > 0f ? (minX - x) / deltaTime : 0f;
+            else if (velocity.x > 0f && x + velocity.x * deltaTime > maxX)
+                velocity.x = deltaTime > 0f ? (maxX - x) / deltaTime : 0f;
+
+            // Luoi an toan: da nam ngoai san (spawn sai cho, bi Launch ban ra) thi keo thang ve.
+            if (x < minX || x > maxX)
+                rb.position = new Vector2(Mathf.Clamp(x, minX, maxX), rb.position.y);
         }
     }
 }

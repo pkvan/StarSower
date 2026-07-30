@@ -39,7 +39,12 @@ namespace StarSower.Biome
             if (audioManager != null)
             {
                 WarnIfMissing(region, region.DefaultMusic, "Music Clip");
-                WarnIfMissing(region, region.Ambient, "Ambient Clip");
+
+                // Chỉ cảnh báo thiếu Ambient Clip khi Region KHÔNG có Ambient Profile. Có Profile
+                // nghĩa là khu vực đã dùng ambient nhiều lớp (gió lặp + chim/lá ngẫu nhiên), ô
+                // Ambient Clip đơn giản để trống là CỐ Ý — cảnh báo lúc đó là báo động giả.
+                if (region.AmbientProfile == null)
+                    WarnIfMissing(region, region.Ambient, "Ambient Clip");
 
                 audioManager.PlayMusic(region.DefaultMusic, region.MusicVolume, fadeInDuration);
                 audioManager.PlayAmbient(region.Ambient, region.AmbientVolume, fadeInDuration);
