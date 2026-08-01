@@ -107,12 +107,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 951000003}
-  lifetime: 999.0
+  lifetime: 999
   autoReturn: 0
-  startScale: 1.0
-  endScale: 1.0
-  startAlpha: 1.0
-  endAlpha: 1.0
+  startScale: 1
+  endScale: 1
+  startAlpha: 1
+  endAlpha: 1
   rotationSpeed: 0
   drift: {x: 0, y: 0}
 --- !u!114 &951000005

@@ -10,6 +10,16 @@ namespace StarSower.Persistence
         public string levelId;
         public bool unlocked;
         public int starsEarned;
+
+        // S2-009 — so sao MAN NAY YEU CAU (bang so node cua chom sao) va so da nhat. Luu de man
+        // hinh chon level hien duoc "3 / 5" ma khong phai nap scene len de dem.
+        // Truong cong them: save cu doc vao mac dinh 0, khong pha gi.
+        public int requiredStars;
+        public int collectedStars;
+
+        // Cong da mo chua. Suy duoc tu collectedStars >= requiredStars, nhung luu rieng vi hai so
+        // kia co the doi khi so node cua chom sao thay doi, con day la su that cua LAN choi do.
+        public bool gateUnlocked;
     }
 
     // Số Star Fragment đã thu thập trong phạm vi 1 chapter (S1-012). Tách khỏi tổng toàn game vì

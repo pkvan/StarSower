@@ -68,6 +68,7 @@ namespace StarSower.Player
         private void Awake()
         {
             groundDetector = groundDetectorSource as IGroundDetector;
+            BaseVisualSortingOrder = visualRenderer.sortingOrder;
         }
 
         // Bat/tat che do canh dien. horizontalSpeed > 0 la chay sang phai, < 0 sang trai, 0 la dung.
@@ -75,6 +76,30 @@ namespace StarSower.Player
         {
             scriptedActive = active;
             scriptedSpeed = horizontalSpeed;
+        }
+
+        // Do mo cua phan hinh. Dat o day chu khong de ben ngoai tu ghi thang vao SpriteRenderer:
+        // component nay von da la nguoi duy nhat dong toi visualRenderer (flipX), gom luon mau vao
+        // day thi khong bao gio co hai noi cung ghi mot thu.
+        // Thu tu ve goc, ghi lai luc Awake. Canh chom sao muon nang Hero len tren nen troi roi
+        // tra lai — phai nho so cu chu khong hardcode, vi so do nam trong prefab.
+        public int BaseVisualSortingOrder { get; private set; }
+
+        public void SetVisualSortingOrder(int order)
+        {
+            visualRenderer.sortingOrder = order;
+        }
+
+        public void RestoreVisualSortingOrder()
+        {
+            visualRenderer.sortingOrder = BaseVisualSortingOrder;
+        }
+
+        public void SetVisualAlpha(float alpha)
+        {
+            Color c = visualRenderer.color;
+            c.a = Mathf.Clamp01(alpha);
+            visualRenderer.color = c;
         }
 
         private void Update()

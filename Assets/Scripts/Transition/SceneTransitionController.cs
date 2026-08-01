@@ -48,6 +48,21 @@ namespace StarSower.Transition
             yield return ActiveEffect.PlayIn(fadeDuration);
         }
 
+        // Che kín với thời lượng RIÊNG cho một lần gọi (S2-006). Thêm nạp chồng thay vì sửa
+        // fadeDuration: fadeDuration là nhịp chung của mọi lần chuyển khu vực, đổi nó đi thì lúc
+        // VÀO khu vực mới cũng nhanh theo — trong khi chỗ cần nhanh chỉ là lúc rời khu vực cũ.
+        public IEnumerator PlayIn(float duration)
+        {
+            yield return ActiveEffect.PlayIn(Mathf.Max(0f, duration));
+        }
+
+        // Mở màn NGAY, không hoạt ảnh. Dùng khi bên dưới lớp chuyển cảnh đã có một màn che khác
+        // cũng đen kín: fade lúc đó là đen chồng đen, người chơi không thấy gì suốt cả quãng đó.
+        public void SnapOpen()
+        {
+            StartCoroutine(ActiveEffect.PlayOut(0f));
+        }
+
         // Mở dần lộ khu vực mới — gọi ngay sau khi scene mới load xong.
         public IEnumerator PlayOut()
         {
@@ -56,6 +71,17 @@ namespace StarSower.Transition
 
         // Đặt màn hình về trạng thái che kín ngay lập tức, không hoạt ảnh — dùng lúc Start() của
         // scene mới để tránh lộ 1 khung hình chưa che trước khi PlayOut() bắt đầu.
+        // Doi mau cho nhung lan che/mo ke tiep. Goi ClearTint() de tra ve mau cua scene.
+        public void SetTint(Color color)
+        {
+            (ActiveEffect as TransitionEffectBase)?.SetTintOverride(color);
+        }
+
+        public void ClearTint()
+        {
+            (ActiveEffect as TransitionEffectBase)?.ClearTintOverride();
+        }
+
         public void SnapCovered()
         {
             StartCoroutine(ActiveEffect.PlayIn(0f));

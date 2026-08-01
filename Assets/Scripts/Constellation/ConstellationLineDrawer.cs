@@ -20,6 +20,17 @@ namespace StarSower.Constellations
         [Tooltip("Be day net (world units).")]
         [SerializeField] private float thickness = 0.05f;
 
+        [Tooltip("Phan DAC cua anh net theo chieu NGANG, tinh theo ti le 0..1 cua be rong anh. " +
+                 "Anh net thuong chua vien trong suot hai dau; khong tru phan do ra thi net ve " +
+                 "ngan hon khoang cach hai ngoi sao va ho ra hai dau. 1 = anh dac sat mep.")]
+        [Range(0.05f, 1f)]
+        [SerializeField] private float spriteOpaqueWidth = 1f;
+
+        [Tooltip("Phan DAC cua anh net theo chieu DOC. Anh co quang sang mem thi phan net that chi " +
+                 "chiem mot dai hep giua anh — khong tru ra thi net mong hon 'Thickness' rat nhieu.")]
+        [Range(0.05f, 1f)]
+        [SerializeField] private float spriteOpaqueHeight = 1f;
+
         private readonly List<SpriteRenderer> lines = new List<SpriteRenderer>();
         private float glowBoost;
 
@@ -140,8 +151,10 @@ namespace StarSower.Constellations
             tr.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(delta.y, delta.x) * Mathf.Rad2Deg);
 
             // Sprite goc rong 1 unit (PPU = be rong anh) nen scale.x chinh la do dai world.
-            float w = sr.sprite != null ? sr.sprite.bounds.size.x : 1f;
-            float h = sr.sprite != null ? sr.sprite.bounds.size.y : 1f;
+            // Chia them cho phan dac: nho vay 'length' va 'thickness' la kich thuoc NHIN THAY
+            // that su, khong phai kich thuoc cua o anh (von gom ca vien trong suot).
+            float w = (sr.sprite != null ? sr.sprite.bounds.size.x : 1f) * spriteOpaqueWidth;
+            float h = (sr.sprite != null ? sr.sprite.bounds.size.y : 1f) * spriteOpaqueHeight;
             tr.localScale = new Vector3(length / Mathf.Max(w, 0.0001f),
                                         thickness * thicknessScale / Mathf.Max(h, 0.0001f), 1f);
         }

@@ -38,6 +38,16 @@ namespace StarSower.Player
 
         private IGroundDetector groundDetector;
         private Vector3 baseScale;
+        // He so mo tu ben ngoai (vd Astral Gate lam nhan vat tan di). NHAN vao alpha tu tinh chu
+        // khong ghi de: component nay van la nguoi duy nhat ghi shadowRenderer.color, neu khong thi
+        // moi frame no lai ghi de len phep lam mo cua ben kia.
+        private float fadeMultiplier = 1f;
+
+        public void SetFadeMultiplier(float value)
+        {
+            fadeMultiplier = Mathf.Clamp01(value);
+        }
+
         private Color baseColor;
         private float currentAlpha;
         private float currentScale = 1f;
@@ -82,6 +92,7 @@ namespace StarSower.Player
         {
             Color c = baseColor;
             c.a = alpha;
+            c.a *= fadeMultiplier;
             shadowRenderer.color = c;
         }
     }

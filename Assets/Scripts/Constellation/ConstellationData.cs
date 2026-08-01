@@ -61,6 +61,11 @@ namespace StarSower.Constellations
         public Sprite Icon => icon;
         public int RequiredFragments => Mathf.Max(1, requiredFragments);
         public IReadOnlyList<Vector2> StarPoints => starPoints;
+
+        // S2-009 — so ngoi sao trong chom, cung la so sao phai nhat trong man tuong ung.
+        // Doc thang tu starPoints chu khong khai them mot con so rieng: hai nguon cho cung mot su
+        // that thi som muon gi cung lech nhau.
+        public int NodeCount => starPoints.Count;
         public IReadOnlyList<StarConnection> Connections => connections;
         public float AnimationDuration => Mathf.Max(0.1f, animationDuration);
         public float EffectScale => Mathf.Max(0.1f, effectScale);

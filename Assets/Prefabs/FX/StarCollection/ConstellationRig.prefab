@@ -53,6 +53,9 @@ MonoBehaviour:
   pocket: {fileID: 0}
   heroMotor: {fileID: 0}
   heroAnimation: {fileID: 0}
+  heroShadow: {fileID: 0}
+  heroSortingOrder: 12
+  fadeOutColor: {r: 1, g: 1, b: 1, a: 1}
   sky: {fileID: 955000013}
   lineDrawer: {fileID: 955000052}
   sequenceCamera: {fileID: 0}
@@ -66,7 +69,7 @@ MonoBehaviour:
   nameGroup: {fileID: 955000075}
   nameLabel: {fileID: 955000082}
   descriptionLabel: {fileID: 955000092}
-  fadeInDuration: 0.8
+  fadeInDuration: 1.2
   pocketGlowDuration: 0.5
   launchDelay: 0.55
   flightDuration: 1.1
@@ -171,7 +174,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 10
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbc13, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 0}
@@ -284,7 +287,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingOrder: 11
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: bbbbbbbbbbbbbbbbbbbbbbbbbbbbfa17, type: 3}
   m_Color: {r: 0.75, g: 0.85, b: 1, a: 0}
@@ -464,11 +467,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aaaaaaaaaaaaaaaaaaaaaaaaaaaaab1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lineSprite: {fileID: 21300000, guid: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbc11, type: 3}
+  lineSprite: {fileID: 21300000, guid: add6a86d22d8f4c2b924b7b9420a160f, type: 3}
   lineMaterial: {fileID: 2100000, guid: bbbbbbbbbbbbbbbbbbbbbbbbbbbbfa21, type: 2}
-  lineColor: {r: 0.62, g: 0.82, b: 1, a: 0.55}
-  sortingOrder: 4
+  lineColor: {r: 1, g: 1, b: 1, a: 0.8}
+  sortingOrder: 14
   thickness: 0.05
+  spriteOpaqueWidth: 0.877
+  spriteOpaqueHeight: 0.253
 --- !u!1 &955000070
 GameObject:
   m_ObjectHideFlags: 0

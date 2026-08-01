@@ -18,26 +18,61 @@ MonoBehaviour:
   icon: {fileID: 0}
   requiredFragments: 53
   starPoints:
-  - {x: 0.35, y: 0.78}
-  - {x: 0.62, y: 0.8}
-  - {x: 0.42, y: 0.55}
-  - {x: 0.5, y: 0.55}
-  - {x: 0.58, y: 0.56}
-  - {x: 0.38, y: 0.28}
-  - {x: 0.66, y: 0.3}
+  - {x: 0.5, y: 0.92}
+  - {x: 0.34, y: 0.8}
+  - {x: 0.64, y: 0.82}
+  - {x: 0.42, y: 0.56}
+  - {x: 0.5, y: 0.54}
+  - {x: 0.58, y: 0.52}
+  - {x: 0.47, y: 0.44}
+  - {x: 0.46, y: 0.35}
+  - {x: 0.45, y: 0.27}
+  - {x: 0.36, y: 0.2}
+  - {x: 0.68, y: 0.18}
+  - {x: 0.3, y: 0.68}
+  - {x: 0.7, y: 0.68}
+  - {x: 0.76, y: 0.88}
+  - {x: 0.84, y: 0.94}
+  - {x: 0.2, y: 0.76}
+  - {x: 0.15, y: 0.66}
+  - {x: 0.16, y: 0.55}
   connections:
+  - fromIndex: 0
+    toIndex: 1
   - fromIndex: 0
     toIndex: 2
   - fromIndex: 1
-    toIndex: 4
-  - fromIndex: 2
+    toIndex: 11
+  - fromIndex: 11
     toIndex: 3
+  - fromIndex: 2
+    toIndex: 12
+  - fromIndex: 12
+    toIndex: 5
   - fromIndex: 3
     toIndex: 4
-  - fromIndex: 2
+  - fromIndex: 4
     toIndex: 5
+  - fromIndex: 3
+    toIndex: 9
+  - fromIndex: 5
+    toIndex: 10
   - fromIndex: 4
     toIndex: 6
+  - fromIndex: 6
+    toIndex: 7
+  - fromIndex: 7
+    toIndex: 8
+  - fromIndex: 2
+    toIndex: 13
+  - fromIndex: 13
+    toIndex: 14
+  - fromIndex: 15
+    toIndex: 16
+  - fromIndex: 16
+    toIndex: 17
+  - fromIndex: 11
+    toIndex: 15
   animationDuration: 7.0
   effectScale: 1.8
   particlePrefab: {fileID: 0}

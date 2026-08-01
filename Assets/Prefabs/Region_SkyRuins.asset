@@ -59,5 +59,6 @@ MonoBehaviour:
   ambient: {fileID: 0}
   ambientVolume: 1
   ambientProfile: {fileID: 0}
+  uiTextColor: {r: 0.07, g: 0.21, b: 0.26, a: 1}
   particlePrefabs:
   - {fileID: 900023001, guid: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb45, type: 3}

@@ -57,6 +57,14 @@ namespace StarSower.Level
             return entry != null ? entry.starsEarned : 0;
         }
 
+        // S2-014 — so manh sao DA NHAT duoc o level nay (khong phai hang sao 0..3). Dung cho the
+        // level: hien dung so ngoi sao ma man do co, ngoi da nhat thi co mau.
+        public int GetCollectedStars(string levelId)
+        {
+            LevelSaveData entry = FindOrNull(levelId);
+            return entry != null ? entry.collectedStars : 0;
+        }
+
         // ---- Chòm sao theo khu vực (S1-020A) ----
 
         // Số khu vực ĐÃ HOÀN THÀNH. Suy ra từ starsEarned > 0 chứ không thêm field "completed" mới:
@@ -209,11 +217,28 @@ namespace StarSower.Level
         // sẽ trỏ tới), rồi lưu NGAY LẬP TỨC — không có bước xác nhận nào ở giữa.
         public void CompleteLevel(string levelId, int starRating, int starFragmentsCollectedThisRun, float elapsedTime)
         {
+            CompleteLevel(levelId, starRating, starFragmentsCollectedThisRun, elapsedTime, 0, 0);
+        }
+
+        // S2-009 — nap chong co them so sao yeu cau / da nhat cua lan choi nay. Giu nap chong cu de
+        // moi cho dang goi khong phai sua theo.
+        public void CompleteLevel(string levelId, int starRating, int starFragmentsCollectedThisRun,
+                                  float elapsedTime, int requiredStars, int collectedStars)
+        {
             LevelSaveData entry = FindOrNull(levelId);
             if (entry == null)
                 return;
 
             entry.starsEarned = Mathf.Max(entry.starsEarned, starRating);
+
+            if (requiredStars > 0)
+            {
+                entry.requiredStars = requiredStars;
+                // Chi ghi len khi lan nay nhat duoc NHIEU hon — choi lai te hon khong lam mat
+                // thanh tich cu, dung luat da dung cho starsEarned va nodesRestored.
+                entry.collectedStars = Mathf.Max(entry.collectedStars, collectedStars);
+                entry.gateUnlocked = entry.gateUnlocked || collectedStars >= requiredStars;
+            }
             saveData.totalStarFragmentsCollected += starFragmentsCollectedThisRun;
             saveData.totalPlayTimeSeconds += elapsedTime;
 

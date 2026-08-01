@@ -67,14 +67,21 @@ namespace StarSower.Level
                  "lửng — lướt camera theo chỉ tổ khoe ra chỗ dở. Tắt thì luồng cũ y nguyên.")]
         [SerializeField] private bool instantDepartureFade;
 
+        [Tooltip("Thời lượng che màn khi Instant Departure Fade bật. Đây là quãng DUY NHẤT còn " +
+                 "nhìn thấy khu vực cũ sau khi chạm Goal, nên để ngắn.")]
+        [Min(0f)]
+        [SerializeField] private float instantFadeDuration = 1f;
+
         private void OnEnable()
         {
             GameEvents.OnLevelCompleted += HandleLevelCompleted;
+            GameEvents.OnGoalReached += HandleGoalReached;
         }
 
         private void OnDisable()
         {
             GameEvents.OnLevelCompleted -= HandleLevelCompleted;
+            GameEvents.OnGoalReached -= HandleGoalReached;
         }
 
         private void Start()
@@ -112,6 +119,15 @@ namespace StarSower.Level
             return regionDisplayName;
         }
 
+        // Cham Astral Gate: khoa di chuyen NGAY, roi de cong dien canh mo ra. Chi rieng viec khoa
+        // — khong dung toi camera, man hinh hay tien trinh, vi con cach OnLevelCompleted vai giay.
+        // Khong co Astral Gate trong scene thi khong ai phat su kien nay, luong cu chay y nguyen.
+        private void HandleGoalReached()
+        {
+            levelTimer.StopTimer();
+            playerController.SetMovementLocked(true);
+        }
+
         private void HandleLevelCompleted()
         {
             StartCoroutine(DepartureRoutine());
@@ -138,7 +154,8 @@ namespace StarSower.Level
                 // Lưu TRƯỚC, để màn hình chòm sao ngay dưới đây tính được cả khu vực vừa xong.
                 int finalStars = ProgressManager.ComputeStarRating(collectibleManager.CollectedStars, collectibleManager.TotalStars);
                 progressManager.CompleteLevel(levelManager.CurrentLevelId, finalStars,
-                    collectibleManager.CollectedStars, levelTimer.ElapsedTime);
+                    collectibleManager.CollectedStars, levelTimer.ElapsedTime,
+                    collectibleManager.TotalStars, collectibleManager.CollectedStars);
 
                 // Chòm sao ĐI TRƯỚC cảnh kết (S1-020B): phần thưởng phải đến trước lời tạm biệt.
                 // Xem cảnh kết xong rồi mới mở chòm sao thì cảm giác như một khúc đuôi thừa.
@@ -158,12 +175,22 @@ namespace StarSower.Level
             // im hẳn trước khi scene bị Unity phá huỷ thay vì bị cắt cụt (xem AudioManager).
             regionAtmosphereManager?.FadeOutForDeparture();
 
-            yield return sceneTransitionController.PlayIn();
-            yield return new WaitForSeconds(transitionHoldDuration);
+            if (instantDepartureFade)
+            {
+                // Bỏ luôn quãng giữ màn đen: quãng đó có mặt để che khoảng khựng lúc NẠP SCENE,
+                // mà ở đây thứ đến ngay sau là màn chòm sao trong chính scene này — không nạp gì.
+                yield return sceneTransitionController.PlayIn(instantFadeDuration);
+            }
+            else
+            {
+                yield return sceneTransitionController.PlayIn();
+                yield return new WaitForSeconds(transitionHoldDuration);
+            }
 
             int starRating = ProgressManager.ComputeStarRating(collectibleManager.CollectedStars, collectibleManager.TotalStars);
             progressManager.CompleteLevel(levelManager.CurrentLevelId, starRating,
-                collectibleManager.CollectedStars, levelTimer.ElapsedTime);
+                collectibleManager.CollectedStars, levelTimer.ElapsedTime,
+                collectibleManager.TotalStars, collectibleManager.CollectedStars);
 
             // Chòm sao hiện SAU khi tiến trình đã lưu (nên số sao mở ra luôn tính cả khu vực vừa
             // xong) và TRƯỚC khi nạp scene kế — nạp scene sẽ phá huỷ luôn màn hình này.

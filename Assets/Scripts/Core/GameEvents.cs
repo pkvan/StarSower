@@ -15,6 +15,11 @@ namespace StarSower.Core
         // cũ — vẫn còn tồn tại trong code (chỉ đang bị tắt trong scene), không có gì gọi tới nữa.
         public static event Action OnLevelCompleted;
 
+        // S2-008 — Player vua cham Astral Gate. Phat NGAY luc cham, som hon OnLevelCompleted vai
+        // giay: quang do la luc cong dang dien canh mo ra, nguoi choi phai het dieu khien duoc
+        // nhung chua duoc chuyen man. Gop chung mot su kien thi mat dung mot trong hai.
+        public static event Action OnGoalReached;
+
         public static void RaiseGameOver()
         {
             OnGameOver?.Invoke();
@@ -23,6 +28,11 @@ namespace StarSower.Core
         public static void RaiseLevelComplete(float elapsedTime)
         {
             OnLevelComplete?.Invoke(elapsedTime);
+        }
+
+        public static void RaiseGoalReached()
+        {
+            OnGoalReached?.Invoke();
         }
 
         public static void RaiseLevelCompleted()

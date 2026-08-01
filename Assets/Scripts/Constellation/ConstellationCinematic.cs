@@ -28,6 +28,17 @@ namespace StarSower.Constellations
 
         [Tooltip("De trong thi tu tim luc Awake. Dung de bat hoat anh chay khi Hero di vao khung.")]
         [SerializeField] private StarSower.Player.PlayerAnimationController heroAnimation;
+
+        [Tooltip("De trong thi tu tim. Dung de hien lai bong cua Hero sau khi Astral Gate lam no tan di.")]
+        [SerializeField] private StarSower.Player.GroundShadowController heroShadow;
+
+        [Tooltip("Thu tu ve cua Hero trong luc dien. Phai LON hon nen troi (10) va NHO hon man che " +
+                 "(50), neu khong Hero bi nen troi phu mat hoac de len ca man che luc chuyen canh.")]
+        [SerializeField] private int heroSortingOrder = 12;
+
+        [Tooltip("Mau man che o doan KET. Chom sao phong to roi tan vao mot chum sang trang truoc " +
+                 "khi sang man ke. Doan MO DAU van dung mau goc cua man che.")]
+        [SerializeField] private Color fadeOutColor = Color.white;
         [SerializeField] private ConstellationSkyBackdrop sky;
         [SerializeField] private ConstellationLineDrawer lineDrawer;
 
@@ -151,6 +162,8 @@ namespace StarSower.Constellations
                 heroMotor = FindFirstObjectByType<StarSower.Player.PlayerMotor>();
             if (heroAnimation == null)
                 heroAnimation = FindFirstObjectByType<StarSower.Player.PlayerAnimationController>();
+            if (heroShadow == null)
+                heroShadow = FindFirstObjectByType<StarSower.Player.GroundShadowController>();
 
             cam = sequenceCamera != null ? sequenceCamera : Camera.main;
 
@@ -167,6 +180,12 @@ namespace StarSower.Constellations
         // chuyen canh: neu mo lop kia ra truoc thi nguoi choi thay loe mot khung hinh man choi cu.
         public void SnapCovered()
         {
+            if (!overlayBaseCached && fadeOverlay != null)
+            {
+                overlayBaseColor = fadeOverlay.color;
+                overlayBaseCached = true;
+            }
+            SetOverlayColor(overlayBaseColor);
             SetOverlayAlpha(1f);
         }
 
@@ -373,13 +392,21 @@ namespace StarSower.Constellations
 
         private IEnumerator FadeIn()
         {
+            // Bau troi len HET NGAY, trong luc man che con den kin — roi moi keo man che ra.
+            //
+            // Truoc day hai thu chay song song: man che mo dan 1->0 va bau troi hien dan 0->1. O
+            // giua quang do ca hai deu dang o nua chung, cong lai KHONG con chan duoc gi, nen man
+            // choi cu lo ra suot mot nhip. Bau troi la anh duc 100% (da do: alpha 255 tren toan bo
+            // 1672x941), nen dua no len truoc la du che kin, va nguoi choi chi thay dung mot phep
+            // mo dan tu den sang bau troi.
+            sky?.SetAlpha(1f);
+
             float t = 0f;
             while (t < fadeInDuration && !skipRequested)
             {
                 t += Time.deltaTime;
                 float k = Mathf.Clamp01(t / fadeInDuration);
                 SetOverlayAlpha(1f - k);
-                sky?.SetAlpha(k);
                 RiseCamera(k);
                 yield return null;
             }
@@ -400,6 +427,15 @@ namespace StarSower.Constellations
 
             Transform hero = heroMotor.transform;
             heroMotor.SetPhysicsActive(false);
+
+            // Hien lai Hero: Astral Gate da lam no tan di o man choi truoc. Khong dat lai o day thi
+            // canh nay chay mot nhan vat vo hinh tu trai vao.
+            heroAnimation?.SetVisualAlpha(1f);
+            heroShadow?.SetFadeMultiplier(1f);
+
+            // Nang Hero len tren nen troi. Nen troi phai che kin moi thu cua man choi (manh sao con
+            // lai nam o order 2), nen no duoc day len 10 — Hero giu nguyen order 3 se bi che mat.
+            heroAnimation?.SetVisualSortingOrder(heroSortingOrder);
 
             float halfW = cam.orthographicSize * cam.aspect;
             float halfH = cam.orthographicSize;
@@ -603,6 +639,14 @@ namespace StarSower.Constellations
         private IEnumerator ZoomAndFadeOut()
         {
             Transform nameTr = nameGroup != null ? nameGroup.transform : null;
+
+            // Man che doi sang mau ket (trang) va bau troi GIU NGUYEN do duc.
+            //
+            // Truoc day bau troi mo dan 1->0 cung luc man che hien dan 0->1: o giua quang do ca hai
+            // deu nua chung nen khong con chan duoc gi, va man choi cu lo ra ngay giua luc dang
+            // phong to chom sao. Giu bau troi duc kin roi chi keo man che len la het.
+            SetOverlayColor(fadeOutColor);
+
             float t = 0f;
             while (t < fadeOutDuration)
             {
@@ -616,7 +660,6 @@ namespace StarSower.Constellations
                     nameTr.localScale = new Vector3(zoom, zoom, 1f);
 
                 SetOverlayAlpha(eased);
-                sky?.SetAlpha(1f - eased);
                 yield return null;
             }
             SetOverlayAlpha(1f);
@@ -643,6 +686,10 @@ namespace StarSower.Constellations
 
         private void Cleanup()
         {
+            // Tra thu tu ve cua Hero ve nhu cu: man ke tai dung chinh instance nay neu khong nap
+            // scene moi, de nguyen la Hero se de len moi thu.
+            heroAnimation?.RestoreVisualSortingOrder();
+
             sky?.Stop();
             sky?.SetAlpha(0f);
             ApplyGlow(0f);
@@ -702,6 +749,19 @@ namespace StarSower.Constellations
             cam.transform.position = p;
         }
 
+
+        // Mau goc cua man che, ghi lai luc Awake — doan mo dau phai quay ve dung mau nay, khong
+        // duoc dinh mau trang cua lan dien truoc.
+        private Color overlayBaseColor = Color.black;
+        private bool overlayBaseCached;
+
+        private void SetOverlayColor(Color color)
+        {
+            if (fadeOverlay == null) return;
+            float a = fadeOverlay.color.a;
+            color.a = a;
+            fadeOverlay.color = color;
+        }
 
         private void SetOverlayAlpha(float a)
         {

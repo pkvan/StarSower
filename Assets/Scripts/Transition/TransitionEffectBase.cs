@@ -15,6 +15,16 @@ namespace StarSower.Transition
 
         protected abstract Color TintColor { get; }
 
+        // Mau ghi de tam thoi. Doan phim chom sao ket bang mot chum sang trang, neu lop chuyen canh
+        // van giu mau xanh den mac dinh thi giua hai buoc se loe mot nhip toi — nen no can bao
+        // duoc "lan nay dung mau nay".
+        private Color? tintOverride;
+
+        public void SetTintOverride(Color color) => tintOverride = color;
+        public void ClearTintOverride() => tintOverride = null;
+
+        private Color ActiveTint => tintOverride ?? TintColor;
+
         // Mặc định tuyến tính — kiểu con override để có cảm giác riêng (mượt như mây, chớp như ánh sáng...).
         protected virtual float Ease(float t) => t;
 
@@ -23,7 +33,7 @@ namespace StarSower.Transition
 
         private IEnumerator Fade(float from, float to, float duration)
         {
-            image.color = TintColor;
+            image.color = ActiveTint;
             float elapsed = 0f;
             while (elapsed < duration)
             {

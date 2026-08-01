@@ -18,24 +18,30 @@ MonoBehaviour:
   icon: {fileID: 0}
   requiredFragments: 12
   starPoints:
-  - {x: 0.5, y: 0.8}
-  - {x: 0.42, y: 0.62}
-  - {x: 0.58, y: 0.6}
-  - {x: 0.45, y: 0.42}
-  - {x: 0.61, y: 0.4}
+  - {x: 0.5, y: 0.88}
+  - {x: 0.36, y: 0.78}
+  - {x: 0.44, y: 0.68}
+  - {x: 0.62, y: 0.64}
+  - {x: 0.4, y: 0.46}
+  - {x: 0.6, y: 0.42}
+  - {x: 0.5, y: 0.3}
   connections:
   - fromIndex: 0
     toIndex: 1
   - fromIndex: 0
     toIndex: 2
-  - fromIndex: 1
-    toIndex: 2
-  - fromIndex: 1
+  - fromIndex: 2
     toIndex: 3
-  - fromIndex: 3
+  - fromIndex: 2
     toIndex: 4
   - fromIndex: 4
-    toIndex: 2
+    toIndex: 5
+  - fromIndex: 5
+    toIndex: 3
+  - fromIndex: 4
+    toIndex: 6
+  - fromIndex: 6
+    toIndex: 5
   animationDuration: 3.5
   effectScale: 1.0
   particlePrefab: {fileID: 0}

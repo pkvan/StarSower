@@ -168,8 +168,11 @@ namespace StarSower.Constellations
             // Che den bang man cua chinh doan phim TRUOC, roi moi mo lop chuyen canh — nguoc thu
             // tu se loe mot khung hinh man choi cu.
             cinematic.SnapCovered();
-            if (sceneTransition != null)
-                yield return sceneTransition.PlayOut();
+
+            // Mở NGAY chứ không fade: lúc này lớp chuyển cảnh đang đen kín và ngay dưới nó là màn
+            // che của đoạn phim cũng đen kín. Fade ở đây là đen chồng đen — người chơi ngồi nhìn
+            // một màn hình không đổi suốt cả quãng fade rồi mới thấy bầu trời hiện ra.
+            sceneTransition?.SnapOpen();
 
             yield return cinematic.Play(constellation, litBefore, litAfter);
 
@@ -182,9 +185,13 @@ namespace StarSower.Constellations
             // Man cuoi: khong ai nap scene ke, phai tu mo man hinh cho Journey Cinematic dien.
             if (levelManager != null && levelManager.HasNextLevel)
             {
-                if (sceneTransition != null)
-                    yield return sceneTransition.PlayIn();
+                // Doan phim ket thuc bang mot chum sang TRANG. Bao lop chuyen canh dung dung
+                // mau do cho lan che nay: khong bao thi no snap ve xanh den mac dinh va man hinh
+                // loe toi mot nhip ngay giua chum sang. Tra mau lai ngay sau khi ban giao xong.
+                sceneTransition?.SetTint(Color.white);
+                sceneTransition?.SnapCovered();
                 cinematic.ClearCover();
+                sceneTransition?.ClearTint();
             }
             else
             {

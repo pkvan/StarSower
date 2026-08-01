@@ -80,6 +80,11 @@ namespace StarSower.Biome
         [Tooltip("Để trống thì Region này chỉ dùng Ambient đơn giản ở trên (nếu có). Gắn asset AmbientProfile để có gió lặp + chim/lá phát ngẫu nhiên.")]
         [SerializeField] private AmbientProfile ambientProfile;
 
+        [Tooltip("Màu chữ của các nhãn nổi trên gameplay ở khu vực này (S2-007). Nền 5 khu trải từ " +
+                 "trắng gần tinh (Cloud Garden) tới xanh đêm (Moon Gate) nên KHÔNG có màu chữ nào " +
+                 "đọc được ở cả năm — mỗi khu phải tự khai màu của mình. Để trắng thì y như trước.")]
+        [SerializeField] private Color uiTextColor = Color.white;
+
         public string RegionId => regionId;
         public string RegionName => regionName;
         public string ConstellationTitle => constellationTitle;
@@ -93,5 +98,6 @@ namespace StarSower.Biome
         public float AmbientVolume => ambientVolume;
         public IReadOnlyList<GameObject> ParticlePrefabs => particlePrefabs;
         public AmbientProfile AmbientProfile => ambientProfile;
+        public Color UITextColor => uiTextColor;
     }
 }
