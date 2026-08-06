@@ -1,10 +1,14 @@
 # PROJECT_CONTEXT.md — Starsower
 
 > Nguồn tham chiếu duy nhất khi tiếp tục phát triển sau compact.
-> Cập nhật đến hết **S2-006 (xong)**. Chapter 1 chơi được trọn vẹn, nhân vật thật, khung hình dọc,
-> hiệu ứng nhặt sao và đoạn phim chòm sao đã vào game.
 >
-> **Ngày cập nhật:** 2026-07-30
+> ⚠️ **Dự án đã sang giai đoạn mới. Đọc §13 (S3 — StarSower Rebirth) TRƯỚC.** Từ §1 tới §12 mô tả
+> giai đoạn S1–S2 (platformer leo dọc, màn hình đứng) — phần lớn vẫn đúng về kiến trúc và bài học,
+> nhưng mọi thứ liên quan tới **hướng màn hình, bố cục màn chơi và bộ kỹ năng** đã bị thay ở S3.
+>
+> Cập nhật đến hết **S3-004 (xong)**.
+>
+> **Ngày cập nhật:** 2026-07-31
 
 ---
 
@@ -29,14 +33,18 @@
 
 **Đây là phần không được tự ý thay đổi.** Mọi quyết định thiết kế sau này phải kiểm tra lại với danh sách dưới đây.
 
-- Starsower là **một hành trình duy nhất từ mặt đất lên đỉnh bầu trời**.
+> ⚠️ **ĐẢO HƯỚNG Ở S3-000 (2026-07-31), theo quyết định của người dùng.** Game chuyển từ **platformer leo dọc màn hình đứng** sang **platformer khám phá màn hình ngang**, lấy cảm hứng Ori / Hollow Knight / Celeste. Các gạch đầu dòng dưới đây về "leo dọc" **không còn hiệu lực**; phần khí chất (mềm, huyền ảo, mơ màng) và phần khôi phục chòm sao thì **giữ nguyên**.
+>
+> Đừng "sửa lại cho đúng luật cũ" — đây là đổi hướng có chủ đích, không phải sai sót.
+
+- ~~Starsower là **một hành trình duy nhất từ mặt đất lên đỉnh bầu trời**~~ → **hành trình khám phá theo chiều ngang**, mỗi khu vực là một bản đồ có đường chính, đường phụ, khu ẩn và khu giải đố.
 - **Level chỉ là các Region của cùng một hành trình** — không phải các màn chơi độc lập.
 - **Không tạo cảm giác "qua màn"**. Không có màn hình "Level Complete", không bảng điểm, không nút bấm giữa các region.
 - **Goal chỉ là điểm chuyển tiếp** — nghĩa là "bạn đã leo tới khu vực kế tiếp", không phải mục tiêu cuối của game.
 - **Auto Transition**: chạm Goal là tự động chuyển sang region mới, liền mạch, mang tính điện ảnh.
 - **Không có nút "Next Level"**. Không có nút "Retry" trong luồng chính.
 - **Không Combat. Không Enemy. Không Boss.**
-- Gameplay tập trung vào đúng 4 thứ: **Platforming · Khám phá · Leo cao · Khôi phục bầu trời**.
+- Gameplay tập trung vào đúng 4 thứ: **Platforming · Khám phá · ~~Leo cao~~ → Di chuyển linh hoạt (nhảy đôi, bám tường, lướt, bay lượn) · Khôi phục bầu trời**.
 - **Star Fragment không phải điểm số.** Mỗi mảnh là một mảnh ánh sáng giúp bầu trời sống lại. Người chơi phải cảm thấy mình đang *"gieo lại các vì sao"*.
 - Người chơi phải cảm thấy **bầu trời đang dần sống lại nhờ hành trình của mình**.
 - **Đây là hành trình xúc cảm, không phải mechanic phức tạp.** Bản sắc mỗi Region đến từ 5 thứ: **không khí riêng · nhạc riêng · bản sắc hình ảnh · tên chòm sao · mạch cảm xúc đáng nhớ**.
@@ -307,6 +315,8 @@ Assets/
 1. Không Combat/Enemy/Boss/Skill Tree/Shop. 2. Không tự thêm mechanic ngoài roadmap. 3. Trải nghiệm quan trọng hơn số lượng mechanic. 4. Gameplay chỉ: Platforming, Khám phá, Leo cao, Khôi phục bầu trời.
 
 ### 8.2 Cấu trúc hành trình
+
+> ⚠️ **Luật 6 ("Leo liên tục, không cắt ngang") đã bị đảo ở S3-000** cùng với §2. Các luật còn lại của mục này (Region thay cho Level, Goal không phải mục tiêu cuối, Transition tự động, không Next Level/Retry, không màn Level Complete) **vẫn giữ nguyên**.
 5. Region thay cho Level. 6. Leo liên tục, không cắt ngang. 7. Goal không phải mục tiêu cuối. 8. Transition tự động, điện ảnh. 9. Không Next Level/Retry trong luồng chính. 10. Không màn hình Level Complete. 11. Tên khu vực hiện tự động.
 
 ### 8.3 Star Fragment & Constellation
@@ -435,11 +445,153 @@ Không dừng chờ duyệt giữa chừng. Chỉ hỏi lại khi yêu cầu mơ
 
 ---
 
+
 ## 12. TÓM TẮT NHANH CHO PHIÊN MỚI
 
+0. ⚠️ **Đọc §13 trước** — dự án đã sang giai đoạn S3 (khám phá màn hình ngang). Các mục dưới đây mô tả giai đoạn S1–S2 và nhiều chỗ đã lỗi thời.
 1. **Chapter 1 chơi được trọn vẹn** từ Forgotten Forest đến cảnh kết + chòm sao. 5 khu, 5 cơ chế riêng, độ khó tăng đều 0→6→8→13→17 cú phải giữ nút.
 2. **Nhân vật thật đã vào game** (S2-002), **khung hình dọc đã khoá** (S2-004), **hiệu ứng nhặt sao có pool, không cấp phát** (S2-005), **đoạn phim chòm sao chạy trong scene, có tiến trình lành dần** (S2-006).
 3. **Không có Editor access** — mọi sửa scene/prefab làm bằng YAML tay + script Python có assert, sau đó audit: trùng fileID, tham chiếu treo, đối ứng cha-con, khớp tên field C#↔YAML. Unity chỉ import khi người dùng bấm vào cửa sổ Editor, và **không import khi đang Play**.
 4. **Chưa playtest.** Vẫn là rủi ro lớn nhất của dự án — giờ còn lớn hơn vì đã chồng thêm 4 sprint chưa ai chơi thử.
 5. **Trước khi build:** gỡ `[Cine]` log, gỡ log trong `ConstellationScreen.Show()`, xác nhận `devAlwaysReplay` tắt.
 6. Đọc mục **8 (Design Decisions)** trước khi đề xuất bất kỳ thay đổi thiết kế nào — đó là phần không được tự ý đảo ngược.
+
+---
+
+## 13. S3 — StarSower Rebirth
+
+> Giai đoạn hiện tại. Mọi mâu thuẫn giữa mục này và §1–§12 thì **mục này thắng**.
+
+### 13.1 Tổng quan
+
+StarSower **không còn là platformer leo dọc màn hình đứng**. Nó đã chính thức thành **platformer khám phá màn hình ngang**, lấy cảm hứng từ **Ori**, **Hollow Knight** và **Celeste** (ảnh hưởng nhẹ).
+
+Game phải giữ được sự thư thái, huyền ảo và giàu không khí, đồng thời khó lên một chút — nhưng **không bao giờ ức chế kiểu Jump King**.
+
+### 13.2 Vòng lặp mới
+
+```
+Khám phá → Tìm sao → Giải đố → Khôi phục chòm sao → Mở Astral Gate → Đi tiếp
+```
+
+### 13.3 Giữ và thay
+
+| Giữ nguyên | Thay hẳn |
+|---|---|
+| Không khí huyền ảo | Màn hình dọc |
+| Khôi phục chòm sao | Tiến trình thuần dọc |
+| Mảnh sao thu thập | Di chuyển đơn giản |
+| Astral Gate | |
+| Tiến trình theo chapter | |
+
+### 13.4 Cấu trúc thế giới
+
+Forgotten Forest · Cloud Garden · Sky Ruins · Aurora Cliffs · Moon Gate
+
+> ⚠️ **Đính chính so với spec:** spec S3 viết *"One chapter = one level"*, nhưng dữ liệu thật của dự án là **một chapter (`Chapter_01`) chứa năm level**. `ChapterDatabase` có đúng một chapter. Đừng dựng lại dữ liệu theo câu đó — ánh xạ level ↔ chòm sao đang chạy theo **chỉ số** trong `LevelDatabase` ↔ `ChapterData.Constellations`.
+
+### 13.5 Camera — **xong (S3-002)**
+
+`CameraFollow2D` bám cả hai trục, có look-ahead ngang **và dọc**, dead zone hai trục, damping riêng từng trục, và biên khung hình.
+
+| Thông số | Giá trị |
+|---|---|
+| Damping ngang / dọc | 0.15 / 0.25 |
+| Look-ahead ngang / dọc | 2.0 / 1.2 |
+| Dead zone | 1.5 × 1.0 |
+| Tốc độ tối đa | 12.0 |
+
+**Dead zone dọc là thứ quyết định** — không có nó, mỗi cú nhảy làm cả khung hình nhấp nhô, và ở màn hình ngang việc đó mệt mắt hơn hẳn màn dọc. Rơi nhanh hơn −12 thì bỏ vùng đệm và bám sát.
+
+Biên (`useBounds`) **đang tắt** — bật khi màn còn là hành lang sẽ khoá camera vào khoảng trống.
+
+**Parallax ba lớp** (S3-002): `Far 0.85` · `Mid 0.70` · `Near 0.50` trong quy ước của `ParallaxLayer`.
+
+> ⚠️ **`ParallaxLayer.parallaxFactor` NGƯỢC với "speed" của spec.** Ở đây `factor = 1` là bám camera (xa vô tận), `factor = 0` là đứng yên (ngang tầm chơi). Spec "speed 0.15" ⇒ `factor 0.85`. Đổi mà hiểu sai chiều là nền chạy ngược.
+
+`background_mid.png` của 5 khu là **ảnh dẫn xuất bằng thuật toán** (pha 55% near + 45% far, kéo về màu sương mù, làm mờ nhẹ, hạ bão hoà) — không phải tranh vẽ tay. Thay file cùng đường dẫn là xong, không phải sửa scene.
+
+**Rung camera ba cấp** (`CameraShake`): Small `(0.14, 0.05)` cho tiếp đất + nhặt sao · Medium `(0.22, 0.10)` cho cổng mở · Large `(0.38, 0.20)` **dành sẵn, chưa ai gọi**.
+
+### 13.6 Kỹ năng nhân vật — **xong (S3-003)**
+
+`PlayerAbilities` + `WallDetector` trên prefab Hero. Mọi thứ **đi qua `PlayerMotor`** — không component nào khác ghi `Rigidbody2D`.
+
+| Kỹ năng | Số |
+|---|---|
+| Nhảy | lực 12 → apex 7.34 |
+| Nhảy đôi | lực 10 → apex tổng 12.44 |
+| Bám tường | rơi tối đa 2.5 |
+| Nhảy tường | (9, 12), khoá điều khiển ngang 0.16s |
+| Lao | 18 trong 0.16s, hồi 0.5s, có lao trên không |
+| Bay lượn | rơi tối đa 2.2, chờ 0.18s |
+
+Chạm đất **và** bám tường đều nạp lại nhảy đôi + lao — biến tường thành chỗ nghỉ, đúng tinh thần Ori.
+
+Input: nút **DASH** ở 5 scene (`MobileInputProvider.dashButton`), bàn phím **Shift** hoặc **K**.
+
+> ⚠️ **Hoạt ảnh là tạm.** Hero chỉ có 5 clip (Idle, Run, Jump, Fall, Landing). Bám tường dùng Fall, lao dùng Run, bay lượn dùng Jump. Có art thật thì thay clip, **không phải sửa logic**.
+
+### 13.7 Bố cục màn — **xong (S3-004)**
+
+| Màn | Bệ | Rộng | Cao | Sao |
+|---|---|---|---|---|
+| Forgotten Forest | 29 | 59.4 | −6.4 … 15.6 | 5 |
+| Cloud Garden | 34 | 77.8 | −6.4 … 15.6 | 7 |
+| Sky Ruins | 39 | 96.2 | −6.4 … 15.6 | 10 |
+| Aurora Cliffs | 46 | 119.2 | −6.4 … 15.6 | 14 |
+| Moon Gate | 52 | 142.2 | −6.4 … 15.6 | 18 |
+
+Mỗi màn có: **đường chính** (bệ cách 4.6, độ cao theo hai sóng sin lệch pha) · **đường phụ** cao hơn 6.2 (cần nhảy đôi) · **khu giải đố** hai tường cách 4.8, bậc 3.4 (cần nhảy tường) · **khu ẩn** ở y = −6.4 · **3 ngôi sao bí mật** · **cổng** ở bệ cuối bên phải.
+
+Kill Floor hạ **−12 → −16** để khu ẩn không thành bẫy chết.
+
+108 cú nhảy trên đường chính của cả 5 màn đã kiểm bằng công thức tầm với: **0 cú không tới được**.
+
+> ⚠️ **Bố cục sinh bằng thuật toán, chưa tinh chỉnh tay.** Nhịp đều đặn hơn một bản đồ do người thiết kế. Đây là việc còn lại rõ nhất.
+
+### 13.8 Chòm sao
+
+```
+Một level = một chòm sao.   Một node = một mảnh sao.
+requiredStars = constellation.NodeCount;   // KHÔNG BAO GIỜ viết cứng
+```
+
+Đường cong sau khi cân bằng lại (xếp theo **số sao thật** của từng chòm để giữ hình nhận ra được):
+
+| Khu vực | Chòm sao | Node |
+|---|---|---|
+| Forgotten Forest | Cassiopeia | 5 |
+| Cloud Garden | Lyra | 7 |
+| Sky Ruins | Cygnus | 10 |
+| Aurora Cliffs | Draco | 14 |
+| Moon Gate | Orion | 18 |
+
+### 13.9 Roadmap S3
+
+| Sprint | Trạng thái |
+|---|---|
+| S3-001 Landscape conversion | **xong** |
+| S3-002 Camera system | **xong** — trừ room transitions |
+| S3-003 Player controller | **xong** — hoạt ảnh tạm |
+| S3-004 Level redesign | **xong** — chưa tinh chỉnh tay |
+| S3-005 Exploration system | chưa |
+| S3-006 Secret areas | chưa |
+| S3-007 UI redesign | chưa |
+| S3-008 Difficulty balancing | chưa |
+
+### 13.10 Việc còn lại của S3
+
+- **Room transitions + biên camera** — code biên đã có, `useBounds` đang tắt, chưa có trigger chuyển phòng.
+- **Tinh chỉnh tay 5 bản đồ** — nhịp hiện đều đặn kiểu máy sinh.
+- **Sprite cho wall slide / dash / glide** — 3 bộ hoạt ảnh còn thiếu.
+- **`ShakeLarge()`** chưa nơi nào gọi.
+- **Ba file tiếng cổng** (`auraClip`, `openClip`, `burstClip`, `transitionClip`) vẫn trống.
+- **`SettingsPanel`** mới là vỏ — `AudioManager` có sẵn `SetMasterVolume`/`SetMusicVolume`/`SetAmbientVolume` chưa ai gọi.
+
+### 13.11 Điều quan trọng nhất
+
+**Giữ được linh hồn của StarSower trong khi thay hoàn toàn cấu trúc.** Không khí mềm, huyền ảo, mơ màng là thứ **không được đánh đổi** lấy độ khó hay độ hoành tráng. Khó hơn một chút — không bao giờ ức chế.
+
+---
+

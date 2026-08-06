@@ -12,6 +12,9 @@ namespace StarSower.Player
         [SerializeField] private OnScreenJoystick moveJoystick;
         [SerializeField] private TouchButton jumpButton;
 
+        [Tooltip("S3-000 — nut lao. De trong thi khong lao duoc tren mobile, nhung game van chay.")]
+        [SerializeField] private TouchButton dashButton;
+
         public float Horizontal => moveJoystick != null ? moveJoystick.Horizontal : 0f;
         public bool JumpHeld => jumpButton != null && jumpButton.IsPressed;
 
@@ -23,6 +26,18 @@ namespace StarSower.Player
                     return false;
 
                 jumpButton.ConsumePress();
+                return true;
+            }
+        }
+
+        public bool DashPressed
+        {
+            get
+            {
+                if (dashButton == null || !dashButton.WasPressedThisFrame)
+                    return false;
+
+                dashButton.ConsumePress();
                 return true;
             }
         }

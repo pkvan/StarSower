@@ -114,6 +114,28 @@ namespace StarSower.Player
             ascentGraceTimer = minAscentGraceTime;
         }
 
+        // S3-R3 — dời Player tới một vị trí và xoá sạch quán tính (dùng cho hồi sinh tại mốc).
+        // API CỘNG THÊM, không đụng luồng Move/Jump/Tick.
+        //
+        // Dùng rb.position chứ không phải transform.position: ghi thẳng transform sẽ khiến
+        // Rigidbody2D chỉ thấy vị trí mới ở bước physics kế tiếp, đủ để va chạm bị tính ở chỗ CŨ
+        // và Player kẹt trong sàn ngay lúc vừa hồi sinh.
+        //
+        // Xoá luôn dashTimer/wallSlide/glide: hồi sinh giữa một cú lao hay đang bám tường mà
+        // không dọn thì trạng thái đó theo người chơi về tận mốc.
+        public void Teleport(Vector2 position)
+        {
+            rb.position = position;
+            rb.linearVelocity = Vector2.zero;
+            rb.WakeUp();
+
+            dashTimer = 0f;
+            glideFallSpeed = -1f;
+            wallSlideSpeed = -1f;
+            ascentGraceTimer = 0f;
+            targetHorizontalSpeed = 0f;
+        }
+
         // Đóng băng/khôi phục vật lý hoàn toàn (dùng cho cinematic, cutscene...).
         // PlayerMotor vẫn là nơi duy nhất đụng Rigidbody2D — bên gọi không cần biết chi tiết.
         public void SetPhysicsActive(bool isActive)
@@ -125,9 +147,63 @@ namespace StarSower.Player
             rb.linearVelocity = Vector2.zero;
         }
 
+        // ---- S3-000: cac kha nang moi deu di qua day ----
+        //
+        // Moi thu ghi Rigidbody2D van nam trong PlayerMotor. PlayerAbilities chi RA LENH, khong tu
+        // dong vao rigidbody — giu dung Single-Writer da theo suot du an.
+
+        private float dashTimer;
+        private Vector2 dashVelocity;
+        private float glideFallSpeed = -1f;
+        private float wallSlideSpeed = -1f;
+
+        public bool IsDashing => dashTimer > 0f;
+
+        // Lao mot doan: trong suot quang nay bo qua trong luc va dieu khien ngang, nen cu lao la
+        // mot duong thang du dang roi hay dang len.
+        public void BeginDash(Vector2 velocity, float duration)
+        {
+            dashVelocity = velocity;
+            dashTimer = Mathf.Max(0f, duration);
+            rb.linearVelocity = velocity;
+        }
+
+        public void CancelDash()
+        {
+            dashTimer = 0f;
+        }
+
+        // Bay luon: gioi han toc do ROI, khong dong toi trong luc. Dat -1 de tat.
+        public void SetGlide(float maxFallSpeed)
+        {
+            glideFallSpeed = maxFallSpeed;
+        }
+
+        // Bam tuong: cung la gioi han toc do roi nhung cham hon nua. Dat -1 de tat.
+        public void SetWallSlide(float maxFallSpeed)
+        {
+            wallSlideSpeed = maxFallSpeed;
+        }
+
+        // Nhay tuong / nhay doi: ghi thang van toc, khong cong don — cong don thi nhay doi luc dang
+        // bay len se bay vot gap doi.
+        public void SetVelocity(Vector2 velocity)
+        {
+            rb.linearVelocity = velocity;
+            ascentGraceTimer = minAscentGraceTime;
+        }
+
         // Nơi DUY NHẤT ghi Rigidbody2D cho di chuyển/gravity — gọi từ FixedUpdate.
         public void Tick(float deltaTime, bool jumpHeld)
         {
+            // Dang lao: giu nguyen van toc lao, khong trong luc, khong dieu khien.
+            if (dashTimer > 0f)
+            {
+                dashTimer -= deltaTime;
+                rb.linearVelocity = dashVelocity;
+                return;
+            }
+
             Vector2 velocity = rb.linearVelocity;
 
             // Đứng trên mặt trơn mà buông tay thì KHÔNG đứng im được: thay vì hãm về 0, nhân vật bị
@@ -172,6 +248,13 @@ namespace StarSower.Player
                 float extraGravity = Physics2D.gravity.y * rb.gravityScale * (gravityScaleMultiplier - 1f);
                 velocity.y += extraGravity * deltaTime;
             }
+
+            // Bam tuong khat hon bay luon: lay gioi han NGHIEM NGAT hon trong hai cai dang bat.
+            float fallLimit = -1f;
+            if (wallSlideSpeed >= 0f) fallLimit = wallSlideSpeed;
+            if (glideFallSpeed >= 0f) fallLimit = fallLimit < 0f ? glideFallSpeed : Mathf.Min(fallLimit, glideFallSpeed);
+            if (fallLimit >= 0f && velocity.y < -fallLimit)
+                velocity.y = -fallLimit;
 
             ApplyHorizontalBounds(ref velocity, deltaTime);
 

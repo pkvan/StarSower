@@ -63,8 +63,8 @@ MonoBehaviour:
   fadeOverlay: {fileID: 955000032}
   nodePrefab: {fileID: 954000004, guid: bbbbbbbbbbbbbbbbbbbbbbbbbbbbfa47, type: 3}
   nodeParent: {fileID: 955000041}
-  fieldSize: {x: 4.2, y: 5.2}
-  fieldCenterOffset: {x: 0, y: -1}
+  fieldSize: {x: 7.6, y: 4.4}
+  fieldCenterOffset: {x: 0, y: -0.4}
   flyCoreScale: 0.7
   nameGroup: {fileID: 955000075}
   nameLabel: {fileID: 955000082}
@@ -553,7 +553,7 @@ MonoBehaviour:
   m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 1080, y: 1920}
+  m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 1
   m_PhysicalUnit: 3
@@ -624,7 +624,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 520}
+  m_AnchoredPosition: {x: 0, y: 430}
   m_SizeDelta: {x: 940, y: 120}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &955000082
@@ -695,7 +695,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 395}
+  m_AnchoredPosition: {x: 0, y: 330}
   m_SizeDelta: {x: 940, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &955000092

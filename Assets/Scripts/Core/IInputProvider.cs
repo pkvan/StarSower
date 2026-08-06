@@ -10,5 +10,8 @@ namespace StarSower.Core
         // Nút nhảy có đang được giữ hay không (khác JumpPressed — đây là trạng thái liên tục,
         // không phải sự kiện 1 frame). Dùng cho Variable Jump Height ở PlayerMotor.
         bool JumpHeld { get; }
+
+        // S3-000 — nut lao. Su kien 1 frame giong JumpPressed.
+        bool DashPressed { get; }
     }
 }

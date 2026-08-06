@@ -23,6 +23,8 @@ GameObject:
   - component: {fileID: 950001019}
   - component: {fileID: 950001020}
   - component: {fileID: 950001021}
+  - component: {fileID: 950002001}
+  - component: {fileID: 950002002}
   m_Layer: 6
   m_Name: Hero
   m_TagString: Untagged
@@ -173,7 +175,7 @@ MonoBehaviour:
   lowJumpMultiplier: 2
   minAscentGraceTime: 0.08
   fallMultiplier: 2.5
-  useHorizontalBounds: 1
+  useHorizontalBounds: 0
   boundsCenterX: 0
   boundsHalfWidth: 2.6
   playerHalfWidth: 0.375
@@ -206,6 +208,7 @@ MonoBehaviour:
   m_EditorClassIdentifier:
   moveJoystick: {fileID: 0}
   jumpButton: {fileID: 0}
+  dashButton: {fileID: 0}
 --- !u!114 &950001015
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -308,10 +311,13 @@ MonoBehaviour:
   motor: {fileID: 950001012}
   animator: {fileID: 950001043}
   visualRenderer: {fileID: 950001042}
+  abilities: {fileID: 950002002}
   facingDeadZone: 0.15
   jumpDetectSpeed: 4
   minAirborneTimeForLanding: 0.08
   landDetectSpeed: -0.5
+  cameraShake: {fileID: 0}
+  landShakeSpeed: -8
 --- !u!1 &950001030
 GameObject:
   m_ObjectHideFlags: 0
@@ -623,3 +629,50 @@ MonoBehaviour:
   flashScale: 0.45
   finalSparkleScale: 1.15
   finalSparkleOffset: 0.1
+--- !u!114 &950002001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 950001001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aaaaaaaaaaaaaaaaaaaaaaaaaaaaab80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wallLayer:
+    serializedVersion: 2
+    m_Bits: 256
+  minWallNormalX: 0.75
+--- !u!114 &950002002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 950001001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aaaaaaaaaaaaaaaaaaaaaaaaaaaaab81, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  motor: {fileID: 950001012}
+  groundDetectorSource: {fileID: 950001011}
+  wallDetector: {fileID: 950002001}
+  inputSource: {fileID: 950001018}
+  doubleJumpEnabled: 1
+  doubleJumpForce: 10
+  wallSlideEnabled: 1
+  wallSlideSpeed: 2.5
+  wallJumpEnabled: 1
+  wallJumpForce: {x: 9, y: 12}
+  wallJumpLockTime: 0.16
+  dashEnabled: 0
+  dashSpeed: 18
+  dashDuration: 0.16
+  dashCooldown: 0.5
+  airDashEnabled: 0
+  glideEnabled: 1
+  glideFallSpeed: 2.2
+  glideDelay: 0.18

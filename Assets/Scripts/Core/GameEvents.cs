@@ -20,6 +20,15 @@ namespace StarSower.Core
         // nhung chua duoc chuyen man. Gop chung mot su kien thi mat dung mot trong hai.
         public static event Action OnGoalReached;
 
+        // S3-R3 — Player vua duoc keo ve moc hoi sinh sau mot cu roi hut. Phat de camera/hieu ung
+        // kip bat lai, KHONG mang theo du lieu: ai can biet moc o dau thi hoi RespawnManager.
+        public static event Action OnPlayerRespawned;
+
+        public static void RaisePlayerRespawned()
+        {
+            OnPlayerRespawned?.Invoke();
+        }
+
         public static void RaiseGameOver()
         {
             OnGameOver?.Invoke();

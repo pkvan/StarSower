@@ -24,12 +24,17 @@ namespace StarSower.Player
         private IGroundDetector groundDetector;
         private PlayerMotor motor;
         private PlayerJumpController jumpController;
+
+        // S3-000 — nhay doi, bam tuong, nhay tuong, lao, bay luon. Khong bat buoc: khong co
+        // component nay thi luong di chuyen quay ve dung nhu truoc, khong hong gi.
+        private PlayerAbilities abilities;
         private bool movementLocked;
 
         private void Awake()
         {
             motor = GetComponent<PlayerMotor>();
             jumpController = GetComponent<PlayerJumpController>();
+            abilities = GetComponent<PlayerAbilities>();
             input = inputProviderSource as IInputProvider;
             groundDetector = groundDetectorSource as IGroundDetector;
         }
@@ -53,7 +58,10 @@ namespace StarSower.Player
 
         private void Update()
         {
-            float horizontal = movementLocked ? 0f : input.Horizontal;
+            // Vua nhay tuong xong thi bo qua input ngang trong mot nhip ngan: giu cần huong vao
+            // tuong se dan nguoi choi ap nguoc lai va cu nhay thanh vo nghia.
+            bool suppressed = movementLocked || (abilities != null && abilities.HorizontalControlLocked);
+            float horizontal = suppressed ? 0f : input.Horizontal;
             motor.SetMoveInput(horizontal, groundDetector.IsGrounded);
 
             // Bề mặt trơn (S1-017). Dùng "as" chứ không ép kiểu: IGroundDetector cố tình KHÔNG khai
@@ -81,6 +89,10 @@ namespace StarSower.Player
 
             if (jumpController.TryConsumeJump())
                 motor.Jump();
+
+            // Chay TRUOC motor.Tick(): moi quyet dinh (lao, nhay tuong, bam tuong) phai xong truoc
+            // khi motor chot van toc cua buoc vat ly nay.
+            abilities?.Tick(Time.fixedDeltaTime);
 
             motor.Tick(Time.fixedDeltaTime, input.JumpHeld);
         }

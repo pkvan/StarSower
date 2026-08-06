@@ -45,6 +45,12 @@ namespace StarSower.Player
                  "di xuong doc thoai thoai se khong kich hoat.")]
         [SerializeField] private float landDetectSpeed = -0.5f;
 
+        [Tooltip("S3-002 — rung nhe khi tiep dat. De trong thi tu tim; khong co thi bo qua.")]
+        [SerializeField] private StarSower.CameraSystem.CameraShake cameraShake;
+
+        [Tooltip("Van toc roi phai manh hon nguong nay moi rung. Buoc xuong bac thap thi khong rung.")]
+        [SerializeField] private float landShakeSpeed = -8f;
+
         // Bam san ID tham so: Animator.SetFloat(string) phai bam chuoi moi lan goi, chay moi frame
         // tren mobile thi khong dang.
         private static readonly int SpeedHash = Animator.StringToHash("Speed");
@@ -68,6 +74,8 @@ namespace StarSower.Player
         private void Awake()
         {
             groundDetector = groundDetectorSource as IGroundDetector;
+            if (cameraShake == null)
+                cameraShake = FindFirstObjectByType<StarSower.CameraSystem.CameraShake>();
             BaseVisualSortingOrder = visualRenderer.sortingOrder;
         }
 
@@ -102,6 +110,9 @@ namespace StarSower.Player
             visualRenderer.color = c;
         }
 
+        [Tooltip("S3-000 — de chon hoat anh cho cac kha nang moi. De trong thi bo qua.")]
+        [SerializeField] private PlayerAbilities abilities;
+
         private void Update()
         {
             if (scriptedActive)
@@ -115,6 +126,43 @@ namespace StarSower.Player
 
             Vector2 velocity = motor.Velocity;
             bool isGrounded = groundDetector.IsGrounded;
+
+            // TAM THOI (S3-000): Hero chua co sprite cho bam tuong / lao / bay luon. Muon tu bo
+            // hoat anh cu sao cho doc duoc nhat, roi thay bang art that sau ma khong phai sua logic:
+            //   bam tuong -> Fall   (dang truot xuong)
+            //   lao        -> Run   (tu the lao ve phia truoc)
+            //   bay luon   -> Jump  (tu the dang tren khong)
+            if (abilities != null)
+            {
+                if (abilities.IsDashing)
+                {
+                    animator.SetFloat(SpeedHash, Mathf.Abs(velocity.x));
+                    animator.SetFloat(VerticalVelocityHash, 0f);
+                    animator.SetBool(IsGroundedHash, true);
+                    UpdateFacing(velocity.x);
+                    previousVerticalVelocity = velocity.y;
+                    return;
+                }
+
+                if (abilities.IsWallSliding)
+                {
+                    animator.SetFloat(SpeedHash, 0f);
+                    animator.SetFloat(VerticalVelocityHash, -1f);
+                    animator.SetBool(IsGroundedHash, false);
+                    previousVerticalVelocity = velocity.y;
+                    return;
+                }
+
+                if (abilities.IsGliding)
+                {
+                    animator.SetFloat(SpeedHash, Mathf.Abs(velocity.x));
+                    animator.SetFloat(VerticalVelocityHash, 1f);
+                    animator.SetBool(IsGroundedHash, false);
+                    UpdateFacing(velocity.x);
+                    previousVerticalVelocity = velocity.y;
+                    return;
+                }
+            }
 
             animator.SetFloat(SpeedHash, Mathf.Abs(velocity.x));
             animator.SetFloat(VerticalVelocityHash, velocity.y);
@@ -132,7 +180,14 @@ namespace StarSower.Player
                                   && previousVerticalVelocity <= landDetectSpeed;
 
                 if (justLanded)
+                {
                     animator.SetTrigger(LandTriggeredHash);
+
+                    // Chi rung khi roi ĐỦ MANH. Khong co nguong nay thi moi buoc xuong mot bac
+                    // thap cung lam giat khung hinh — doc ra la loi chu khong phai suc nang.
+                    if (cameraShake != null && previousVerticalVelocity <= landShakeSpeed)
+                        cameraShake.ShakeSmall();
+                }
 
                 airborneTime = 0f;
             }

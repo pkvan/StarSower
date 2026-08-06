@@ -34,6 +34,12 @@ namespace StarSower.Managers
         [Tooltip("Thời gian chờ trước khi reload lại level, để người chơi kịp nhận ra vừa rơi chết.")]
         [SerializeField] private float reloadDelay = 1.5f;
 
+        [Tooltip("S3-R3. Có gán thì chạm Kill Floor sẽ HỒI SINH tại mốc gần nhất thay vì nạp lại " +
+                 "cả màn — bắt buộc với màn S3 cao ~80 unit, nơi nạp lại đồng nghĩa mất hết tiến " +
+                 "trình vì hụt đúng một cú nhảy. Để trống thì luật cũ (nạp lại scene) giữ nguyên, " +
+                 "nên mọi scene chưa gán vẫn chạy y như trước.")]
+        [SerializeField] private Level.RespawnManager respawnManager;
+
         [Tooltip("Bật để hiện IsGameOver/CurrentFallDistance trên màn hình — dùng tạm lúc debug.")]
         [SerializeField] private bool debugLogging = false;
 
@@ -69,6 +75,15 @@ namespace StarSower.Managers
 
         private void TriggerGameOver()
         {
+            // Có mốc hồi sinh thì rơi KHÔNG còn là kết thúc màn: kéo Player về mốc rồi chơi tiếp,
+            // không phát OnGameOver (phát sẽ khiến PlayerController tự khoá input vĩnh viễn) và
+            // không đặt isGameOver (đặt sẽ khoá luôn Update, mốc sau đó hết tác dụng).
+            if (respawnManager != null)
+            {
+                respawnManager.Respawn();
+                return;
+            }
+
             isGameOver = true;
             GameEvents.RaiseGameOver();
             StartCoroutine(ReloadLevelAfterDelay());

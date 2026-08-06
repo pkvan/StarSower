@@ -50,6 +50,9 @@ MonoBehaviour:
   - sprite: {fileID: 21300000, guid: 16f7f04cbaad64cf0af0a1813eb391e6, type: 3}
     color: {r: 1, g: 1, b: 1, a: 1}
     parallaxFactor: 0.05
+  - sprite: {fileID: 21300000, guid: bbbbbbbbbbbbbbbbbbbbbbbbbbbbc741, type: 3}
+    color: {r: 1, g: 1, b: 1, a: 0.8}
+    parallaxFactor: 0.3
   - sprite: {fileID: 21300000, guid: e6ed1f4cab597463fac6b0a415d10dea, type: 3}
     color: {r: 1, g: 1, b: 1, a: 0.55}
     parallaxFactor: 0.12

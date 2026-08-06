@@ -118,10 +118,6 @@ namespace StarSower.Level
 
         [Tooltip("Rung camera luc cong bung mo. De trong thi bo qua.")]
         [SerializeField] private MonoBehaviour cameraShakeSource;
-        [Min(0f)]
-        [SerializeField] private float shakeDuration = 0.2f;
-        [Min(0f)]
-        [SerializeField] private float shakeMagnitude = 0.08f;
 
         [Header("Hero tan di")]
         [Tooltip("De trong thi tu tim trong scene. Khong tim thay thi bo qua, cong van chay.")]
@@ -403,9 +399,9 @@ namespace StarSower.Level
                 pool.Spawn(StarFXType.PocketGlow, p, 0f, 2.2f, 0.8f);
             }
 
-            // Rung nhe MOT lan luc cong bung mo. Bien do nho — StarSower can cam giac binh yen,
-            // rung manh se thanh mot cu no.
-            cameraShake?.Shake(shakeDuration, shakeMagnitude);
+            // Rung MOT lan luc cong bung mo, dung cap MEDIUM cua CameraShake thay vi tu bia mot
+            // cap so rieng — do manh cua rung la chuyen cam giac chung cua game.
+            (cameraShake as CameraShake)?.ShakeMedium();
             Play(burstClip);
 
             Vector3 bodyBase = gateBody != null ? gateBody.transform.localScale : Vector3.one;

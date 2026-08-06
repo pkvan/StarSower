@@ -30,6 +30,7 @@ namespace StarSower.Player
 
         public float Horizontal => activeProvider != null ? activeProvider.Horizontal : 0f;
         public bool JumpPressed => activeProvider != null && activeProvider.JumpPressed;
+        public bool DashPressed => activeProvider != null && activeProvider.DashPressed;
         public bool JumpHeld => activeProvider != null && activeProvider.JumpHeld;
     }
 }

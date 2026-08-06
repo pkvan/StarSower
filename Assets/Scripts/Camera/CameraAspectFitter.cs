@@ -28,6 +28,11 @@ namespace StarSower.CameraSystem
         [Tooltip("Toa do X tam man. Camera bi khoa cung o day, khong bao gio truot ngang.")]
         [SerializeField] private float levelCenterX;
 
+        [Tooltip("S3-000 — chieu cao the gioi phai luon nhin thay tron ven (world units). O man " +
+                 "hinh NGANG day moi la rang buoc that: be rong tu du theo ti le, con chieu cao " +
+                 "moi la thu quyet dinh nhin duoc bao xa len/xuong.")]
+        [SerializeField] private float playableHeight = 10f;
+
         [Tooltip("Khung nhin doc toi thieu — tren may rong (9:16) giu nguyen gia tri nay thay vi " +
                  "zoom vao. Bang dung orthographic size von co cua du an.")]
         [SerializeField] private float minOrthographicSize = 5f;
@@ -80,8 +85,11 @@ namespace StarSower.CameraSystem
             if (aspect <= 0f)
                 return;
 
-            float requiredSize = playableWidth / (2f * aspect);
-            cam.orthographicSize = Mathf.Max(requiredSize, minOrthographicSize);
+            // Lay rang buoc CHAT NHAT trong ba: du be ngang, du chieu cao, va khong duoi muc san.
+            // Man dung thi ve dau bi be ngang khong che; man ngang thi chieu cao khong che.
+            float byWidth = playableWidth / (2f * aspect);
+            float byHeight = playableHeight * 0.5f;
+            cam.orthographicSize = Mathf.Max(Mathf.Max(byWidth, byHeight), minOrthographicSize);
 
             lastAspect = aspect;
             lastWidth = Screen.width;

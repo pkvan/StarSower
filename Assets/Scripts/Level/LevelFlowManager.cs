@@ -164,7 +164,11 @@ namespace StarSower.Level
 
                 yield return journeyCinematic.Play();
 
-                playerController.SetMovementLocked(false);
+                // Canh ket "dung han": man hinh o nguyen khung nhin lai nam khu vuc, nen KHONG
+                // tra lai quyen dieu khien — tra lai thi Player van chay duoc trong khi camera
+                // da doi cho va HUD da tat.
+                if (!journeyCinematic.StaysAtEnd)
+                    playerController.SetMovementLocked(false);
                 yield break;
             }
 

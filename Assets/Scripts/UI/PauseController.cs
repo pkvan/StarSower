@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using StarSower.Core;
 using StarSower.Level;
 using StarSower.Player;
@@ -21,6 +22,11 @@ namespace StarSower.UI
         [SerializeField] private CanvasGroup pausePanel;
         [SerializeField] private CanvasGroup settingsPanel;
         [SerializeField] private GameObject pauseButton;
+
+        [Tooltip("Nut duoc chon san khi bang tam dung vua mo (thuong la Resume) — hien sang o " +
+                 "trang thai Selected ngay ca khi chuot khong tro vao, dung dung co che Selectable " +
+                 "cua Unity (khong phai gia lap tinh). De trong thi bo qua, khong nut nao duoc chon san.")]
+        [SerializeField] private GameObject defaultSelectedButton;
 
         [Header("Doi tuong bi dung")]
         [Tooltip("Cum joystick + nut nhay. Tat di la joystick tu nha ngon tay dang giu, khong bi " +
@@ -119,6 +125,13 @@ namespace StarSower.UI
             if (openRoutine != null)
                 StopCoroutine(openRoutine);
             openRoutine = StartCoroutine(OpenAnimation(pausePanel));
+
+            // Chon san Resume bang chinh co che Selectable cua Unity (Button.m_SelectedSprite),
+            // KHONG phai gia lap tinh — chuot di hover qua nut khac se tu nhuong sang trang thai
+            // Highlighted cua nut do nhu binh thuong. Goi SAU ApplyPanel: chon mot GameObject
+            // dang tat se khong co tac dung.
+            if (EventSystem.current != null && defaultSelectedButton != null)
+                EventSystem.current.SetSelectedGameObject(defaultSelectedButton);
         }
 
         public void Resume()
@@ -131,6 +144,8 @@ namespace StarSower.UI
 
             ApplyPanel(pausePanel, false);
             ApplyPanel(settingsPanel, false);
+            if (EventSystem.current != null)
+                EventSystem.current.SetSelectedGameObject(null);
 
             if (mobileInputRoot != null)
                 mobileInputRoot.SetActive(true);

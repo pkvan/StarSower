@@ -75,9 +75,23 @@ namespace StarSower.Collectibles
             Collect();
         }
 
+        private StarSower.CameraSystem.CameraShake cameraShake;
+
         private void Collect()
         {
             isCollected = true;
+
+            // Rung nhe moi lan nhat — cap Small dung chung voi luc tiep dat. Tu tim thay vi keo
+            // tay: StarFragment duoc dat hang chuc cai moi man, noi tay tung cai la viec phai lam
+            // lai moi khi them sao.
+            //
+            // KHONG dung static cache: tham chieu se song sot qua lan doi scene va tro toi mot
+            // camera DA BI HUY. Toan tu ?. dung phep so null that cua C#, khong dung phep so da
+            // nap chong cua Unity, nen no se khong chan duoc va nem MissingReferenceException.
+            if (cameraShake == null)
+                cameraShake = FindFirstObjectByType<StarSower.CameraSystem.CameraShake>();
+            if (cameraShake != null)
+                cameraShake.ShakeSmall();
 
             // Co hieu ung moi thi no lam chu toan bo tu day: dien hoat anh, va cong diem KHI SAO
             // BAY TOI TUI chu khong phai ngay bay gio. Van la CollectibleManager.RegisterCollected()

@@ -12,6 +12,10 @@ namespace StarSower.Player
 
         public float Horizontal => Input.GetAxisRaw(horizontalAxisName);
         public bool JumpPressed => Input.GetButtonDown(jumpButtonName);
+
+        // S3-000 — Left Shift hoac K. Dung KeyCode chu khong Input Manager axis: them axis moi doi
+        // sua ProjectSettings, ma phim lao thi khong can cau hinh lai.
+        public bool DashPressed => Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.K);
         public bool JumpHeld => Input.GetButton(jumpButtonName);
     }
 }
